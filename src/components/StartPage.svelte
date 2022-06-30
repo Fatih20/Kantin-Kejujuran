@@ -22,7 +22,7 @@
       <button
         class="option-container"
         on:click={async () => {
-          appState.set("main");
+          appState.set("trade");
         }}
       >
         <h3 class="start-button-title">Start Trading</h3>

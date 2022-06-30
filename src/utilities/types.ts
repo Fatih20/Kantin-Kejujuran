@@ -1,3 +1,3 @@
-const possibleAppStateList = ["startPage", "main"] as const;
+const possibleAppStateList = ["startPage", "trade"] as const;
 
 export type PossibleAppState = typeof possibleAppStateList[number];
