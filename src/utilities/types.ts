@@ -21,3 +21,9 @@ export interface ISoldItem extends ISoldItemLite {
     milisecondCreated : number,
     dateCreated : string,
 }
+
+const possibleNameProblemList = ["none", "long", "empty"] as const;
+export type PossibleNameProblem = typeof possibleNameProblemList[number];
+
+
+
