@@ -134,7 +134,7 @@
     flex-direction: column;
     gap: 0.5em;
     justify-content: center;
-    position: fixed;
+    /* position: fixed; */
     padding: 0.5em;
     width: 100%;
   }
