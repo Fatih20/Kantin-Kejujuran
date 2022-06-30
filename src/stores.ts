@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { initialStoreBalance } from "./config";
-import type { PossibleAppState } from "./utilities/types";
+import type { ISoldItem, ISoldItemLite, PossibleAppState } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createStoreBalance () {
@@ -29,13 +29,12 @@ function createStoreBalance () {
 
     
     async function reset () {
-        const newSavedGame = initialStoreBalance;
-        localStorage.removeItem("savedGame");
-        set(newSavedGame);
+        localStorage.removeItem("storeBalance");
+        set(initialStoreBalance);
     }
 
     function removeFromLocalStorage() {
-        localStorage.removeItem("savedGame");
+        localStorage.removeItem("storeBalance");
     }
 
     return {
@@ -49,5 +48,55 @@ function createStoreBalance () {
     }
 }
 
+function createSoldItemList () {
+    const {subscribe, set, update} = writable(fetchSoldItemListFromLocalStorage());
+
+    function fetchSoldItemListFromLocalStorage() {
+    const candidateSoldItemList = fetchItemFromLocalStorage("soldItemList");
+    return (candidateSoldItemList ?? []) as ISoldItem[];
+    }
+
+    function insert (newSoldItem : ISoldItemLite) {
+        update (previousSoldItemList => {
+            const date = new Date()
+            const dateCreated = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMonth()}`
+            const timeAppendedNewSoldItem = {...newSoldItem, dateCreated, milisecondCreated : date.getTime()} as ISoldItem;
+            const newSoldItemList = [...previousSoldItemList, timeAppendedNewSoldItem]
+            localStorage.setItem("soldItemList", JSON.stringify(newSoldItemList));
+            return newSoldItemList;
+        })
+    }
+
+    function remove (removedSoldItem : ISoldItem) {
+        update (previousSoldItemList => {
+            const newSoldItemList = previousSoldItemList.filter((soldItem) => JSON.stringify(soldItem) !== JSON.stringify(removedSoldItem)
+            );
+            localStorage.setItem("soldItemList", JSON.stringify(newSoldItemList));
+            return newSoldItemList;
+        })
+    }
+
+    
+    async function reset () {
+        localStorage.removeItem("soldItemList");
+        set([] as ISoldItem[]);
+    }
+
+    function removeFromLocalStorage() {
+        localStorage.removeItem("soldItemList");
+    }
+
+    return {
+        subscribe,
+        reset,
+        set,
+        update,
+        insert,
+        remove,
+        removeFromLocalStorage,
+    }
+}
+
 export const appState = writable("trade" as PossibleAppState)
+export const soldItemList = createSoldItemList();
 export const storeBalance = createStoreBalance();
