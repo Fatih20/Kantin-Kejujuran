@@ -6,3 +6,12 @@ export function priceDenominator (rawPrice : number) : string {
       })
     return formatter.format(rawPrice);
 }
+
+export function fetchItemFromLocalStorage (key : string){
+    let candidateResult = localStorage.getItem(key);
+    if (candidateResult !== undefined && candidateResult !== null) {
+        return JSON.parse(candidateResult)
+    } else {
+        return undefined
+    }
+}
