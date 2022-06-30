@@ -4,11 +4,13 @@ import type { ISoldItem, ISoldItemLite, PossibleAppState } from "./utilities/typ
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createStoreBalance () {
-    const {subscribe, set, update} = writable(fetchStoreBalanceFromLocalStorage());
+    const {subscribe, set, update} = writable(initializeStoreBalance());
 
-    function fetchStoreBalanceFromLocalStorage() {
+    function initializeStoreBalance() {
     const candidateStoreBalance = fetchItemFromLocalStorage("storeBalance");
-    return (candidateStoreBalance ?? initialStoreBalance) as number;
+    const newInitialStoreBalance = (candidateStoreBalance ?? initialStoreBalance) as number;
+    localStorage.setItem("storeBalance", JSON.stringify(newInitialStoreBalance))
+    return newInitialStoreBalance;
     }
 
     function add (increment) {
@@ -49,12 +51,14 @@ function createStoreBalance () {
 }
 
 function createSoldItemList () {
-    const {subscribe, set, update} = writable(fetchSoldItemListFromLocalStorage());
+    const {subscribe, set, update} = writable(initializeSoldItemList());
 
-    function fetchSoldItemListFromLocalStorage() {
-    const candidateSoldItemList = fetchItemFromLocalStorage("soldItemList");
-    return (candidateSoldItemList ?? []) as ISoldItem[];
-    }
+    function initializeSoldItemList() {
+        const candidateSoldItemList = fetchItemFromLocalStorage("soldItemList");
+        const newInitialSoldItemList = (candidateSoldItemList ?? []) as ISoldItem[];
+        localStorage.setItem("soldItemList", JSON.stringify(newInitialSoldItemList))
+        return newInitialSoldItemList;
+        }
 
     function insert (newSoldItem : ISoldItemLite) {
         update (previousSoldItemList => {
