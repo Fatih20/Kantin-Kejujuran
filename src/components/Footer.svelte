@@ -5,18 +5,31 @@
 
   let footerState = "default" as PossibleFooterState;
   let inputtedNumber: number;
+  let validInput = true;
+
+  $: {
+    if (footerState === "take" && inputtedNumber > $storeBalance) {
+      validInput = false;
+    } else {
+      validInput = true;
+    }
+  }
 
   function handleOperate() {
+    let completeOperation = true;
+    if (!validInput) {
+      return;
+    }
     if (footerState === "give") {
       storeBalance.add(inputtedNumber);
     } else if (footerState === "take") {
-      if (inputtedNumber <= $storeBalance) {
-        storeBalance.subtract(inputtedNumber);
-      }
+      storeBalance.subtract(inputtedNumber);
     }
 
-    inputtedNumber = 0;
-    footerState = "default";
+    if (completeOperation) {
+      inputtedNumber = 0;
+      footerState = "default";
+    }
   }
 </script>
 
@@ -34,6 +47,9 @@
 </head>
 
 <main>
+  {#if !validInput}
+    <p class="warning-text">You can't withdraw more than the canteen balance</p>
+  {/if}
   <div class="footer-container">
     {#if footerState === "default"}
       <button class="money-button" on:click={() => (footerState = "take")}>
@@ -87,11 +103,11 @@
     bottom: 0;
     box-sizing: border-box;
     color: rgb(var(--text-on-primary-element-color));
-    height: 50px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     position: fixed;
-    padding: 0 1em;
+    padding: 1em;
     width: 100%;
   }
 
@@ -156,6 +172,8 @@
   }
 
   .input-operator {
+    padding: 0;
+    margin: 0;
     width: 100%;
     flex-grow: 1;
     margin: 0;
