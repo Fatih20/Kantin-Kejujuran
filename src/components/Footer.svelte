@@ -1,15 +1,31 @@
 <script lang="ts">
   import { storeBalance } from "../stores";
-  import type { PossibleFooterState } from "../utilities/types";
+  import type {
+    PossibleFooterState,
+    PossibleInputProblem,
+  } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
 
   let footerState = "default" as PossibleFooterState;
-  let inputtedNumber: number;
+  let inputtedNumber: number | undefined = undefined;
   let validInput = true;
+  let inputProblem = "none" as PossibleInputProblem;
+
+  function reset() {
+    inputtedNumber = undefined;
+    footerState = "default";
+  }
 
   $: {
     if (footerState === "take" && inputtedNumber > $storeBalance) {
       validInput = false;
+      inputProblem = "overdraw";
+    } else if (inputtedNumber === null) {
+      validInput = false;
+      inputProblem = "NaN";
+    } else if (inputtedNumber < 0) {
+      validInput = false;
+      inputProblem = "negative";
     } else {
       validInput = true;
     }
@@ -27,8 +43,7 @@
     }
 
     if (completeOperation) {
-      inputtedNumber = 0;
-      footerState = "default";
+      reset();
     }
   }
 </script>
@@ -48,7 +63,13 @@
 
 <main>
   {#if !validInput}
-    <p class="warning-text">You can't withdraw more than the canteen balance</p>
+    {#if inputProblem === "overdraw"}
+      <p class="warning-text">
+        You can't withdraw more than the canteen balance
+      </p>
+    {:else if inputProblem === "NaN" || inputProblem === "negative"}
+      <p class="warning-text">Please enter a positive number</p>
+    {/if}
   {/if}
   <div class="footer-container">
     {#if footerState === "default"}
@@ -64,10 +85,7 @@
         <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
       </button>
     {:else}
-      <button
-        class="operate-button cancel-button"
-        on:click={() => (footerState = "default")}
-      >
+      <button class="operate-button cancel-button" on:click={reset}>
         <i class="fa-solid fa-share fa-flip-horizontal money-icon" /></button
       >
       <div class="input-container">
@@ -75,16 +93,25 @@
         <input
           class="input-operator"
           type="number"
+          min="0"
           placeholder={"0"}
           bind:value={inputtedNumber}
           on:keydown={({ key }) => {
             if (key == "Enter") {
               handleOperate();
+              return;
             }
+          }}
+          on:keyup={() => {
+            console.log(inputtedNumber);
           }}
         />
       </div>
-      <button class="operate-button" on:click={handleOperate}>
+      <button
+        class="operate-button"
+        class:invalid-operate-button={!validInput}
+        on:click={handleOperate}
+      >
         {#if footerState === "give"}
           <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
         {:else if footerState === "take"}
@@ -105,15 +132,22 @@
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
     flex-direction: column;
+    gap: 0.5em;
     justify-content: center;
     position: fixed;
-    padding: 1em;
+    padding: 0.5em;
     width: 100%;
+  }
+
+  .warning-text {
+    font-weight: 600;
+    text-align: center;
   }
 
   .footer-container {
     align-items: center;
     display: flex;
+    height: 2em;
     gap: 1.5em;
     justify-content: center;
     width: 100%;
@@ -150,10 +184,13 @@
     /* width: 50px; */
   }
 
+  .invalid-operate-button {
+    opacity: 0.5;
+  }
+
   .money-icon {
     font-size: 1.25em;
   }
-
   .cancel-button {
     font-weight: 800;
   }
@@ -164,6 +201,7 @@
     flex-grow: 1;
     gap: 0.25em;
     justify-content: center;
+    height: 100%;
   }
 
   .input-container p {
@@ -172,10 +210,15 @@
   }
 
   .input-operator {
-    padding: 0;
-    margin: 0;
-    width: 100%;
+    /* background-color: rgb(var(--primary-color));
+    color: rgb(var(--text-on-primary-element-color));
+    outline: none;
+    border: solid 1.5px rgb(var(--text-on-primary-element-color)); */
+    color: rgb(var(--primary-color));
     flex-grow: 1;
+    font-weight: 700;
     margin: 0;
+    outline: none;
+    width: 100%;
   }
 </style>
