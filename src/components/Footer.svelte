@@ -4,6 +4,20 @@
   import { priceDenominator } from "../utilities/utilities";
 
   let footerState = "default" as PossibleFooterState;
+  let inputtedNumber: number;
+
+  function handleOperate() {
+    if (footerState === "give") {
+      storeBalance.add(inputtedNumber);
+    } else if (footerState === "take") {
+      if (inputtedNumber <= $storeBalance) {
+        storeBalance.subtract(inputtedNumber);
+      }
+    }
+
+    inputtedNumber = 0;
+    footerState = "default";
+  }
 </script>
 
 <head>
@@ -21,16 +35,47 @@
 
 <main>
   <div class="footer-container">
-    <button class="money-button" on:click={() => console.log("Withdrawing")}>
-      Take
-      <!-- <i class="fa-solid fa-inbox-in money-icon" /> -->
-    </button>
+    {#if footerState === "default"}
+      <button class="money-button" on:click={() => (footerState = "take")}>
+        <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
+      </button>
 
-    <div class="money-container">
-      <i class="fa-solid fa-money-bill-wave money-icon" />
-      <p class="store-balance">{priceDenominator($storeBalance)}</p>
-    </div>
-    <button class="money-button">Give</button>
+      <div class="money-container">
+        <i class="fa-solid fa-money-bill-wave money-icon" />
+        <p class="store-balance">{priceDenominator($storeBalance)}</p>
+      </div>
+      <button class="money-button" on:click={() => (footerState = "give")}>
+        <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
+      </button>
+    {:else}
+      <button
+        class="operate-button cancel-button"
+        on:click={() => (footerState = "default")}
+      >
+        <i class="fa-solid fa-share fa-flip-horizontal money-icon" /></button
+      >
+      <div class="input-container">
+        <p>$</p>
+        <input
+          class="input-operator"
+          type="number"
+          placeholder={"0"}
+          bind:value={inputtedNumber}
+          on:keydown={({ key }) => {
+            if (key == "Enter") {
+              handleOperate();
+            }
+          }}
+        />
+      </div>
+      <button class="operate-button" on:click={handleOperate}>
+        {#if footerState === "give"}
+          <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
+        {:else if footerState === "take"}
+          <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
+        {/if}
+      </button>
+    {/if}
   </div>
 </main>
 
@@ -39,22 +84,24 @@
     align-items: center;
     align-self: flex-start;
     background-color: rgb(var(--primary-color));
+    bottom: 0;
     box-sizing: border-box;
     color: rgb(var(--text-on-primary-element-color));
     height: 50px;
     display: flex;
     justify-content: center;
-    padding: 1em;
+    position: fixed;
+    padding: 0 1em;
     width: 100%;
   }
 
   .footer-container {
     align-items: center;
     display: flex;
-    gap: 1em;
+    gap: 1.5em;
     justify-content: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
   }
 
   .money-container {
@@ -70,10 +117,12 @@
   }
 
   .store-balance {
+    /* font-size: 1.25em; */
     font-weight: 600;
   }
 
-  .money-button {
+  .money-button,
+  .operate-button {
     background-color: rgba(0, 0, 0, 0);
     border: none;
     color: white;
@@ -86,6 +135,29 @@
   }
 
   .money-icon {
-    font-size: 1.5em;
+    font-size: 1.25em;
+  }
+
+  .cancel-button {
+    font-weight: 800;
+  }
+
+  .input-container {
+    align-items: center;
+    display: flex;
+    flex-grow: 1;
+    gap: 0.25em;
+    justify-content: center;
+  }
+
+  .input-container p {
+    font-size: 1.25em;
+    font-weight: 600;
+  }
+
+  .input-operator {
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
   }
 </style>

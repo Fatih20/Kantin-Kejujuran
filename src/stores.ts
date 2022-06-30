@@ -11,6 +11,22 @@ function createStoreBalance () {
     return (candidateStoreBalance ?? initialStoreBalance) as number;
     }
 
+    function add (increment) {
+        update (previousBalance => {
+            const newValue = previousBalance + increment
+            localStorage.setItem("storeBalance", JSON.stringify(newValue));
+            return newValue
+        })
+    }
+
+    function subtract (increment) {
+        update (previousBalance => {
+            const newValue = previousBalance - increment
+            localStorage.setItem("storeBalance", JSON.stringify(newValue));
+            return newValue
+        })
+    }
+
     
     async function reset () {
         const newSavedGame = initialStoreBalance;
@@ -27,6 +43,8 @@ function createStoreBalance () {
         reset,
         set,
         update,
+        add,
+        subtract,
         removeFromLocalStorage,
     }
 }
