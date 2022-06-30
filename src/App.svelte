@@ -1,8 +1,12 @@
 <script lang="ts">
+  import StartPage from "./components/StartPage.svelte";
+  import { appState } from "./stores";
 </script>
 
 <main>
-  <h1>Kantin Kejujuran</h1>
+  {#if $appState === "startPage"}
+    <StartPage />
+  {/if}
 </main>
 
 <style>
