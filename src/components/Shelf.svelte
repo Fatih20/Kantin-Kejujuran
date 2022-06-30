@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { soldItemList } from "../stores";
   import NewItemForm from "./NewItemForm.svelte";
+  import SoldItem from "./SoldItem.svelte";
 
   let addingNewItem = false;
 </script>
@@ -25,11 +27,23 @@
       >
     {/if}
   </div>
-  <h2>A shelf</h2>
+  <div class="shelf">
+    {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
+      <SoldItem
+        name={soldItem.name}
+        price={soldItem.price}
+        description={soldItem.description}
+      />
+    {/each}
+  </div>
 </main>
 
 <style>
   main {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex-grow: 1;
     overflow-y: scroll;
     position: relative;
@@ -85,5 +99,13 @@
     pointer-events: all;
     padding: 7px;
     /* width: 75px; */
+  }
+
+  .shelf {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+    flex-grow: 1;
+    width: 100%;
   }
 </style>
