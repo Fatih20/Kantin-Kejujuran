@@ -63,7 +63,7 @@ function createSoldItemList () {
     function insert (newSoldItem : ISoldItemLite) {
         update (previousSoldItemList => {
             const date = new Date()
-            const dateCreated = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMonth()}`
+            const dateCreated = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
             const timeAppendedNewSoldItem = {...newSoldItem, dateCreated, milisecondCreated : date.getTime()} as ISoldItem;
             const newSoldItemList = [...previousSoldItemList, timeAppendedNewSoldItem]
             localStorage.setItem("soldItemList", JSON.stringify(newSoldItemList));
