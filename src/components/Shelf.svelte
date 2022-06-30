@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { stop_propagation } from "svelte/internal";
+  import NewItemForm from "./NewItemForm.svelte";
 
   let addingNewItem = false;
 </script>
@@ -10,10 +10,12 @@
     class:absolute-container-active={addingNewItem}
     on:click={() => (addingNewItem = false)}
   >
-    <div class="spacer" />
     {#if addingNewItem}
-      <p>Bruh</p>
+      <div class="spacer" />
+      <NewItemForm />
+      <div class="spacer" />
     {:else}
+      <div class="spacer" />
       <button
         class="add-new-button"
         on:click={(e) => {
@@ -72,6 +74,16 @@
 
   .add-new-button {
     align-self: center;
+    background-color: rgb(var(--primary-color));
+    border-radius: var(--button-smaller-radius);
+    color: rgb(var(--text-on-primary-element-color));
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease-in-out;
+    /* font-size: 1em; */
+    margin: 0;
     pointer-events: all;
+    padding: 7px;
+    /* width: 75px; */
   }
 </style>
