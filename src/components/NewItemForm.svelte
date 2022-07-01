@@ -3,11 +3,11 @@
 
   import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
-  import ButtonTemplate from "./ButtonTemplate.svelte";
 
   let name: string = "";
-  let price: number | null = null;
+  let price: number | null | undefined = undefined;
   let description: string = "";
+  let imageFilename = "";
 
   let nameProblem = "empty" as PossibleNameProblem;
   let descriptionProblem = "empty" as PossibleNameProblem;
@@ -15,9 +15,12 @@
   let nameJustStarted = true;
   let priceJustStarted = true;
   let descriptionJustStarted = true;
+  let imageJustStarted = true;
 
   let nameWarningText = "";
   let descriptionWarningText = "";
+  let priceWarningText = "";
+  let imageWarningText = "";
 
   let dataValid = false;
 
@@ -75,6 +78,22 @@
     }
   }
 
+  $: {
+    if (!priceValid) {
+      priceWarningText = "Please enter a positive number";
+    } else {
+      priceWarningText = "";
+    }
+  }
+
+  $: {
+    if (price !== undefined) {
+      priceJustStarted = false;
+    } else {
+      priceJustStarted = true;
+    }
+  }
+
   $: nameValid = nameProblem === "none";
   $: priceValid = price > 0 && price !== null;
   $: descriptionValid = descriptionProblem === "none";
@@ -115,13 +134,25 @@
   <h2>Adding New Item</h2>
   <form on:submit={handleSubmit}>
     <div class="input-element">
+      <label for="image-input">Item Image</label>
+      <div class="input-container">
+        <input id="name-input" name="name" type="file" accept="image/*" />
+        <p
+          class="input-warning"
+          class:name-not-valid-warning={!nameValid && !nameJustStarted}
+        >
+          {nameWarningText}
+        </p>
+      </div>
+    </div>
+    <div class="input-element">
       <label for="name-input"
         >Item Name ({`${name.length} / ${maxNameLength}`})</label
       >
-      <div class="name-input-container">
+      <div class="input-container">
         <input id="name-input" name="name" bind:value={name} />
         <p
-          class="name-warning"
+          class="input-warning"
           class:name-not-valid-warning={!nameValid && !nameJustStarted}
         >
           {nameWarningText}
@@ -130,20 +161,19 @@
     </div>
     <div class="input-element">
       <label for="price-input">Item Price</label>
-      <div class="price-input-container">
+      <div class="input-container">
         <input
           id="price-input"
           name="price"
           type="number"
           min="0"
           bind:value={price}
-          on:keydown={() => (priceJustStarted = false)}
         />
         <p
-          class="name-warning"
+          class="input-warning"
           class:name-not-valid-warning={!priceValid && !priceJustStarted}
         >
-          Please enter a positive number
+          {priceWarningText}
         </p>
       </div>
     </div>
@@ -151,7 +181,7 @@
       <label for="description-input"
         >Item Description ({`${description.length} / ${maxDescriptionLength}`})</label
       >
-      <div class="description-input-container">
+      <div class="input-container">
         <textarea
           id="description-input"
           name="description"
@@ -162,7 +192,7 @@
           cols="20"
         />
         <p
-          class="name-warning"
+          class="input-warning"
           class:name-not-valid-warning={!descriptionValid &&
             !descriptionJustStarted}
         >
@@ -230,9 +260,9 @@
     font-weight: 600;
   }
 
-  .name-input-container,
-  .price-input-container,
-  .description-input-container {
+  .input-container,
+  .input-container,
+  .input-container {
     align-content: center;
     display: flex;
     flex-direction: column;
@@ -245,7 +275,7 @@
     margin: 0;
     width: 100%;
   }
-  .name-warning {
+  .input-warning {
     display: none;
     color: rgb(var(--warning-color-bg));
     font-weight: 500;
