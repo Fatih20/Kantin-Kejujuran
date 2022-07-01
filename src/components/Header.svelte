@@ -11,7 +11,7 @@
 </head>
 
 <main>
-  <h1 class="title">Honest Canteen</h1>
+  <h1 class="title">HC</h1>
 </main>
 
 <style>
