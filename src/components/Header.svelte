@@ -62,6 +62,7 @@
     /* align-self: center; */
     font-family: "Kalam", cursive;
     font-size: 1.7 5em;
+    user-select: none;
 
     /* border: solid 1px black; */
   }
