@@ -37,7 +37,7 @@ export function compareFunctionGenerator (isDate : boolean, isAscending : boolea
 
 export function validImageChecker (imageName : string) {
     for (const validImageExtension of validImageExtensionList) {
-        const testedRegex = new RegExp(`\\.${validImageExtensionList}+$`)
+        const testedRegex = new RegExp(`\\.${validImageExtension}+$`)
         if (testedRegex.test(imageName)) {
             return true;
         }

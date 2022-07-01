@@ -13,7 +13,7 @@ export type PossibleInputProblem = typeof possibleInputProblemList[number];
 
 export interface ISoldItemLite {
     name : string,
-    // imageLink : string,
+    image : File,
     description : string,
     price : number,
 

@@ -3,11 +3,12 @@
 
   import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
+  import { validImageChecker } from "../utilities/utilities";
 
   let name: string = "";
   let price: number | null | undefined = undefined;
   let description: string = "";
-  let imageFilename = "";
+  let imageFilename: string | null = "";
   let image: FileList | null = null;
 
   let nameProblem = "empty" as PossibleNameProblem;
@@ -25,7 +26,9 @@
 
   let dataValid = false;
 
-  $: dataValid = nameValid && priceValid && descriptionValid;
+  $: dataValid = [nameValid, priceValid, descriptionValid, imageValid].every(
+    (validity) => validity === true
+  );
 
   $: {
     if (name !== "") {
@@ -95,9 +98,34 @@
     }
   }
 
+  $: {
+    if (!imageValid) {
+      imageWarningText = "Not an acceptable image";
+    } else {
+      image;
+    }
+  }
+
+  $: {
+    if (imageFilename !== "") {
+      imageJustStarted = false;
+    } else {
+      imageJustStarted = true;
+    }
+  }
+
+  $: {
+    if (!validImageChecker(imageFilename)) {
+      imageWarningText = "Invalid type of image";
+    } else if (imageFilename === null) {
+      imageWarningText = "Please upload an image";
+    }
+  }
+
   $: nameValid = nameProblem === "none";
   $: priceValid = price > 0 && price !== null;
   $: descriptionValid = descriptionProblem === "none";
+  $: imageValid = validImageChecker(imageFilename) && image !== null;
   // let imageLink : string;
 
   function reset() {
@@ -138,8 +166,8 @@
       <label for="image-input">Item Image (JPG or PNG)</label>
       <div class="input-container">
         <input
-          id="name-input"
-          name="name"
+          id="image-input"
+          name="image-input"
           type="file"
           accept="image/png, image/jpeg"
           bind:value={imageFilename}
@@ -147,9 +175,9 @@
         />
         <p
           class="input-warning"
-          class:name-not-valid-warning={!nameValid && !nameJustStarted}
+          class:input-not-valid-warning={!imageValid && !imageJustStarted}
         >
-          {nameWarningText}
+          {imageWarningText}
         </p>
       </div>
     </div>
@@ -158,10 +186,10 @@
         >Item Name ({`${name.length} / ${maxNameLength}`})</label
       >
       <div class="input-container">
-        <input id="name-input" name="name" bind:value={name} />
+        <input id="name-input" name="name-input" bind:value={name} />
         <p
           class="input-warning"
-          class:name-not-valid-warning={!nameValid && !nameJustStarted}
+          class:input-not-valid-warning={!nameValid && !nameJustStarted}
         >
           {nameWarningText}
         </p>
@@ -172,14 +200,14 @@
       <div class="input-container">
         <input
           id="price-input"
-          name="price"
+          name="price-input"
           type="number"
           min="0"
           bind:value={price}
         />
         <p
           class="input-warning"
-          class:name-not-valid-warning={!priceValid && !priceJustStarted}
+          class:input-not-valid-warning={!priceValid && !priceJustStarted}
         >
           {priceWarningText}
         </p>
@@ -201,7 +229,7 @@
         />
         <p
           class="input-warning"
-          class:name-not-valid-warning={!descriptionValid &&
+          class:input-not-valid-warning={!descriptionValid &&
             !descriptionJustStarted}
         >
           {descriptionWarningText}
@@ -288,7 +316,7 @@
     color: rgb(var(--warning-color-bg));
     font-weight: 500;
   }
-  .name-not-valid-warning {
+  .input-not-valid-warning {
     display: inline;
   }
 
