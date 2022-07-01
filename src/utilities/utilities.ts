@@ -42,7 +42,18 @@ export function validImageChecker (imageName : string) {
             return true;
         }
     }
-    
     return false;
-    
 }
+
+export function objToString(obj, ndeep) {
+    switch(typeof obj){
+      case "string": return '"'+obj+'"';
+      case "function": return obj.name || obj.toString();
+      case "object":
+        var indent = Array(ndeep||1).join('\t'), isArray = Array.isArray(obj);
+        return ('{['[+isArray] + Object.keys(obj).map(function(key){
+             return '\n\t' + indent +(isArray?'': key + ': ' )+ objToString(obj[key], (ndeep||1)+1);
+           }).join(',') + '\n' + indent + '}]'[+isArray]).replace(/[\s\t\n]+(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)/g,'');
+      default: return obj.toString();
+    }
+  }

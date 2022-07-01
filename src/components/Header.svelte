@@ -57,13 +57,22 @@
 
   .header-button {
     align-self: center;
+    align-items: center;
     background-color: rgba(0, 0, 0, 0);
     border: none;
     color: rgb(var(--text-on-primary-element-color));
+    display: flex;
+    justify-content: center;
     font-size: 1.25em;
     margin: 0;
+    padding: 0;
     width: 30px;
+    transition: transform 0.25s ease-in-out;
 
     /* border: solid 1px black; */
+  }
+
+  .header-button:hover {
+    transform: rotate(180deg);
   }
 </style>

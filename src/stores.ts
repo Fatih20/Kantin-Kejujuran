@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { initialSortCondition, initialStoreBalance } from "./config";
 import type { ISoldItem, ISoldItemLite, PossibleAppState, SortingCondition } from "./utilities/types";
-import { compareFunctionGenerator, fetchItemFromLocalStorage } from "./utilities/utilities";
+import { compareFunctionGenerator, fetchItemFromLocalStorage, objToString } from "./utilities/utilities";
 
 function createStoreBalance () {
     const {subscribe, set, update} = writable(initializeStoreBalance());
