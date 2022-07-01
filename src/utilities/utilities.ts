@@ -1,3 +1,4 @@
+import { validImageExtensionList } from "../config";
 import type { ISoldItem } from "./types";
 
 export function priceDenominator (rawPrice : number) : string {
@@ -32,4 +33,16 @@ export function compareFunctionGenerator (isDate : boolean, isAscending : boolea
     }
 
     return isAscending ? compareFunction : alternateCompareFunction;
+}
+
+export function validImageChecker (imageName : string) {
+    for (const validImageExtension of validImageExtensionList) {
+        const testedRegex = new RegExp(`\\.${validImageExtensionList}+$`)
+        if (testedRegex.test(imageName)) {
+            return true;
+        }
+    }
+    
+    return false;
+    
 }

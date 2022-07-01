@@ -1,3 +1,5 @@
+import { validImageExtensionList } from "../config";
+
 const possibleAppStateList = ["startPage", "trade", "add"] as const;
 
 export type PossibleAppState = typeof possibleAppStateList[number];
@@ -33,6 +35,3 @@ export type PossibleNameProblem = typeof possibleNameProblemList[number];
 
 export type SortingCondition = [boolean, boolean];
 // The first is whether to sort by date or name, date = true. The second is whether to sort in ascending order
-
-
-

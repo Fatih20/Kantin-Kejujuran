@@ -44,7 +44,7 @@
     padding: 0 0.5em;
     width: 100%;
 
-    border: solid 1px black;
+    /* border: solid 1px black; */
   }
 
   .title {

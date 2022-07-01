@@ -8,6 +8,7 @@
   let price: number | null | undefined = undefined;
   let description: string = "";
   let imageFilename = "";
+  let image: FileList | null = null;
 
   let nameProblem = "empty" as PossibleNameProblem;
   let descriptionProblem = "empty" as PossibleNameProblem;
@@ -134,9 +135,16 @@
   <h2>Adding New Item</h2>
   <form on:submit={handleSubmit}>
     <div class="input-element">
-      <label for="image-input">Item Image</label>
+      <label for="image-input">Item Image (JPG or PNG)</label>
       <div class="input-container">
-        <input id="name-input" name="name" type="file" accept="image/*" />
+        <input
+          id="name-input"
+          name="name"
+          type="file"
+          accept="image/png, image/jpeg"
+          bind:value={imageFilename}
+          bind:files={image}
+        />
         <p
           class="input-warning"
           class:name-not-valid-warning={!nameValid && !nameJustStarted}
