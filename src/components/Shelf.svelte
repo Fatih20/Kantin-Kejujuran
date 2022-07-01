@@ -1,11 +1,10 @@
 <script lang="ts">
   import { soldItemList, appState } from "../stores";
-  import ButtonTemplate from "./ButtonTemplate.svelte";
   import SoldItem from "./SoldItem.svelte";
 </script>
 
 <main>
-  <div
+  <!-- <div
     class="absolute-container"
     on:click={() => console.log("Is clicking container")}
   >
@@ -17,7 +16,7 @@
         e.stopPropagation();
       }}>Add new Item</button
     >
-  </div>
+  </div> -->
   {#if $soldItemList.length === 0}
     <h2 class="empty-text">No items are currently sold</h2>
   {:else}
