@@ -20,8 +20,8 @@
     {/key}
   {:else if $appState === "trade"}
     <Shelf />
+    <Footer />
   {/if}
-  <Footer />
 </main>
 
 <style>
