@@ -21,12 +21,19 @@
   />
 </head>
 
-<main>
-  <button class="header-button add-button">
+<main class:header-in-add={$appState === "add"}>
+  <button
+    class="header-button add-button"
+    class:header-button-disabled={$appState === "add"}
+  >
     <!-- <i class="fa-solid fa-plus" /> -->
   </button>
   <h1 class="title">HC</h1>
-  <button class="header-button add-button" on:click={() => appState.set("add")}>
+  <button
+    class="header-button add-button"
+    on:click={() => appState.set("add")}
+    class:header-button-disabled={$appState === "add"}
+  >
     <i class="fa-solid fa-plus" />
   </button>
 </main>
@@ -45,6 +52,10 @@
     width: 100%;
 
     /* border: solid 1px black; */
+  }
+
+  .header-in-add {
+    justify-content: center;
   }
 
   .title {
@@ -70,6 +81,10 @@
     transition: transform 0.25s ease-in-out;
 
     /* border: solid 1px black; */
+  }
+
+  .header-button-disabled {
+    display: none;
   }
 
   .header-button:hover {
