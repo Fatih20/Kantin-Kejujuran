@@ -89,7 +89,7 @@
         <i class="fa-solid fa-share fa-flip-horizontal money-icon" /></button
       >
       <div class="input-container">
-        <p>$</p>
+        <p>Rp</p>
         <input
           class="input-operator"
           type="number"
