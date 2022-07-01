@@ -28,7 +28,7 @@
   >
     <!-- <i class="fa-solid fa-plus" /> -->
   </button>
-  <h1 class="title">HC</h1>
+  <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
   <button
     class="header-button add-button"
     on:click={() => appState.set("add")}
@@ -60,6 +60,7 @@
 
   .title {
     /* align-self: center; */
+    cursor: pointer;
     font-family: "Kalam", cursive;
     font-size: 1.7 5em;
     user-select: none;
