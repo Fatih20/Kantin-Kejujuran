@@ -28,6 +28,8 @@
     display: flex;
     filter: drop-shadow(0 0 0.75rem rgba(var(--secondary-color), 0.5));
     flex-direction: column;
+    word-break: break-all;
+    hyphens: manual;
     justify-content: flex-start;
     padding: 0.5em;
   }

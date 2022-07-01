@@ -33,7 +33,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     flex-grow: 1;
     overflow-y: auto;
     position: relative;
@@ -88,11 +88,13 @@
   }
 
   .shelf {
+    --gap-size: 10px;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(auto-fill, repeat(3, 33%));
+    /* grid-template-rows: repeat(auto-fit, 150px); */
     gap: 10px;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     padding: 0.5em;
     width: 100%;
   }
