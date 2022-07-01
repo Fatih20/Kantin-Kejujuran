@@ -1,7 +1,7 @@
 <script lang="ts">
   import { maxDescriptionLength, maxNameLength } from "../config";
 
-  import { soldItemList } from "../stores";
+  import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
 
   let name: string = "";
@@ -97,7 +97,21 @@
   }
 </script>
 
+<head>
+  <script
+    src="https://kit.fontawesome.com/31a5898fa1.js"
+    crossorigin="anonymous"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+
 <main on:click={(e) => e.stopPropagation()}>
+  <h2>Adding New Item</h2>
   <form on:submit={handleSubmit}>
     <div class="input-element">
       <label for="name-input"
@@ -144,6 +158,7 @@
           min="0"
           bind:value={description}
           rows="5"
+          cols="20"
         />
         <p
           class="name-warning"
@@ -154,33 +169,43 @@
         </p>
       </div>
     </div>
-    <button
-      class="submit-button"
-      type="submit"
-      class:submit-button-disabled={!dataValid}
-      disabled={!dataValid}
-    >
-      Add Item
-    </button>
+    <div class="button-container">
+      <button
+        class="return-button"
+        type="submit"
+        on:click={() => appState.set("trade")}
+      >
+        <i class="fa-solid fa-arrow-left" />
+      </button>
+      <div class="spacer" />
+      <button
+        class="submit-button"
+        type="submit"
+        class:submit-button-disabled={!dataValid}
+        disabled={!dataValid}
+      >
+        <i class="fa-solid fa-plus" />
+      </button>
+    </div>
   </form>
 </main>
 
 <style>
   main {
     align-items: center;
-    background-color: rgb(var(--primary-color));
-    border-radius: var(--button-radius);
+    background-color: rgb(var(--text-on-primary-element-color));
     box-sizing: border-box;
     /* border: solid 2px white; */
-    color: rgb(var(--text-on-primary-element-color));
+    color: rgb(var(--primary-color));
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     gap: 0.5em;
     justify-content: flex-start;
     padding: 0.5em 1em;
     width: 100%;
-    max-width: 300px;
-    min-height: 100px;
+
+    /* border: solid 1px black; */
   }
 
   form {
@@ -190,6 +215,7 @@
     justify-content: center;
     gap: 0.5em;
   }
+
   .input-element {
     align-items: flex-start;
     display: flex;
@@ -200,10 +226,12 @@
     width: 100%;
   }
   label {
-    font-weight: 500;
+    font-weight: 600;
   }
 
-  .name-input-container {
+  .name-input-container,
+  .price-input-container,
+  .description-input-container {
     align-content: center;
     display: flex;
     flex-direction: column;
@@ -211,22 +239,37 @@
     gap: 0.25em;
     width: 100%;
   }
-  .name-input-container input {
+
+  input {
+    margin: 0;
     width: 100%;
   }
   .name-warning {
     display: none;
     color: rgb(var(--warning-color-bg));
+    font-weight: 500;
   }
   .name-not-valid-warning {
     display: inline;
   }
 
-  .submit-button {
-    background-color: rgb(var(--text-on-primary-element-color));
+  textarea {
+    resize: vertical;
+    max-width: 100%;
+    width: 100%;
+  }
+  .button-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  button {
+    background-color: rgb(var(--primary-color));
     border-radius: var(--button-smaller-radius);
-    color: rgb(var(--primary-color));
-    cursor: pointer;
+    border: none;
+    color: rgb(var(--text-on-primary-element-color));
     font-weight: 600;
     transition: all 0.25s ease-in-out;
     /* font-size: 1em; */
@@ -235,9 +278,8 @@
     padding: 7px;
   }
 
-  textarea {
-    width: 100%;
-    max-width: 100%;
+  .spacer {
+    flex-grow: 1;
   }
   .submit-button-disabled {
     --border-color: var(--disabled-color);

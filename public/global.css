@@ -6,7 +6,7 @@ body {
 }
 
 body {
-  --primary-color: 255, 161, 84;
+  --primary-color: 243, 115, 41;
   --text-on-primary-element-color: 255, 255, 255;
   --secondary-color: 58, 145, 4;
   --text-on-secondary-element-color: 255, 255, 255;
@@ -22,7 +22,7 @@ body {
   --disabled-color: 126 128 135;
   --text-on-disabled-element-color: 255, 255, 255;
   --text-on-white-unintrusive-color: 102 102 102;
-  
+
   color: #333;
   margin: 0;
   padding: 0;
@@ -72,6 +72,7 @@ input:disabled {
 
 button {
   color: #333;
+  cursor: pointer;
   background-color: #f4f4f4;
   outline: none;
   transition: all 0.1s ease-in-out;

@@ -1,31 +1,18 @@
 <script lang="ts">
-  import { soldItemList } from "../stores";
-  import NewItemForm from "./NewItemForm.svelte";
+  import { soldItemList, appState } from "../stores";
   import SoldItem from "./SoldItem.svelte";
-
-  let addingNewItem = false;
 </script>
 
 <main>
-  <div
-    class="absolute-container"
-    class:absolute-container-active={addingNewItem}
-    on:click={() => (addingNewItem = false)}
-  >
-    {#if addingNewItem}
-      <div class="spacer" />
-      <NewItemForm />
-      <div class="spacer" />
-    {:else}
-      <div class="spacer" />
-      <button
-        class="add-new-button"
-        on:click={(e) => {
-          addingNewItem = true;
-          e.stopPropagation();
-        }}>Add new Item</button
-      >
-    {/if}
+  <div class="absolute-container">
+    <div class="spacer" />
+    <button
+      class="add-new-button"
+      on:click={(e) => {
+        appState.set("add");
+        e.stopPropagation();
+      }}>Add new Item</button
+    >
   </div>
   {#if $soldItemList.length === 0}
     <h2 class="empty-text">No items are currently sold</h2>

@@ -7,7 +7,7 @@
 <main>
   {#if $appState === "startPage"}
     <StartPage />
-  {:else if $appState === "trade"}
+  {:else if $appState === "trade" || $appState === "add"}
     <Store />
   {/if}
 </main>
