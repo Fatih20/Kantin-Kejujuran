@@ -27,15 +27,19 @@
       >
     {/if}
   </div>
-  <div class="shelf">
-    {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
-      <SoldItem
-        name={soldItem.name}
-        price={soldItem.price}
-        description={soldItem.description}
-      />
-    {/each}
-  </div>
+  {#if $soldItemList.length === 0}
+    <h2 class="empty-text">No items are currently sold</h2>
+  {:else}
+    <div class="shelf">
+      {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
+        <SoldItem
+          name={soldItem.name}
+          price={soldItem.price}
+          description={soldItem.description}
+        />
+      {/each}
+    </div>
+  {/if}
 </main>
 
 <style>
@@ -80,6 +84,10 @@
     /* opacity: 1; */
     pointer-events: auto;
     /* visibility: visible; */
+  }
+
+  .empty-text {
+    color: rgba(var(--primary-color), 0.75);
   }
 
   .spacer {
