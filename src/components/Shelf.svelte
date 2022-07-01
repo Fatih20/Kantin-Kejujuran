@@ -1,6 +1,27 @@
 <script lang="ts">
-  import { soldItemList, appState } from "../stores";
+  import { soldItemList, appState, sortCondition } from "../stores";
+  import type { SortingCondition } from "../utilities/types";
   import SoldItem from "./SoldItem.svelte";
+
+  function secondSortingTextGenerator(sortCondition: SortingCondition) {
+    if (sortCondition[0]) {
+      return sortCondition[1] ? "from oldest" : "from newest";
+    } else {
+      return sortCondition[1] ? "ascending" : "descending";
+    }
+  }
+  $: firstSortingText = $sortCondition[0] ? "date" : "name";
+  $: secondSortingText = secondSortingTextGenerator($sortCondition);
+
+  function handleSortChanges(isOrder: boolean) {
+    if (isOrder) {
+      sortCondition.alternateSortOrder();
+    } else {
+      sortCondition.alternateSortBy();
+    }
+    soldItemList.resort($sortCondition);
+  }
+  // $: soldItemList.resort($sortCondition);
 </script>
 
 <main>
@@ -20,6 +41,15 @@
   {#if $soldItemList.length === 0}
     <h2 class="empty-text">No items are currently sold</h2>
   {:else}
+    <div class="sort-container">
+      <p class="sort-text">
+        Sorted by <span on:click={() => handleSortChanges(false)}
+          >{firstSortingText}</span
+        >,
+        <span on:click={() => handleSortChanges(true)}>{secondSortingText}</span
+        >
+      </p>
+    </div>
     <div class="shelf">
       {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
         <SoldItem {soldItem} />
@@ -97,5 +127,14 @@
     /* flex-grow: 1; */
     padding: 0.5em;
     width: 100%;
+  }
+
+  .sort-text {
+    user-select: none;
+  }
+
+  .sort-text span {
+    text-decoration: underline black dashed;
+    cursor: pointer;
   }
 </style>

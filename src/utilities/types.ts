@@ -32,7 +32,7 @@ export type PossibleNameProblem = typeof possibleNameProblemList[number];
 // type SortOrder = typeof possibleSortOrder[number];
 
 export type SortingCondition = [boolean, boolean];
-// The first is whether to sort by date. The second is whether to sort in ascending order
+// The first is whether to sort by date or name, date = true. The second is whether to sort in ascending order
 
 
 

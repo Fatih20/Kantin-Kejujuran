@@ -81,9 +81,11 @@ function createSoldItemList () {
 
     function resort (sortCondition : SortingCondition) {
         update(previousSoldItemList => {
-            const newSoldItemList = previousSoldItemList.sort(compareFunctionGenerator(sortCondition[0], sortCondition[1]));
-            localStorage.setItem("sortCondition", JSON.stringify(newSoldItemList));
-            return newSoldItemList;
+            console.log(previousSoldItemList);
+            previousSoldItemList.sort(compareFunctionGenerator(sortCondition[0], sortCondition[1]));
+            console.log(previousSoldItemList);
+            localStorage.setItem("soldItemList", JSON.stringify(previousSoldItemList));
+            return previousSoldItemList;
         })
     }
 
@@ -120,20 +122,23 @@ function createSortCondition () {
 
     function alternateSortBy () {
         update(previousSortCondition => {
-            previousSortCondition[0] = !previousSortCondition[0]
+            previousSortCondition[0] = !previousSortCondition[0];
+            localStorage.setItem("sortCondition", JSON.stringify(previousSortCondition));
             return previousSortCondition
         })
     }
 
     function alternateSortOrder () {
         update(previousSortCondition => {
-            previousSortCondition[1] = !previousSortCondition[1]
+            previousSortCondition[1] = !previousSortCondition[1];
+            localStorage.setItem("sortCondition", JSON.stringify(previousSortCondition));
             return previousSortCondition
         })
 
     }
 
     return {
+        subscribe,
         set,
         update,
         alternateSortBy,
