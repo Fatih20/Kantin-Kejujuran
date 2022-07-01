@@ -71,25 +71,34 @@
   }
   #button-container button {
     margin: 0;
-    padding: 0;
   }
+
   .option-container {
     align-items: center;
-    background-color: rgb(var(--primary-color));
-    /* border: solid 2px black; */
+    background-color: rgba(var(--primary-color), 0);
     border: none;
-    /* box-sizing: border-box; */
+    box-sizing: content-box;
     border-radius: var(--button-radius);
-    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4); */
+    color: rgb(var(--text-on-primary-element-color));
     cursor: pointer;
-    font-family: "Inter", sans-serif;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
     justify-content: center;
-    max-width: 200px;
+    /* max-width: 200px; */
+    padding: 0.25em;
     text-align: center;
+    transition: all 0.25s ease-in-out;
   }
+
+  .option-container:hover {
+    background-color: rgb(var(--text-on-primary-element-color));
+  }
+
+  .option-container:hover .start-button-title {
+    color: rgba(var(--primary-color), 1);
+  }
+
   #title {
     font-family: "Kalam", cursive;
     text-align: center;
