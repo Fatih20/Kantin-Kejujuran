@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { initialSortCondition, initialStoreBalance } from "./config";
 import type { ISoldItem, ISoldItemLite, PossibleAppState, SortingCondition } from "./utilities/types";
-import { fetchItemFromLocalStorage } from "./utilities/utilities";
+import { compareFunctionGenerator, fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createStoreBalance () {
     const {subscribe, set, update} = writable(initializeStoreBalance());
@@ -79,6 +79,14 @@ function createSoldItemList () {
         })
     }
 
+    function resort (sortCondition : SortingCondition) {
+        update(previousSoldItemList => {
+            const newSoldItemList = previousSoldItemList.sort(compareFunctionGenerator(sortCondition[0], sortCondition[1]));
+            localStorage.setItem("sortCondition", JSON.stringify(newSoldItemList));
+            return newSoldItemList;
+        })
+    }
+
     
     async function reset () {
         localStorage.removeItem("soldItemList");
@@ -96,6 +104,7 @@ function createSoldItemList () {
         update,
         insert,
         remove,
+        resort,
         removeFromLocalStorage,
     }
 }
@@ -137,3 +146,4 @@ function createSortCondition () {
 export const appState = writable("trade" as PossibleAppState)
 export const soldItemList = createSoldItemList();
 export const storeBalance = createStoreBalance();
+export const sortCondition = createSortCondition();
