@@ -1,7 +1,7 @@
 export function priceDenominator (rawPrice : number) : string {
-    const formatter = new Intl.NumberFormat('en-US', {
+    const formatter = new Intl.NumberFormat('id-ID', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'IDR',
         minimumFractionDigits: 2
       })
     return formatter.format(rawPrice);
