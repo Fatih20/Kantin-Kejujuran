@@ -8,7 +8,7 @@
   let name: string = "";
   let price: number | null | undefined = undefined;
   let description: string = "";
-  let imageFilename: string | null = "";
+  let imageFilename: string | null = null;
   let image: FileList | null = null;
 
   let nameProblem = "empty" as PossibleNameProblem;
@@ -107,7 +107,7 @@
   }
 
   $: {
-    if (imageFilename !== "") {
+    if (imageFilename !== null) {
       imageJustStarted = false;
     } else {
       imageJustStarted = true;
@@ -130,17 +130,25 @@
 
   function reset() {
     name = "";
-    price = null;
+    price = undefined;
     description = "";
+    imageFilename = null;
+    image = null;
 
     nameJustStarted = true;
     priceJustStarted = true;
     descriptionJustStarted = true;
+    imageJustStarted = true;
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const newSoldItem = { name, price, description } as ISoldItemLite;
+    const newSoldItem = {
+      name,
+      price,
+      description,
+      image: image[0],
+    } as ISoldItemLite;
     soldItemList.insert(newSoldItem);
     reset();
   }
