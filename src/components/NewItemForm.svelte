@@ -3,6 +3,7 @@
 
   import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
+  import ButtonTemplate from "./ButtonTemplate.svelte";
 
   let name: string = "";
   let price: number | null = null;

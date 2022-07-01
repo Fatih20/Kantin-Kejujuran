@@ -8,9 +8,9 @@ body {
 body {
   --primary-color: 243, 115, 41;
   --text-on-primary-element-color: 255, 255, 255;
-  --secondary-color: 58, 145, 4;
-  --text-on-secondary-element-color: 255, 255, 255;
-  --secondary-selected-color: 67, 169, 4;
+  --secondary-color: 255, 194, 125;
+  --text-on-secondary-element-color: 0, 0, 0;
+  --secondary-selected-color: 255, 161, 84;
   --text-on-secondary-selected-element-color: 255, 255, 255;
   --button-radius: 7px;
   --button-smaller-radius: 4px;

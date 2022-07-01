@@ -73,6 +73,7 @@ function createSoldItemList () {
 
     function remove (removedSoldItem : ISoldItem) {
         update (previousSoldItemList => {
+            console.log("Is trying to remove")
             const newSoldItemList = previousSoldItemList.filter((soldItem) => JSON.stringify(soldItem) !== JSON.stringify(removedSoldItem)
             );
             localStorage.setItem("soldItemList", JSON.stringify(newSoldItemList));
@@ -101,6 +102,6 @@ function createSoldItemList () {
     }
 }
 
-export const appState = writable("add" as PossibleAppState)
+export const appState = writable("trade" as PossibleAppState)
 export const soldItemList = createSoldItemList();
 export const storeBalance = createStoreBalance();

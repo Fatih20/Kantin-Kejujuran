@@ -1,10 +1,14 @@
 <script lang="ts">
   import { soldItemList, appState } from "../stores";
+  import ButtonTemplate from "./ButtonTemplate.svelte";
   import SoldItem from "./SoldItem.svelte";
 </script>
 
 <main>
-  <div class="absolute-container">
+  <div
+    class="absolute-container"
+    on:click={() => console.log("Is clicking container")}
+  >
     <div class="spacer" />
     <button
       class="add-new-button"
@@ -19,11 +23,7 @@
   {:else}
     <div class="shelf">
       {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
-        <SoldItem
-          name={soldItem.name}
-          price={soldItem.price}
-          description={soldItem.description}
-        />
+        <SoldItem {soldItem} />
       {/each}
     </div>
   {/if}
@@ -65,14 +65,6 @@
     border: solid 1px black;
   }
 
-  .absolute-container-active {
-    background-color: rgba(0, 0, 0, 0.5);
-    /* display: flex; */
-    /* opacity: 1; */
-    pointer-events: auto;
-    /* visibility: visible; */
-  }
-
   .empty-text {
     color: rgba(var(--primary-color), 0.75);
   }
@@ -97,10 +89,12 @@
   }
 
   .shelf {
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 10px;
     flex-grow: 1;
+    padding: 0.5em;
     width: 100%;
   }
 </style>
