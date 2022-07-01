@@ -4,12 +4,20 @@
   import Footer from "./Footer.svelte";
   import { appState } from "../stores";
   import NewItemForm from "./NewItemForm.svelte";
+
+  let formKey = {};
+
+  function resetForm() {
+    formKey = {};
+  }
 </script>
 
 <main>
   <Header />
   {#if $appState === "add"}
-    <NewItemForm />
+    {#key formKey}
+      <NewItemForm on:reset={resetForm} />
+    {/key}
   {:else if $appState === "trade"}
     <Shelf />
   {/if}

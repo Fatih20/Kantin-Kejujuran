@@ -1,9 +1,12 @@
 <script lang="ts">
   import { maxDescriptionLength, maxNameLength } from "../config";
 
+  import { createEventDispatcher } from "svelte";
   import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
   import { validImageChecker } from "../utilities/utilities";
+
+  let dispatch = createEventDispatcher();
 
   let name: string = "";
   let price: number | null | undefined = undefined;
@@ -129,16 +132,7 @@
   // let imageLink : string;
 
   function reset() {
-    name = "";
-    price = undefined;
-    description = "";
-    imageFilename = null;
-    image = null;
-
-    nameJustStarted = true;
-    priceJustStarted = true;
-    descriptionJustStarted = true;
-    imageJustStarted = true;
+    dispatch("reset");
   }
 
   function handleSubmit(e) {
