@@ -36,7 +36,7 @@
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     position: relative;
     width: 100%;
 
