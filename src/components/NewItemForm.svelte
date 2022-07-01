@@ -162,127 +162,151 @@
 </head>
 
 <main on:click={(e) => e.stopPropagation()}>
-  <h2>Adding New Item</h2>
-  <form on:submit={handleSubmit}>
-    <div class="input-element">
-      <label for="image-input">Item Image (JPG or PNG)</label>
-      <div class="input-container">
-        <input
-          id="image-input"
-          name="image-input"
-          type="file"
-          accept="image/png, image/jpeg"
-          bind:value={imageFilename}
-          bind:files={image}
-        />
-        <p
-          class="input-warning"
-          class:input-not-valid-warning={!imageValid && !imageJustStarted}
-        >
-          {imageWarningText}
-        </p>
+  <div class="form-container">
+    <h2 class="title">What's the item?</h2>
+    <form on:submit={handleSubmit}>
+      <div class="input-element">
+        <label for="image-input">Any photo of it? (JPG or PNG)</label>
+        <div class="input-container">
+          <input
+            id="image-input"
+            name="image-input"
+            type="file"
+            accept="image/png, image/jpeg"
+            bind:value={imageFilename}
+            bind:files={image}
+          />
+          <p
+            class="input-warning"
+            class:input-not-valid-warning={!imageValid && !imageJustStarted}
+          >
+            {imageWarningText}
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="input-element">
-      <label for="name-input"
-        >Item Name ({`${name.length} / ${maxNameLength}`})</label
-      >
-      <div class="input-container">
-        <input id="name-input" name="name-input" bind:value={name} />
-        <p
-          class="input-warning"
-          class:input-not-valid-warning={!nameValid && !nameJustStarted}
+      <div class="input-element">
+        <label for="name-input"
+          >What's its name? ({`${name.length} / ${maxNameLength}`})</label
         >
-          {nameWarningText}
-        </p>
+        <div class="input-container">
+          <input id="name-input" name="name-input" bind:value={name} />
+          <p
+            class="input-warning"
+            class:input-not-valid-warning={!nameValid && !nameJustStarted}
+          >
+            {nameWarningText}
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="input-element">
-      <label for="price-input">Item Price</label>
-      <div class="input-container">
-        <input
-          id="price-input"
-          name="price-input"
-          type="number"
-          min="0"
-          bind:value={price}
-        />
-        <p
-          class="input-warning"
-          class:input-not-valid-warning={!priceValid && !priceJustStarted}
+      <div class="input-element">
+        <label for="price-input">What is it worth? (Rp)</label>
+        <div class="input-container">
+          <input
+            id="price-input"
+            name="price-input"
+            type="number"
+            min="0"
+            bind:value={price}
+          />
+          <p
+            class="input-warning"
+            class:input-not-valid-warning={!priceValid && !priceJustStarted}
+          >
+            {priceWarningText}
+          </p>
+        </div>
+      </div>
+      <div class="input-element">
+        <label for="description-input"
+          >Describe it ({`${description.length} / ${maxDescriptionLength}`})</label
         >
-          {priceWarningText}
-        </p>
+        <div class="input-container">
+          <textarea
+            id="description-input"
+            name="description"
+            type="text"
+            min="0"
+            bind:value={description}
+            rows="5"
+            cols="20"
+          />
+          <p
+            class="input-warning"
+            class:input-not-valid-warning={!descriptionValid &&
+              !descriptionJustStarted}
+          >
+            {descriptionWarningText}
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="input-element">
-      <label for="description-input"
-        >Item Description ({`${description.length} / ${maxDescriptionLength}`})</label
-      >
-      <div class="input-container">
-        <textarea
-          id="description-input"
-          name="description"
-          type="text"
-          min="0"
-          bind:value={description}
-          rows="5"
-          cols="20"
-        />
-        <p
-          class="input-warning"
-          class:input-not-valid-warning={!descriptionValid &&
-            !descriptionJustStarted}
+      <div class="button-container">
+        <button
+          class="return-button"
+          type="submit"
+          on:click={() => appState.set("trade")}
         >
-          {descriptionWarningText}
-        </p>
+          Back
+        </button>
+        <div class="spacer" />
+        <button
+          class="submit-button"
+          type="submit"
+          class:submit-button-disabled={!dataValid}
+          disabled={!dataValid}
+        >
+          Sell
+        </button>
       </div>
-    </div>
-    <div class="button-container">
-      <button
-        class="return-button"
-        type="submit"
-        on:click={() => appState.set("trade")}
-      >
-        <i class="fa-solid fa-arrow-left" />
-      </button>
-      <div class="spacer" />
-      <button
-        class="submit-button"
-        type="submit"
-        class:submit-button-disabled={!dataValid}
-        disabled={!dataValid}
-      >
-        <i class="fa-solid fa-plus" />
-      </button>
-    </div>
-  </form>
+    </form>
+  </div>
 </main>
 
 <style>
   main {
     align-items: center;
-    background-color: rgb(var(--text-on-primary-element-color));
+    background-color: rgba(0, 0, 0, 0);
     box-sizing: border-box;
     /* border: solid 2px white; */
     color: rgb(var(--primary-color));
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: 0.5em;
-    justify-content: flex-start;
+    justify-content: center;
     padding: 0.5em 1em;
     width: 100%;
 
     /* border: solid 1px black; */
   }
 
+  .form-container {
+    align-items: center;
+    background-color: rgb(var(--primary-color));
+    box-sizing: border-box;
+    border-radius: var(--button-radius);
+    color: rgb(var(--text-on-primary-element-color));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1em;
+    /* width: 100%; */
+  }
+
+  .title {
+    border-bottom: solid 2px rgb(var(--text-on-primary-element-color));
+    display: inline-block;
+    text-align: center;
+    padding-bottom: 0.25em;
+    width: 100%;
+    /* border: solid 1px black; */
+  }
+
   form {
+    padding-top: 0.75em;
     align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5em;
+    gap: 1em;
   }
 
   .input-element {
@@ -290,23 +314,28 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5em;
+    gap: 0.175em;
     padding: 0;
     width: 100%;
   }
   label {
-    font-weight: 600;
+    font-weight: 400;
+    margin: 0;
   }
 
-  .input-container,
-  .input-container,
   .input-container {
     align-content: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.25em;
+    gap: 0.5em;
     width: 100%;
+  }
+
+  input,
+  textarea {
+    border-radius: var(--button-radius);
+    outline-color: rgb(var(--primary-color));
   }
 
   input {
@@ -315,15 +344,20 @@
   }
   .input-warning {
     display: none;
-    color: rgb(var(--warning-color-bg));
+    background-color: rgb(var(--warning-color-bg));
+    box-sizing: border-box;
+    border-radius: var(--button-radius);
+    color: rgb(var(--warning-color-fg));
     font-weight: 500;
+    padding: 3px 6px;
   }
   .input-not-valid-warning {
-    display: inline;
+    display: inline-block;
   }
 
   textarea {
     resize: vertical;
+    margin: 0;
     max-width: 100%;
     width: 100%;
   }
@@ -335,7 +369,7 @@
   }
 
   button {
-    background-color: rgb(var(--primary-color));
+    background-color: rgba(var(--primary-color), 0);
     border-radius: var(--button-smaller-radius);
     border: none;
     color: rgb(var(--text-on-primary-element-color));
@@ -350,9 +384,21 @@
   .spacer {
     flex-grow: 1;
   }
+
+  button:hover {
+    background-color: rgb(var(--text-on-primary-element-color));
+    color: rgb(var(--primary-color));
+  }
+
   .submit-button-disabled {
     --border-color: var(--disabled-color);
-    background-color: rgb(var(--disabled-color));
-    color: rgb(var(--text-on-disabled-element-color));
+    /* background-color: rgb(var(--disabled-color)); */
+    color: rgba(var(--text-on-disabled-element-color), 0.5);
+    cursor: initial;
+  }
+
+  .submit-button-disabled:hover {
+    background-color: rgba(var(--primary-color), 0);
+    color: rgba(var(--text-on-disabled-element-color), 0.5);
   }
 </style>
