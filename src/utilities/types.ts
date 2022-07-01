@@ -25,5 +25,14 @@ export interface ISoldItem extends ISoldItemLite {
 const possibleNameProblemList = ["none", "long", "empty"] as const;
 export type PossibleNameProblem = typeof possibleNameProblemList[number];
 
+// const possibleSortBy = ["date", "price"] as const;
+// const possibleSortOrder = ["ascending", "descending"] as const;
+
+// type SortBy = typeof possibleSortBy[number];
+// type SortOrder = typeof possibleSortOrder[number];
+
+export type SortingCondition = [boolean, boolean];
+// The first is whether to sort by date. The second is whether to sort in ascending order
+
 
 

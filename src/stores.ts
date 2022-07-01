@@ -1,14 +1,13 @@
 import { writable } from "svelte/store";
-import { initialStoreBalance } from "./config";
-import type { ISoldItem, ISoldItemLite, PossibleAppState } from "./utilities/types";
+import { initialSortCondition, initialStoreBalance } from "./config";
+import type { ISoldItem, ISoldItemLite, PossibleAppState, SortingCondition } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createStoreBalance () {
     const {subscribe, set, update} = writable(initializeStoreBalance());
 
     function initializeStoreBalance() {
-    const candidateStoreBalance = fetchItemFromLocalStorage("storeBalance");
-    const newInitialStoreBalance = (candidateStoreBalance ?? initialStoreBalance) as number;
+    const newInitialStoreBalance = (fetchItemFromLocalStorage("storeBalance") ?? initialStoreBalance) as number;
     localStorage.setItem("storeBalance", JSON.stringify(newInitialStoreBalance))
     return newInitialStoreBalance;
     }
@@ -54,8 +53,7 @@ function createSoldItemList () {
     const {subscribe, set, update} = writable(initializeSoldItemList());
 
     function initializeSoldItemList() {
-        const candidateSoldItemList = fetchItemFromLocalStorage("soldItemList");
-        const newInitialSoldItemList = (candidateSoldItemList ?? []) as ISoldItem[];
+        const newInitialSoldItemList = (fetchItemFromLocalStorage("soldItemList") ?? []) as ISoldItem[];
         localStorage.setItem("soldItemList", JSON.stringify(newInitialSoldItemList))
         return newInitialSoldItemList;
         }
@@ -100,6 +98,40 @@ function createSoldItemList () {
         remove,
         removeFromLocalStorage,
     }
+}
+
+function createSortCondition () {
+    const {subscribe, set, update } = writable(initializeSortCondition());
+
+    function initializeSortCondition() {
+        const newSortCondition = (fetchItemFromLocalStorage("sortCondition") ?? initialSortCondition) as SortingCondition;
+        localStorage.setItem("sortCondition", JSON.stringify(newSortCondition));
+        return newSortCondition;
+    }
+
+    function alternateSortBy () {
+        update(previousSortCondition => {
+            previousSortCondition[0] = !previousSortCondition[0]
+            return previousSortCondition
+        })
+    }
+
+    function alternateSortOrder () {
+        update(previousSortCondition => {
+            previousSortCondition[1] = !previousSortCondition[1]
+            return previousSortCondition
+        })
+
+    }
+
+    return {
+        set,
+        update,
+        alternateSortBy,
+        alternateSortOrder
+    }
+
+
 }
 
 export const appState = writable("trade" as PossibleAppState)
