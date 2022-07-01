@@ -76,11 +76,15 @@
       <button class="money-button" on:click={() => (footerState = "take")}>
         <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
       </button>
+      <!-- <div class="spacer" /> -->
 
       <div class="money-container">
-        <i class="fa-solid fa-money-bill-wave money-icon" />
-        <p class="store-balance">{priceDenominator($storeBalance)}</p>
+        <div class="money-container-second">
+          <i class="fa-solid fa-money-bill-wave money-icon" />
+          <p class="store-balance">{priceDenominator($storeBalance)}</p>
+        </div>
       </div>
+      <!-- <div class="spacer" /> -->
       <button class="money-button" on:click={() => (footerState = "give")}>
         <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
       </button>
@@ -154,16 +158,30 @@
     max-width: 300px;
   }
 
+  .spacer {
+    flex-grow: 1;
+  }
+
   .money-container {
     align-items: center;
     display: flex;
     flex-grow: 1;
     gap: 0.5em;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-x: auto;
     height: 100%;
 
     /* border: solid 1px black; */
+  }
+
+  .money-container-second {
+    align-items: center;
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    flex-grow: 1;
+    /* overflow-x: auto; */
+    height: 100%;
   }
 
   .store-balance {
