@@ -131,6 +131,7 @@
     align-items: center;
     align-self: flex-start;
     background-color: rgb(var(--primary-color));
+    border-top: solid 2px rgb(var(--primary-border-color));
     bottom: 0;
     box-sizing: border-box;
     color: rgb(var(--text-on-primary-element-color));

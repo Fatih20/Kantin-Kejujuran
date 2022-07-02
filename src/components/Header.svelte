@@ -44,6 +44,7 @@
     align-self: flex-start;
     background-color: rgb(var(--primary-color));
     box-sizing: border-box;
+    border-bottom: solid 2px rgb(var(--primary-border-color));
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
     height: 50px;
@@ -51,7 +52,7 @@
     padding: 0 0.5em;
     width: 100%;
 
-    /* border: solid 1px black; */
+    /* border: solid 1px white; */
   }
 
   .header-in-add {
