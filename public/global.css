@@ -8,7 +8,7 @@ body {
 body {
   --primary-color: 72, 90, 108;
   --text-on-primary-element-color: 255, 255, 255;
-  --secondary-color: 255, 194, 125;
+  --secondary-color: 212 212 212;
   --text-on-secondary-element-color: 0, 0, 0;
   --secondary-selected-color: 255, 161, 84;
   --text-on-secondary-selected-element-color: 255, 255, 255;
@@ -16,7 +16,7 @@ body {
   --button-smaller-radius: 4px;
   --secondary-active-color: 255, 255, 255;
   --text-on-secondary-active-element-color: 0, 0, 0;
-  --primary-border-color: 32, 107, 0;
+  --primary-border-color: 14 20 31;
   --warning-color-bg: 237 83 83;
   --warning-color-fg: 122 0 0;
   --disabled-color: 126 128 135;
