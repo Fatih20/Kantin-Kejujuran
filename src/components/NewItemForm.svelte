@@ -71,7 +71,7 @@
     } else if (nameProblem === "empty") {
       nameWarningText = "Please enter a name";
     } else if (nameProblem === "long") {
-      nameWarningText = "Description entered is too long";
+      nameWarningText = "Name entered is too long";
     }
   }
 
@@ -81,7 +81,7 @@
     } else if (descriptionProblem === "empty") {
       descriptionWarningText = "Please enter a description";
     } else if (descriptionProblem === "long") {
-      descriptionWarningText = "Name entered is too long";
+      descriptionWarningText = "Description entered is too long";
     }
   }
 
