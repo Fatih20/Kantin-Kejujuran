@@ -5,13 +5,15 @@
     successTextDuration,
   } from "../config";
 
+  import { fade } from "svelte/transition";
+
   import { appState, soldItemList } from "../stores";
   import { uploadImage } from "../utilities/photosAPI";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
   import { validImageChecker } from "../utilities/utilities";
 
-  let showingSuccessText = false;
-  let showingFailedText = false;
+  let showingResultText = false;
+  let justFailed = false;
 
   let isSubmitting = false;
 
@@ -159,6 +161,8 @@
     e.preventDefault();
     console.log("Is submitting");
     const { isError, retrievedData } = await uploadImage(imageList[0]);
+    showingResultText = true;
+    isSubmitting = false;
     if (!isError) {
       const { url: imageLink } = retrievedData;
       const newSoldItem = {
@@ -168,18 +172,14 @@
         imageLink,
       } as ISoldItemLite;
       soldItemList.insert(newSoldItem);
-      showingSuccessText = true;
-      isSubmitting = false;
+      justFailed = false;
       reset();
-      setTimeout(() => {
-        showingSuccessText = false;
-      }, successTextDuration);
     } else {
-      showingFailedText = true;
-      setTimeout(() => {
-        showingFailedText = false;
-      }, successTextDuration);
+      justFailed = true;
     }
+    setTimeout(() => {
+      showingResultText = false;
+    }, successTextDuration);
   }
 </script>
 
@@ -292,10 +292,19 @@
         >
           Back
         </button>
-        <p class="success-text" class:success-text-shown={showingSuccessText}>
-          Item succesfully added
-        </p>
-        <!-- <div class="spacer" /> -->
+        {#if showingResultText}
+          {#if justFailed}
+            <p class="result-text fail-text" transition:fade>
+              Adding new item failed. Try again.
+            </p>
+          {:else}
+            <p class="result-text success-text" transition:fade>
+              Item succesfully added.
+            </p>
+          {/if}
+        {:else}
+          <div class="spacer" />
+        {/if}
         <button
           class="submit-button"
           type="submit"
@@ -451,20 +460,23 @@
     color: rgba(var(--text-on-disabled-element-color), 0.5);
   }
 
-  .success-text {
-    background-color: rgb(var(--success-color-bg));
+  .result-text {
     border-radius: var(--button-radius);
-    color: rgb(var(--success-color-fg));
     display: inline-block;
     font-weight: 500;
     flex-grow: 1;
-    opacity: 0;
-    padding: 3px 6px;
     transition: opacity 0.25s ease-in-out;
     text-align: center;
+    padding: 3px 6px;
   }
 
-  .success-text-shown {
-    opacity: 1;
+  .success-text {
+    background-color: rgb(var(--success-color-bg));
+    color: rgb(var(--success-color-fg));
+  }
+
+  .fail-text {
+    background-color: rgb(var(--warning-color-bg));
+    color: rgb(var(--warning-color-fg));
   }
 </style>
