@@ -5,6 +5,18 @@
     PossibleInputProblem,
   } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
+  import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+  } from "@sveltestack/svelte-query";
+  import { getBalance } from "../utilities/storeAPI";
+  import { onMount } from "svelte";
+  import type { AxiosError } from "axios";
+
+  const queryClient = useQueryClient();
+
+  const balanceQuery = useQuery<number, AxiosError>("balance", getBalance);
 
   let footerState = "default" as PossibleFooterState;
   let inputtedNumber: number | undefined = undefined;
@@ -81,7 +93,9 @@
       <div class="money-container">
         <div class="money-container-second">
           <i class="fa-solid fa-money-bill-wave money-icon" />
-          <p class="store-balance">{priceDenominator($storeBalance)}</p>
+          {#if $balanceQuery.status === "success"}
+            <p class="store-balance">{priceDenominator($balanceQuery.data)}</p>
+          {/if}
         </div>
       </div>
       <!-- <div class="spacer" /> -->

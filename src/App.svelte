@@ -4,20 +4,25 @@
   import { appState, soldItemList } from "./stores";
   import { onMount } from "svelte";
   import { getBalance, incrementBalance } from "./utilities/storeAPI";
+  import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
+
+  const queryClient = new QueryClient();
 
   onMount(async () => {
-    await incrementBalance(500);
+    // await incrementBalance(500);
     console.log(await getBalance());
   });
 </script>
 
-<main>
-  {#if $appState === "startPage"}
-    <StartPage />
-  {:else if $appState === "trade" || $appState === "add"}
-    <Store />
-  {/if}
-</main>
+<QueryClientProvider client={queryClient}>
+  <main>
+    {#if $appState === "startPage"}
+      <StartPage />
+    {:else if $appState === "trade" || $appState === "add"}
+      <Store />
+    {/if}
+  </main>
+</QueryClientProvider>
 
 <style>
   main {

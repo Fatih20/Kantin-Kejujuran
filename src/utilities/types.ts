@@ -44,3 +44,9 @@ export type ShelfState = typeof possibleShelfState[number];
 
 const possibleAPIMethodList = ["post", "put", "get", "patch", "delete"] as const;
 export type PossibleAPIMethodType = typeof possibleAPIMethodList[number];
+
+export type IAPIReturn<T> = {
+    error : any,
+    message : string,
+    response : T,
+}

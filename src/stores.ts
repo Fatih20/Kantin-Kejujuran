@@ -81,9 +81,7 @@ function createSoldItemList () {
 
     function resort (sortCondition : SortingCondition) {
         update(previousSoldItemList => {
-            console.log(previousSoldItemList);
             previousSoldItemList.sort(compareFunctionGenerator(sortCondition[0], sortCondition[1]));
-            console.log(previousSoldItemList);
             localStorage.setItem("soldItemList", JSON.stringify(previousSoldItemList));
             return previousSoldItemList;
         })
@@ -148,7 +146,7 @@ function createSortCondition () {
 
 }
 
-export const appState = writable("add" as PossibleAppState)
+export const appState = writable("trade" as PossibleAppState)
 export const soldItemList = createSoldItemList();
 export const storeBalance = createStoreBalance();
 export const sortCondition = createSortCondition();

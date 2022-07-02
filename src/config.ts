@@ -1,9 +1,10 @@
+export const shootToProduction = true;
 export const initialStoreBalance = 100000;
 export const maxNameLength = 40;
 export const maxDescriptionLength = 100;
 export const initialSortCondition = [true, true];
 export const validImageExtensionList = ["png", "jpg", "gif", "jpeg"] as const;
-export const backendAddress = "https://honest-canteen-backend.herokuapp.com";
+export const backendAddress = shootToProduction ? "https://honest-canteen-backend.herokuapp.com" : "localhost:3000";
 export const successTextDuration = 500;
 export const callLimit = 5;
 export const CLOUDINARY = {
