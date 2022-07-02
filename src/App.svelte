@@ -3,16 +3,8 @@
   import Store from "./components/Store.svelte";
   import { appState } from "./stores";
   import { onMount } from "svelte";
-  import { backendAddress } from "./config";
 
-  onMount(async () => {
-    try {
-      const response = await fetch(`${backendAddress}/test`);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  onMount(async () => {});
 </script>
 
 <main>

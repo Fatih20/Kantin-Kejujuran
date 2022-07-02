@@ -42,3 +42,6 @@ export type SortingCondition = [boolean, boolean];
 
 const possibleShelfState = ["all", "one"] as const;
 export type ShelfState = typeof possibleShelfState[number];
+
+const possibleAPIMethodList = ["post", "put", "get", "patch", "delete"] as const;
+export type PossibleAPIMethodType = typeof possibleAPIMethodList[number];

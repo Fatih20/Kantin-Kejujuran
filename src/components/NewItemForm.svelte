@@ -6,10 +6,12 @@
   } from "../config";
 
   import { appState, soldItemList } from "../stores";
+  import { uploadImage } from "../utilities/imgurAPI";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
   import { validImageChecker } from "../utilities/utilities";
 
   let showingSuccessText = false;
+  let isSubmitting = false;
 
   let imageInputKey = {};
 
@@ -150,8 +152,11 @@
     imageJustStarted = true;
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
+    isSubmitting = true;
     e.preventDefault();
+    // const formdata = new FormData();
+    // formdata.append("image", image[0]);
     console.log("Is submitting");
     const newSoldItem = {
       name,
@@ -160,7 +165,10 @@
       // image: image[0],
     } as ISoldItemLite;
     soldItemList.insert(newSoldItem);
+    const response = await uploadImage(image[0]);
+    console.log(response);
     showingSuccessText = true;
+    isSubmitting = false;
     reset();
     setTimeout(() => {
       showingSuccessText = false;
@@ -196,6 +204,7 @@
               accept="image/png, image/jpeg"
               bind:value={imageFilename}
               bind:files={image}
+              disabled={isSubmitting}
             />
           {/key}
           <p
@@ -211,7 +220,12 @@
           >What's its name? ({`${name.length} / ${maxNameLength}`})</label
         >
         <div class="input-container">
-          <input id="name-input" name="name-input" bind:value={name} />
+          <input
+            id="name-input"
+            name="name-input"
+            bind:value={name}
+            disabled={isSubmitting}
+          />
           <p
             class="input-warning"
             class:input-not-valid-warning={!nameValid && !nameJustStarted}
@@ -229,6 +243,7 @@
             type="number"
             min="0"
             bind:value={price}
+            disabled={isSubmitting}
           />
           <p
             class="input-warning"
@@ -251,6 +266,7 @@
             bind:value={description}
             rows="5"
             cols="20"
+            disabled={isSubmitting}
           />
           <p
             class="input-warning"
