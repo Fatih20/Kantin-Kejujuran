@@ -143,7 +143,7 @@
     left: 0;
     /* opacity: 0; */
     right: 0;
-    position: absolute;
+    position: fixed;
     padding: var(--padding-of-shelf-main);
     top: 0;
     /* height: 100%; */
