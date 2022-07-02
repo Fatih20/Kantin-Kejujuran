@@ -91,9 +91,11 @@
   .image-container {
     align-items: center;
     background-color: rgb(0, 0, 0);
+    border-radius: var(--button-radius);
     display: flex;
     grid-row: 1 / 4;
     justify-content: center;
+    overflow: hidden;
     min-height: 0;
     min-width: 0;
     height: 100%;
