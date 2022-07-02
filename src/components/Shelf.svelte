@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import { soldItemList, appState, sortCondition } from "../stores";
   import type {
     ISoldItem,
@@ -7,6 +9,10 @@
   } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
+
+  onMount(() => {
+    soldItemList.resort($sortCondition);
+  });
 
   let shelfState = "all" as ShelfState;
   let seenItem: ISoldItem;
