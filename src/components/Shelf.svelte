@@ -129,7 +129,7 @@
     padding: var(--padding-of-shelf-main);
     width: min(100%, 1000px);
 
-    border: solid 1px black;
+    /* border: solid 1px black; */
   }
 
   .absolute-container {
