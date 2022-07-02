@@ -21,6 +21,7 @@
   $: seenPrice = seenItem?.price;
   $: seenDescription = seenItem?.description;
   $: seenDate = seenItem?.dateCreated;
+  $: seenImageLink = seenItem?.imageLink;
 
   function overallSortingTextGenerator(sortCondition: SortingCondition) {
     if (sortCondition[0]) {
@@ -72,7 +73,7 @@
       <!-- <div class="spacer" /> -->
       <div class="seen-item-container" on:click={(e) => e.stopPropagation()}>
         <div class="seen-image-container">
-          <img class="seen-image" src="placeholder3.png" alt="Product chosen" />
+          <img class="seen-image" src={seenImageLink} alt="Product chosen" />
         </div>
         <div class="main-seen-item-container">
           <div class="title-part-container">

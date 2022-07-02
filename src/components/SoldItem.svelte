@@ -4,7 +4,7 @@
   import { priceDenominator } from "../utilities/utilities";
   import { createEventDispatcher } from "svelte";
   export let soldItem: ISoldItem;
-  const { name, price } = soldItem;
+  const { name, price, imageLink } = soldItem;
 
   const dispatch = createEventDispatcher();
 
@@ -17,11 +17,7 @@
 
 <main>
   <div class="image-container">
-    <img
-      src={Math.random() >= 0.5 ? "placeholder3.png" : "placeholder2.png"}
-      alt="product"
-      class="image"
-    />
+    <img src={imageLink} alt="product" class="image" />
   </div>
   <div class="text-container">
     <p class="title">{name}</p>

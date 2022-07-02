@@ -13,10 +13,9 @@ export type PossibleInputProblem = typeof possibleInputProblemList[number];
 
 export interface ISoldItemLite {
     name : string,
-    imageLink : File,
+    imageLink : string,
     description : string,
     price : number,
-
 }
 
 export interface ISoldItem extends ISoldItemLite {
