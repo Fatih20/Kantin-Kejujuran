@@ -6,11 +6,13 @@
   } from "../config";
 
   import { appState, soldItemList } from "../stores";
-  import { uploadImage } from "../utilities/imgurAPI";
+  import { uploadImage } from "../utilities/photosAPI";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
   import { validImageChecker } from "../utilities/utilities";
 
   let showingSuccessText = false;
+  let showingFailedText = false;
+
   let isSubmitting = false;
 
   let imageInputKey = {};
@@ -19,7 +21,7 @@
   let price: number | null | undefined = undefined;
   let description: string = "";
   let imageFilename: string | null = null;
-  let image: FileList | null = null;
+  let imageList: FileList | null = null;
 
   let nameProblem = "empty" as PossibleNameProblem;
   let descriptionProblem = "empty" as PossibleNameProblem;
@@ -112,7 +114,7 @@
     if (!imageValid) {
       imageWarningText = "Not an acceptable image";
     } else {
-      image;
+      imageWarningText = "";
     }
   }
 
@@ -135,7 +137,7 @@
   $: nameValid = nameProblem === "none";
   $: priceValid = price > 0 && price !== null;
   $: descriptionValid = descriptionProblem === "none";
-  $: imageValid = validImageChecker(imageFilename) && image !== null;
+  $: imageValid = validImageChecker(imageFilename) && imageList !== null;
   // let imageLink : string;
 
   function reset() {
@@ -144,7 +146,7 @@
     price = undefined;
     description = "";
     imageFilename = null;
-    image = null;
+    imageList = null;
 
     nameJustStarted = true;
     priceJustStarted = true;
@@ -155,24 +157,29 @@
   async function handleSubmit(e) {
     isSubmitting = true;
     e.preventDefault();
-    // const formdata = new FormData();
-    // formdata.append("image", image[0]);
     console.log("Is submitting");
-    const newSoldItem = {
-      name,
-      price,
-      description,
-      // image: image[0],
-    } as ISoldItemLite;
-    soldItemList.insert(newSoldItem);
-    const response = await uploadImage(image[0]);
-    console.log(response);
-    showingSuccessText = true;
-    isSubmitting = false;
-    reset();
-    setTimeout(() => {
-      showingSuccessText = false;
-    }, successTextDuration);
+    const { isError, retrievedData } = await uploadImage(imageList[0]);
+    if (!isError) {
+      const { url: imageLink } = retrievedData;
+      const newSoldItem = {
+        name,
+        price,
+        description,
+        imageLink,
+      } as ISoldItemLite;
+      soldItemList.insert(newSoldItem);
+      showingSuccessText = true;
+      isSubmitting = false;
+      reset();
+      setTimeout(() => {
+        showingSuccessText = false;
+      }, successTextDuration);
+    } else {
+      showingFailedText = true;
+      setTimeout(() => {
+        showingFailedText = false;
+      }, successTextDuration);
+    }
   }
 </script>
 
@@ -203,7 +210,7 @@
               type="file"
               accept="image/png, image/jpeg"
               bind:value={imageFilename}
-              bind:files={image}
+              bind:files={imageList}
               disabled={isSubmitting}
             />
           {/key}
