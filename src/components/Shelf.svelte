@@ -3,15 +3,18 @@
   import type { SortingCondition } from "../utilities/types";
   import SoldItem from "./SoldItem.svelte";
 
-  function secondSortingTextGenerator(sortCondition: SortingCondition) {
+  function overallSortingTextGenerator(sortCondition: SortingCondition) {
     if (sortCondition[0]) {
-      return sortCondition[1] ? "from oldest" : "from newest";
+      return sortCondition[1] ? "From oldest" : "From newest";
     } else {
-      return sortCondition[1] ? "ascending" : "descending";
+      return sortCondition[1]
+        ? "Alphabetical order"
+        : "Reverse alphabetical order";
     }
   }
-  $: firstSortingText = $sortCondition[0] ? "date" : "name";
-  $: secondSortingText = secondSortingTextGenerator($sortCondition);
+  $: firstSortingText = $sortCondition[0] ? "Date" : "Name";
+  $: secondSortingText = $sortCondition[1] ? "Ascending" : "Descending";
+  $: overallSortingText = overallSortingTextGenerator($sortCondition);
 
   function handleSortChanges(isOrder: boolean) {
     if (isOrder) {
@@ -42,13 +45,16 @@
     <h2 class="empty-text">No items are currently sold</h2>
   {:else}
     <div class="sort-container">
-      <p class="sort-text">
-        Sorted by <span on:click={() => handleSortChanges(false)}
-          >{firstSortingText}</span
-        >,
-        <span on:click={() => handleSortChanges(true)}>{secondSortingText}</span
+      <p class="sort-text">Sort Method: <span>{overallSortingText}</span></p>
+      <div class="spacer" />
+      <div class="sort-button-container">
+        <button class="sort-button" on:click={() => handleSortChanges(true)}
+          >{secondSortingText}</button
         >
-      </p>
+        <button class="sort-button" on:click={() => handleSortChanges(false)}
+          >{firstSortingText}</button
+        >
+      </div>
     </div>
     <div class="shelf">
       {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
@@ -61,12 +67,15 @@
 <style>
   main {
     align-items: center;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     flex-grow: 1;
+    gap: 0.5em;
     overflow-y: auto;
     position: relative;
+    padding: 0.5em;
     width: 100%;
 
     /* border: solid 1px black; */
@@ -125,16 +134,52 @@
     /* grid-template-rows: repeat(auto-fit, 150px); */
     gap: 10px;
     /* flex-grow: 1; */
-    padding: 0.5em;
+    /* padding: 0.5em; */
     width: 100%;
   }
 
+  .sort-container {
+    align-items: center;
+    display: flex;
+    /* flex-direction: column; */
+    gap: 0.5em;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .sort-text,
+  .sort-button {
+    font-weight: 500;
+  }
+
   .sort-text {
+    /* line-height: 2; */
     user-select: none;
+    /* text-align: center; */
   }
 
   .sort-text span {
-    text-decoration: underline black dashed;
+    font-weight: 400;
+  }
+
+  .sort-button-container {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+    text-align: left;
+    justify-content: flex-end;
+
+    /* border: solid 1px white; */
+  }
+
+  .sort-button {
+    background-color: rgb(var(--text-on-primary-element-color));
+    /* box-sizing: border-box; */
+    color: rgb(var(--primary-color));
+    border-radius: var(--button-radius);
     cursor: pointer;
+    margin: 0;
+    padding: 0.2em;
   }
 </style>
