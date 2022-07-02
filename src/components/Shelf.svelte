@@ -72,11 +72,11 @@
     flex-direction: column;
     justify-content: flex-start;
     flex-grow: 1;
-    gap: 0.5em;
+    gap: 0.75em;
     overflow-y: auto;
     position: relative;
-    padding: 0.5em;
-    width: 100%;
+    padding: 0.75em;
+    width: min(100%, 1000px);
 
     /* border: solid 1px black; */
   }
@@ -127,12 +127,16 @@
   }
 
   .shelf {
-    --gap-size: 10px;
+    --gap-size: 0.75em;
+    --minimum-item-width: 200px;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: repeat(auto-fill, repeat(3, 33%));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--minimum-item-width), 1fr)
+    );
     /* grid-template-rows: repeat(auto-fit, 150px); */
-    gap: 10px;
+    gap: var(--gap-size);
     /* flex-grow: 1; */
     /* padding: 0.5em; */
     width: 100%;
