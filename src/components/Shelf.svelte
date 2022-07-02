@@ -1,7 +1,20 @@
 <script lang="ts">
   import { soldItemList, appState, sortCondition } from "../stores";
-  import type { SortingCondition } from "../utilities/types";
+  import type {
+    ISoldItem,
+    ShelfState,
+    SortingCondition,
+  } from "../utilities/types";
+  import { priceDenominator } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
+
+  let shelfState = "all" as ShelfState;
+  let seenItem: ISoldItem;
+
+  $: seenName = seenItem?.name;
+  $: seenPrice = seenItem?.price;
+  $: seenDescription = seenItem?.description;
+  $: seenDate = seenItem?.dateCreated;
 
   function overallSortingTextGenerator(sortCondition: SortingCondition) {
     if (sortCondition[0]) {
@@ -16,6 +29,26 @@
   $: secondSortingText = $sortCondition[1] ? "Ascending" : "Descending";
   $: overallSortingText = overallSortingTextGenerator($sortCondition);
 
+  function seeItem(e: CustomEvent) {
+    shelfState = "one";
+    const { detail } = e;
+    const { soldItem }: { soldItem: ISoldItem } = detail as {
+      soldItem: ISoldItem;
+    };
+
+    seenItem = soldItem;
+  }
+
+  function handleBuySeenItem() {
+    soldItemList.remove(seenItem);
+    handleCloseSeeItem();
+  }
+
+  function handleCloseSeeItem() {
+    shelfState = "all";
+    seenItem = {} as ISoldItem;
+  }
+
   function handleSortChanges(isOrder: boolean) {
     if (isOrder) {
       sortCondition.alternateSortOrder();
@@ -28,21 +61,38 @@
 </script>
 
 <main>
-  <!-- <div
-    class="absolute-container"
-    on:click={() => console.log("Is clicking container")}
-  >
-    <div class="spacer" />
-    <button
-      class="add-new-button"
-      on:click={(e) => {
-        appState.set("add");
-        e.stopPropagation();
-      }}>Add new Item</button
-    >
-  </div> -->
+  {#if shelfState === "one"}
+    <div class="absolute-container" on:click={handleCloseSeeItem}>
+      <!-- <div class="spacer" /> -->
+      <div class="seen-item-container" on:click={(e) => e.stopPropagation()}>
+        <div class="seen-image-container">
+          <img class="seen-image" src="placeholder3.png" alt="Product chosen" />
+        </div>
+        <div class="main-seen-item-container">
+          <div class="title-part-container">
+            <h3 class="seen-name">{seenName}</h3>
+            <p class="seen-date">{seenDate}</p>
+          </div>
+          <h2 class="seen-price">{priceDenominator(seenPrice)}</h2>
+          <p class="seen-description">{seenDescription}</p>
+        </div>
+        <button class="buy-in-see-button" on:click={handleBuySeenItem}
+          >Buy Item</button
+        >
+      </div>
+      <!-- <button
+        class="add-new-button"
+        on:click={(e) => {
+          appState.set("add");
+          e.stopPropagation();
+        }}>Add new Item</button
+      > -->
+    </div>
+  {/if}
   {#if $soldItemList.length === 0}
+    <div class="spacer" />
     <h2 class="empty-text">No items are currently sold</h2>
+    <div class="spacer" />
   {:else}
     <div class="sort-container">
       <p class="sort-text">Sort Method: <span>{overallSortingText}</span></p>
@@ -58,7 +108,7 @@
     </div>
     <div class="shelf">
       {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
-        <SoldItem {soldItem} />
+        <SoldItem on:seeItem={seeItem} {soldItem} />
       {/each}
     </div>
   {/if}
@@ -66,6 +116,7 @@
 
 <style>
   main {
+    --padding-of-shelf-main: 0.75em;
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -75,18 +126,17 @@
     gap: 0.75em;
     overflow-y: auto;
     position: relative;
-    padding: 0.75em;
+    padding: var(--padding-of-shelf-main);
     width: min(100%, 1000px);
 
-    /* border: solid 1px black; */
+    border: solid 1px black;
   }
 
   .absolute-container {
     align-items: center;
-    bottom: 0;
     box-sizing: border-box;
-    background-color: rgba(0, 0, 0, 0);
-    pointer-events: none;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -94,17 +144,71 @@
     /* opacity: 0; */
     right: 0;
     position: absolute;
-    padding: 0.5em;
+    padding: var(--padding-of-shelf-main);
     top: 0;
+    /* height: 100%; */
     transition: all 0.25s ease-in-out;
     /* visibility: hidden; */
     z-index: 1000;
 
-    border: solid 1px black;
+    /* border: solid 1px white; */
+  }
+  .seen-item-container {
+    align-items: flex-start;
+    background-color: rgb(var(--secondary-color));
+    border-radius: var(--button-radius);
+    box-sizing: border-box;
+    color: rgb(var(--text-on-secondary-element-color));
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    justify-content: center;
+    padding: 0.5em;
+    width: min(300px, 100%);
+  }
+
+  .seen-image-container {
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    border-radius: var(--button-radius);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+    max-height: 250px;
+    width: 100%;
+  }
+
+  .seen-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .main-seen-item-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .seen-date {
+    font-size: 0.8em;
+  }
+
+  .seen-price {
+    font-size: 1.25em;
+  }
+
+  .seen-name,
+  .seen-price {
+    font-weight: 600;
   }
 
   .empty-text {
     color: rgba(var(--primary-color), 0.75);
+    text-align: center;
   }
 
   .spacer {
@@ -124,6 +228,18 @@
     pointer-events: all;
     padding: 7px;
     /* width: 75px; */
+  }
+
+  .buy-in-see-button {
+    background-color: rgb(var(--text-on-primary-element-color));
+    border-radius: var(--button-smaller-radius);
+    box-sizing: border-box;
+    border: none;
+    color: rgb(var(--primary-color));
+    font-weight: 600;
+    transition: all 0.25s ease-in-out;
+    margin: 0;
+    padding: 7px;
   }
 
   .shelf {

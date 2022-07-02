@@ -2,8 +2,17 @@
   import { soldItemList } from "../stores";
   import type { ISoldItem } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
+  import { createEventDispatcher } from "svelte";
   export let soldItem: ISoldItem;
   const { name, price } = soldItem;
+
+  const dispatch = createEventDispatcher();
+
+  function handleSeeItem() {
+    dispatch("seeItem", {
+      soldItem,
+    });
+  }
 </script>
 
 <main>
@@ -21,7 +30,7 @@
   </div>
   <div class="spacer" />
   <div class="button-container">
-    <button> See Item </button>
+    <button on:click={() => handleSeeItem()}> See Item </button>
     <button on:click={() => soldItemList.remove(soldItem)}> Buy Item </button>
   </div>
 </main>

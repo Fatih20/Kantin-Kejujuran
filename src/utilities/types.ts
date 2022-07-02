@@ -35,3 +35,6 @@ export type PossibleNameProblem = typeof possibleNameProblemList[number];
 
 export type SortingCondition = [boolean, boolean];
 // The first is whether to sort by date or name, date = true. The second is whether to sort in ascending order
+
+const possibleShelfState = ["all", "one"] as const;
+export type ShelfState = typeof possibleShelfState[number];
