@@ -1,10 +1,14 @@
 <script lang="ts">
   import StartPage from "./components/StartPage.svelte";
   import Store from "./components/Store.svelte";
-  import { appState } from "./stores";
+  import { appState, soldItemList } from "./stores";
   import { onMount } from "svelte";
+  import { getBalance, incrementBalance } from "./utilities/storeAPI";
 
-  onMount(async () => {});
+  onMount(async () => {
+    await incrementBalance(500);
+    console.log(await getBalance());
+  });
 </script>
 
 <main>
