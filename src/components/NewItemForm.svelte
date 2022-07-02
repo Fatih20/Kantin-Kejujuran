@@ -137,6 +137,7 @@
 
   function handleSubmit(e) {
     e.preventDefault();
+    console.log("Is submitting");
     const newSoldItem = {
       name,
       price,
@@ -242,7 +243,7 @@
       <div class="button-container">
         <button
           class="return-button"
-          type="submit"
+          type="button"
           on:click={() => appState.set("trade")}
         >
           Back
