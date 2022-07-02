@@ -148,7 +148,7 @@ function createSortCondition () {
 
 }
 
-export const appState = writable("trade" as PossibleAppState)
+export const appState = writable("add" as PossibleAppState)
 export const soldItemList = createSoldItemList();
 export const storeBalance = createStoreBalance();
 export const sortCondition = createSortCondition();

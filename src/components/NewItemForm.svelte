@@ -1,12 +1,17 @@
 <script lang="ts">
-  import { maxDescriptionLength, maxNameLength } from "../config";
+  import {
+    maxDescriptionLength,
+    maxNameLength,
+    successTextDuration,
+  } from "../config";
 
-  import { createEventDispatcher } from "svelte";
   import { appState, soldItemList } from "../stores";
   import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
   import { validImageChecker } from "../utilities/utilities";
 
-  let dispatch = createEventDispatcher();
+  let showingSuccessText = false;
+
+  let imageInputKey = {};
 
   let name: string = "";
   let price: number | null | undefined = undefined;
@@ -132,7 +137,17 @@
   // let imageLink : string;
 
   function reset() {
-    dispatch("reset");
+    imageInputKey = {};
+    name = "";
+    price = undefined;
+    description = "";
+    imageFilename = null;
+    image = null;
+
+    nameJustStarted = true;
+    priceJustStarted = true;
+    descriptionJustStarted = true;
+    imageJustStarted = true;
   }
 
   function handleSubmit(e) {
@@ -142,10 +157,14 @@
       name,
       price,
       description,
-      image: image[0],
+      // image: image[0],
     } as ISoldItemLite;
     soldItemList.insert(newSoldItem);
+    showingSuccessText = true;
     reset();
+    setTimeout(() => {
+      showingSuccessText = false;
+    }, successTextDuration);
   }
 </script>
 
@@ -169,14 +188,16 @@
       <div class="input-element">
         <label for="image-input">Any photo of it? (JPG or PNG)</label>
         <div class="input-container">
-          <input
-            id="image-input"
-            name="image-input"
-            type="file"
-            accept="image/png, image/jpeg"
-            bind:value={imageFilename}
-            bind:files={image}
-          />
+          {#key imageInputKey}
+            <input
+              id="image-input"
+              name="image-input"
+              type="file"
+              accept="image/png, image/jpeg"
+              bind:value={imageFilename}
+              bind:files={image}
+            />
+          {/key}
           <p
             class="input-warning"
             class:input-not-valid-warning={!imageValid && !imageJustStarted}
@@ -248,7 +269,10 @@
         >
           Back
         </button>
-        <div class="spacer" />
+        <p class="success-text" class:success-text-shown={showingSuccessText}>
+          Item succesfully added
+        </p>
+        <!-- <div class="spacer" /> -->
         <button
           class="submit-button"
           type="submit"
@@ -365,6 +389,7 @@
   .button-container {
     align-items: center;
     display: flex;
+    gap: 0.5em;
     justify-content: center;
     width: 100%;
   }
@@ -401,5 +426,22 @@
   .submit-button-disabled:hover {
     background-color: rgba(var(--primary-color), 0);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
+  }
+
+  .success-text {
+    background-color: rgb(var(--success-color-bg));
+    border-radius: var(--button-radius);
+    color: rgb(var(--success-color-fg));
+    display: inline-block;
+    font-weight: 500;
+    flex-grow: 1;
+    opacity: 0;
+    padding: 3px 6px;
+    transition: opacity 0.25s ease-in-out;
+    text-align: center;
+  }
+
+  .success-text-shown {
+    opacity: 1;
   }
 </style>
