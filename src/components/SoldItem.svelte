@@ -1,17 +1,41 @@
 <script lang="ts">
   import { soldItemList } from "../stores";
-  import type { ISoldItem } from "../utilities/types";
+  import type { ISoldItemRaw } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
   import { createEventDispatcher } from "svelte";
-  export let soldItem: ISoldItem;
+  export let soldItem: ISoldItemRaw;
   const { name, price, imageLink } = soldItem;
+  import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+  } from "@sveltestack/svelte-query";
+  import { buyItem } from "../utilities/storeAPI";
 
+  const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
 
   function handleSeeItem() {
     dispatch("seeItem", {
+      buyItemFunction: handleBuyingItem,
       soldItem,
     });
+  }
+
+  const mutateItems = useMutation(
+    async (boughtItem: ISoldItemRaw) => {
+      console.log("Entering buy");
+      await buyItem(boughtItem);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("items");
+      },
+    }
+  );
+
+  async function handleBuyingItem() {
+    await $mutateItems.mutateAsync(soldItem);
   }
 </script>
 
@@ -27,7 +51,7 @@
   <div class="spacer" />
   <div class="button-container">
     <button on:click={() => handleSeeItem()}> See Item </button>
-    <button on:click={() => soldItemList.remove(soldItem)}> Buy Item </button>
+    <button on:click={() => handleBuyingItem()}> Buy Item </button>
   </div>
 </main>
 

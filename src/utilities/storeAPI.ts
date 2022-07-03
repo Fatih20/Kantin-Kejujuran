@@ -35,3 +35,15 @@ export async function getAllItems () {
     return response as ISoldItemRaw[];
     
 }
+
+export async function buyItem (boughtItem : ISoldItemRaw) {
+    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.put(`${backendAddress}/store/buyItem`, {boughtItem}, OPTIONS);
+
+    if (error !== null) {
+        throw new Error("Failed to buy item");
+    }
+
+    console.log(response);
+
+    return response;
+}

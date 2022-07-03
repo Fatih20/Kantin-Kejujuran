@@ -1,10 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-  } from "@sveltestack/svelte-query";
+  import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
   import { soldItemList, appState, sortCondition } from "../stores";
   import type {
@@ -19,7 +15,7 @@
   } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
   import type { AxiosError } from "axios";
-  import { getAllItems } from "../utilities/storeAPI";
+  import { buyItem, getAllItems } from "../utilities/storeAPI";
 
   const queryClient = useQueryClient();
 
@@ -49,6 +45,8 @@
   $: seenDate = seenItem?.dateCreated;
   $: seenImageLink = seenItem?.imageLink;
 
+  let currentBuyItemFunction;
+
   function overallSortingTextGenerator(sortCondition: SortingCondition) {
     if (sortCondition[0]) {
       return sortCondition[1] ? "From oldest" : "From newest";
@@ -65,9 +63,12 @@
   function seeItem(e: CustomEvent) {
     shelfState = "one";
     const { detail } = e;
-    const { soldItem }: { soldItem: ISoldItem } = detail as {
+    const { soldItem, buyItemFunction } = detail as {
       soldItem: ISoldItem;
+      buyItemFunction: () => void;
     };
+
+    currentBuyItemFunction = buyItemFunction;
 
     seenItem = soldItem;
   }
@@ -80,6 +81,7 @@
   function handleCloseSeeItem() {
     shelfState = "all";
     seenItem = {} as ISoldItem;
+    currentBuyItemFunction = undefined;
   }
 
   function handleSortChanges(isOrder: boolean) {
@@ -109,8 +111,12 @@
           <h2 class="seen-price">{priceDenominator(seenPrice)}</h2>
           <p class="seen-description">{seenDescription}</p>
         </div>
-        <button class="buy-in-see-button" on:click={handleBuySeenItem}
-          >Buy Item</button
+        <button
+          class="buy-in-see-button"
+          on:click={async () => {
+            await currentBuyItemFunction();
+            handleCloseSeeItem();
+          }}>Buy Item</button
         >
       </div>
       <!-- <button

@@ -142,8 +142,6 @@ function createSortCondition () {
         alternateSortBy,
         alternateSortOrder
     }
-
-
 }
 
 export const appState = writable("trade" as PossibleAppState)
