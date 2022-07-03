@@ -6,7 +6,7 @@ export const initialSortCondition = [true, true];
 export const validImageExtensionList = ["png", "jpg", "gif", "jpeg"] as const;
 export const backendAddress = shootToProduction ? "https://honest-canteen-backend.herokuapp.com" : "localhost:3000";
 export const showBuyingResultDuration = 500;
-export const successTextDuration = 500;
+export const successTextDuration = 1000;
 export const callLimit = 5;
 export const CLOUDINARY = {
     name : "dby0aipeg",

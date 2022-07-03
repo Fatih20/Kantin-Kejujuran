@@ -30,14 +30,12 @@
 
   const mutateItems = useMutation(
     async (boughtItem: ISoldItemRaw) => {
-      console.log("Entering buy");
       await buyItem(boughtItem);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("items");
         justFailedBuying.set(false);
-        console.log("Successfully bought the item");
       },
       onSettled: () => {
         buyingProcess.set(false);
@@ -54,7 +52,11 @@
 
   async function handleBuyingItem() {
     buyingProcess.set(true);
-    await $mutateItems.mutateAsync(soldItem);
+    try {
+      await $mutateItems.mutateAsync(soldItem);
+    } catch (error) {
+      console.log(error);
+    }
   }
 </script>
 

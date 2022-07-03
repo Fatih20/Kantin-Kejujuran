@@ -198,7 +198,11 @@
         description,
         imagelink,
       } as ISoldItemLite;
-      await $mutateItems.mutateAsync(fillItemInfo(newSoldItem));
+      try {
+        await $mutateItems.mutateAsync(fillItemInfo(newSoldItem));
+      } catch (error) {
+        console.log(error);
+      }
       // soldItemList.insert(newSoldItem);
     } else {
       justFailed = true;

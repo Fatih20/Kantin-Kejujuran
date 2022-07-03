@@ -67,7 +67,11 @@
 
     const incrementor =
       footerState === "give" ? inputtedNumber : -inputtedNumber;
-    await $mutateBalance.mutateAsync(incrementor);
+    try {
+      await $mutateBalance.mutateAsync(incrementor);
+    } catch (error) {
+      console.log(error);
+    }
 
     // if (completeOperation) {
     //   reset();
@@ -140,9 +144,7 @@
               return;
             }
           }}
-          on:keyup={() => {
-            console.log(inputtedNumber);
-          }}
+          on:keyup={() => {}}
         />
       </div>
       <button
