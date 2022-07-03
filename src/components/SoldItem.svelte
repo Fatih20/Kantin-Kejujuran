@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { soldItemList } from "../stores";
+  import {
+    buyingProcess,
+    justFailedBuying,
+    showBuyingResultText,
+    soldItemList,
+  } from "../stores";
   import type { ISoldItemRaw } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
   import { createEventDispatcher } from "svelte";
@@ -11,6 +16,7 @@
     useQueryClient,
   } from "@sveltestack/svelte-query";
   import { buyItem } from "../utilities/storeAPI";
+  import { showBuyingResultDuration } from "../config";
 
   const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
@@ -30,11 +36,24 @@
     {
       onSuccess: () => {
         queryClient.invalidateQueries("items");
+        justFailedBuying.set(false);
+        console.log("Successfully bought the item");
+      },
+      onSettled: () => {
+        buyingProcess.set(false);
+        showBuyingResultText.set(true);
+        setTimeout(() => {
+          showBuyingResultText.set(false);
+        }, showBuyingResultDuration);
+      },
+      onError: () => {
+        justFailedBuying.set(true);
       },
     }
   );
 
   async function handleBuyingItem() {
+    buyingProcess.set(true);
     await $mutateItems.mutateAsync(soldItem);
   }
 </script>

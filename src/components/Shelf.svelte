@@ -2,7 +2,13 @@
   import { onMount } from "svelte";
   import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
-  import { soldItemList, appState, sortCondition } from "../stores";
+  import {
+    soldItemList,
+    appState,
+    sortCondition,
+    showBuyingResultText,
+    justFailedBuying,
+  } from "../stores";
   import type {
     ISoldItem,
     ISoldItemRaw,
@@ -19,7 +25,11 @@
 
   const queryClient = useQueryClient();
 
-  const itemsQuery = useQuery<ISoldItemRaw[], AxiosError>("items", getAllItems);
+  const itemsQuery = useQuery<ISoldItemRaw[], AxiosError>(
+    "items",
+    getAllItems,
+    { refetchInterval: 5000 }
+  );
 
   $: sortedItems =
     $itemsQuery.data === undefined
@@ -67,15 +77,9 @@
       soldItem: ISoldItem;
       buyItemFunction: () => void;
     };
-
     currentBuyItemFunction = buyItemFunction;
 
     seenItem = soldItem;
-  }
-
-  function handleBuySeenItem() {
-    soldItemList.remove(seenItem);
-    handleCloseSeeItem();
   }
 
   function handleCloseSeeItem() {
@@ -128,6 +132,11 @@
       > -->
     </div>
   {/if}
+  <!-- {#if $showBuyingResultText}
+    <div class="absolute-container absolute-container-invisible">
+      
+    </div>
+  {/if} -->
   {#if $itemsQuery.status === "loading"}
     <div class="spacer" />
     <h2 class="empty-text">Loading items</h2>
@@ -202,6 +211,15 @@
 
     /* border: solid 1px white; */
   }
+
+  .absolute-container-invisible {
+    background-color: rgba(0, 0, 0, 0);
+    justify-content: flex-end;
+  }
+
+  .buying-result-text {
+  }
+
   .seen-item-container {
     align-items: flex-start;
     background-color: rgb(var(--secondary-color));

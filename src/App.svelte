@@ -1,7 +1,13 @@
 <script lang="ts">
   import StartPage from "./components/StartPage.svelte";
   import Store from "./components/Store.svelte";
-  import { appState, soldItemList } from "./stores";
+  import BuyingOverlay from "./components/BuyingOverlay.svelte";
+  import {
+    appState,
+    buyingProcess,
+    showBuyingResultText,
+    soldItemList,
+  } from "./stores";
   import { onMount } from "svelte";
   import {
     getAllItems,
@@ -21,6 +27,9 @@
 
 <QueryClientProvider client={queryClient}>
   <main>
+    {#if $buyingProcess || $showBuyingResultText}
+      <BuyingOverlay />
+    {/if}
     {#if $appState === "startPage"}
       <StartPage />
     {:else if $appState === "trade" || $appState === "add"}
