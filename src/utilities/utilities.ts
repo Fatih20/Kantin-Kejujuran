@@ -23,7 +23,7 @@ export function fetchItemFromLocalStorage (key : string){
 export function compareFunctionGenerator (isDate : boolean, isAscending : boolean) {
     const compareFunction = (isDate ? 
         (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
-        return soldItem1["milisecondCreated"] < soldItem2["milisecondCreated"] ? -1 : (soldItem1["milisecondCreated"] > soldItem2["milisecondCreated"] ? 1 : 0)
+        return soldItem1["milisecondcreated"] < soldItem2["milisecondcreated"] ? -1 : (soldItem1["milisecondcreated"] > soldItem2["milisecondcreated"] ? 1 : 0)
     } : (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
         return soldItem1["name"] < soldItem2["name"] ? -1 : (soldItem1["name"] > soldItem2["name"] ? 1 : 0)
     })
