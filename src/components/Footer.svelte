@@ -10,26 +10,42 @@
     useMutation,
     useQueryClient,
   } from "@sveltestack/svelte-query";
-  import { getBalance } from "../utilities/storeAPI";
-  import { onMount } from "svelte";
+  import { getBalance, incrementBalance } from "../utilities/storeAPI";
   import type { AxiosError } from "axios";
 
   const queryClient = useQueryClient();
 
-  const balanceQuery = useQuery<number, AxiosError>("balance", getBalance);
+  const balanceQuery = useQuery<number, AxiosError>("balance", getBalance, {
+    refetchInterval: 30000,
+  });
+  const mutateBalance = useMutation(
+    "balance",
+    async (incrementor: number) => {
+      await incrementBalance(incrementor);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("balance");
+        reset();
+      },
+    }
+  );
 
   let footerState = "default" as PossibleFooterState;
   let inputtedNumber: number | undefined = undefined;
   let validInput = true;
   let inputProblem = "none" as PossibleInputProblem;
 
+  let operating = false;
+
   function reset() {
+    operating = false;
     inputtedNumber = undefined;
     footerState = "default";
   }
 
   $: {
-    if (footerState === "take" && inputtedNumber > $storeBalance) {
+    if (footerState === "take" && inputtedNumber > $balanceQuery.data) {
       validInput = false;
       inputProblem = "overdraw";
     } else if (inputtedNumber === null) {
@@ -43,20 +59,19 @@
     }
   }
 
-  function handleOperate() {
-    let completeOperation = true;
+  async function handleOperate() {
+    operating = true;
     if (!validInput) {
       return;
     }
-    if (footerState === "give") {
-      storeBalance.add(inputtedNumber);
-    } else if (footerState === "take") {
-      storeBalance.subtract(inputtedNumber);
-    }
 
-    if (completeOperation) {
-      reset();
-    }
+    const incrementor =
+      footerState === "give" ? inputtedNumber : -inputtedNumber;
+    await $mutateBalance.mutateAsync(incrementor);
+
+    // if (completeOperation) {
+    //   reset();
+    // }
   }
 </script>
 
@@ -103,16 +118,21 @@
         <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
       </button>
     {:else}
-      <button class="operate-button cancel-button" on:click={reset}>
+      <button
+        class="operate-button cancel-button"
+        on:click={reset}
+        class:invalid-operate-button={operating}
+      >
         <i class="fa-solid fa-share fa-flip-horizontal money-icon" /></button
       >
       <div class="input-container">
-        <p>Rp</p>
+        <p class:invalid-operate-button={operating}>Rp</p>
         <input
           class="input-operator"
           type="number"
           min="0"
           placeholder={"0"}
+          disabled={operating}
           bind:value={inputtedNumber}
           on:keydown={({ key }) => {
             if (key == "Enter") {
@@ -127,7 +147,7 @@
       </div>
       <button
         class="operate-button"
-        class:invalid-operate-button={!validInput}
+        class:invalid-operate-button={!validInput || operating}
         on:click={handleOperate}
       >
         {#if footerState === "give"}

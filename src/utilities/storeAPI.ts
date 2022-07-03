@@ -17,8 +17,10 @@ export async function getBalance() {
 }   
 
 export async function incrementBalance(increment : number) {
-     const {error, message, response} = await axios.put(`${backendAddress}/store/balance`, {"balanceIncrement" : increment}, OPTIONS) as IAPIReturn<number>;
+     const {data : {error, message, response}} : {data : IAPIReturn<any>} = await axios.put(`${backendAddress}/store/balance`, {"balanceIncrement" : increment}, OPTIONS);
      if (error !== null) {
          throw new Error("Failed to increment balance")
      }
+
+     return response;
 }

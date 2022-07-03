@@ -10,7 +10,7 @@
 
   onMount(async () => {
     // await incrementBalance(500);
-    console.log(await getBalance());
+    // console.log(await getBalance());
   });
 </script>
 
