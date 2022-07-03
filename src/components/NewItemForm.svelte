@@ -191,12 +191,12 @@
     e.preventDefault();
     const { isError, retrievedData } = await uploadImage(imageList[0]);
     if (!isError) {
-      const { url: imageLink } = retrievedData;
+      const { url: imagelink } = retrievedData;
       const newSoldItem = {
         name,
         price,
         description,
-        imageLink,
+        imagelink,
       } as ISoldItemLite;
       await $mutateItems.mutateAsync(fillItemInfo(newSoldItem));
       // soldItemList.insert(newSoldItem);

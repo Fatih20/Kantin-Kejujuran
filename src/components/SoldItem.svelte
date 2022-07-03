@@ -9,7 +9,7 @@
   import { priceDenominator } from "../utilities/utilities";
   import { createEventDispatcher } from "svelte";
   export let soldItem: ISoldItemRaw;
-  const { name, price, imageLink } = soldItem;
+  const { name, price, imagelink } = soldItem;
   import {
     useMutation,
     useQuery,
@@ -60,7 +60,7 @@
 
 <main>
   <div class="image-container">
-    <img src={imageLink} alt="product" class="image" />
+    <img src={imagelink} alt="product" class="image" />
   </div>
   <div class="text-container">
     <p class="title">{name}</p>

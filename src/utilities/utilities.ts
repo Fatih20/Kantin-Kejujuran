@@ -102,7 +102,7 @@ export async function fetchDataRetry (functionToCall : () => Promise<any>, times
 
 export function fillItemInfo (addedItem : ISoldItemLite) {
         const date = new Date()
-        const dateCreated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
-        const timeAppendedNewSoldItem = {...addedItem, dateCreated, milisecondCreated : date.getTime()} as ISoldItem;
+        const datecreated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
+        const timeAppendedNewSoldItem = {...addedItem, datecreated, milisecondcreated : date.getTime()} as ISoldItem;
         return timeAppendedNewSoldItem;
 }

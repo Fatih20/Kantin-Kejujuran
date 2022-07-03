@@ -52,8 +52,8 @@
   $: seenName = seenItem?.name;
   $: seenPrice = seenItem?.price;
   $: seenDescription = seenItem?.description;
-  $: seenDate = seenItem?.dateCreated;
-  $: seenImageLink = seenItem?.imageLink;
+  $: seenDate = seenItem?.datecreated;
+  $: seenImageLink = seenItem?.imagelink;
 
   let currentBuyItemFunction;
 
