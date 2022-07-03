@@ -8,21 +8,9 @@
     showBuyingResultText,
     soldItemList,
   } from "./stores";
-  import { onMount } from "svelte";
-  import {
-    getAllItems,
-    getBalance,
-    incrementBalance,
-  } from "./utilities/storeAPI";
   import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
 
   const queryClient = new QueryClient();
-
-  onMount(async () => {
-    // await incrementBalance(500);
-    // console.log(await getBalance());
-    console.log(await getAllItems());
-  });
 </script>
 
 <QueryClientProvider client={queryClient}>

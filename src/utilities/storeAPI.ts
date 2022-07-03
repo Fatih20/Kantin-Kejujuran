@@ -53,7 +53,6 @@ export async function addItem (addedItem : ISoldItem) {
         throw new Error("Failed to add item");
     }
 
-    console.log(response);
 
     return response;
 }
