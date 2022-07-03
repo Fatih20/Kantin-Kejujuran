@@ -21,7 +21,6 @@ export function fetchItemFromLocalStorage (key : string){
 }
 
 export function compareFunctionGenerator (isDate : boolean, isAscending : boolean) {
-    // const keyOfComparedValue = (isDate ? "milisecondsCreated" : "name") as keyof ISoldItem
     const compareFunction = (isDate ? 
         (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
         return soldItem1["milisecondCreated"] < soldItem2["milisecondCreated"] ? -1 : (soldItem1["milisecondCreated"] > soldItem2["milisecondCreated"] ? 1 : 0)

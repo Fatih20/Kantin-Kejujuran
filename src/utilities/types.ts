@@ -1,5 +1,3 @@
-import { validImageExtensionList } from "../config";
-
 const possibleAppStateList = ["startPage", "trade", "add"] as const;
 
 export type PossibleAppState = typeof possibleAppStateList[number];
@@ -29,12 +27,6 @@ export interface ISoldItemRaw extends ISoldItem {
 
 const possibleNameProblemList = ["none", "long", "empty"] as const;
 export type PossibleNameProblem = typeof possibleNameProblemList[number];
-
-// const possibleSortBy = ["date", "price"] as const;
-// const possibleSortOrder = ["ascending", "descending"] as const;
-
-// type SortBy = typeof possibleSortBy[number];
-// type SortOrder = typeof possibleSortOrder[number];
 
 export type SortingCondition = [boolean, boolean];
 // The first is whether to sort by date or name, date = true. The second is whether to sort in ascending order

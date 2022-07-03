@@ -13,7 +13,7 @@
 
   import { fade } from "svelte/transition";
 
-  import { appState, soldItemList } from "../stores";
+  import { appState } from "../stores";
   import { uploadImage } from "../utilities/photosAPI";
   import type {
     ISoldItem,
@@ -153,7 +153,6 @@
   $: priceValid = price > 0 && price !== null;
   $: descriptionValid = descriptionProblem === "none";
   $: imageValid = validImageChecker(imageFilename) && imageList !== null;
-  // let imageLink : string;
 
   const mutateItems = useMutation(
     "items",
@@ -203,7 +202,6 @@
       } catch (error) {
         console.log(error);
       }
-      // soldItemList.insert(newSoldItem);
     } else {
       justFailed = true;
     }
@@ -363,8 +361,6 @@
     justify-content: center;
     padding: 0.5em 1em;
     width: 100%;
-
-    /* border: solid 1px black; */
   }
 
   .form-container {
@@ -377,7 +373,6 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 1em;
-    /* width: 100%; */
   }
 
   .title {
@@ -386,7 +381,6 @@
     text-align: center;
     padding-bottom: 0.25em;
     width: 100%;
-    /* border: solid 1px black; */
   }
 
   form {
@@ -465,9 +459,7 @@
     color: rgb(var(--text-on-primary-element-color));
     font-weight: 600;
     transition: all 0.25s ease-in-out;
-    /* font-size: 1em; */
     margin: 0;
-    /* width: 75px; */
     padding: 7px;
   }
 
@@ -482,7 +474,6 @@
 
   .submit-button-disabled {
     --border-color: var(--disabled-color);
-    /* background-color: rgb(var(--disabled-color)); */
     color: rgba(var(--text-on-disabled-element-color), 0.5);
     cursor: initial;
   }

@@ -2,12 +2,7 @@
   import StartPage from "./components/StartPage.svelte";
   import Store from "./components/Store.svelte";
   import BuyingOverlay from "./components/BuyingOverlay.svelte";
-  import {
-    appState,
-    buyingProcess,
-    showBuyingResultText,
-    soldItemList,
-  } from "./stores";
+  import { appState, buyingProcess, showBuyingResultText } from "./stores";
   import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
 
   const queryClient = new QueryClient();

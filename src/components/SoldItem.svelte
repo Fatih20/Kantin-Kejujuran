@@ -3,7 +3,6 @@
     buyingProcess,
     justFailedBuying,
     showBuyingResultText,
-    soldItemList,
   } from "../stores";
   import type { ISoldItemRaw } from "../utilities/types";
   import { priceDenominator } from "../utilities/utilities";
@@ -67,7 +66,6 @@
   <div class="text-container">
     <p class="title">{name}</p>
     <h4>{priceDenominator(price)}</h4>
-    <!-- <p>{description}</p> -->
   </div>
   <div class="spacer" />
   <div class="button-container">
@@ -78,7 +76,6 @@
 
 <style>
   main {
-    /* align-items: center; */
     background-color: rgb(var(--secondary-color));
     border-radius: var(--button-radius);
     box-sizing: border-box;
@@ -86,12 +83,9 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(5, 1fr);
-    /* filter: drop-shadow(0 0 0.75rem rgba(var(--secondary-color), 0.5)); */
     flex-direction: column;
     gap: 0.25em;
     height: 300px;
-    /* hyphens: manual; */
-    /* justify-content: flex-start; */
     padding: 0.75em;
     word-break: break-word;
   }
@@ -105,9 +99,7 @@
   }
 
   .title {
-    /* margin-bottom: 0.25em; */
     font-size: 1.1em;
-    /* font-weight: ; */
   }
 
   .spacer {

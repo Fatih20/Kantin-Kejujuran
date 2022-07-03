@@ -2,13 +2,7 @@
   import { onMount } from "svelte";
   import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
-  import {
-    soldItemList,
-    appState,
-    sortCondition,
-    showBuyingResultText,
-    justFailedBuying,
-  } from "../stores";
+  import { sortCondition } from "../stores";
   import type {
     ISoldItem,
     ISoldItemRaw,
@@ -21,7 +15,7 @@
   } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
   import type { AxiosError } from "axios";
-  import { buyItem, getAllItems } from "../utilities/storeAPI";
+  import { getAllItems } from "../utilities/storeAPI";
 
   const queryClient = useQueryClient();
 
@@ -37,10 +31,6 @@
       : $itemsQuery.data.sort(
           compareFunctionGenerator($sortCondition[0], $sortCondition[1])
         );
-
-  onMount(() => {
-    soldItemList.resort($sortCondition);
-  });
 
   let shelfState = "all" as ShelfState;
   let seenItem: ISoldItem;
@@ -90,9 +80,7 @@
     } else {
       sortCondition.alternateSortBy();
     }
-    soldItemList.resort($sortCondition);
   }
-  // $: soldItemList.resort($sortCondition);
 </script>
 
 <main>
@@ -119,20 +107,8 @@
           }}>Buy Item</button
         >
       </div>
-      <!-- <button
-        class="add-new-button"
-        on:click={(e) => {
-          appState.set("add");
-          e.stopPropagation();
-        }}>Add new Item</button
-      > -->
     </div>
   {/if}
-  <!-- {#if $showBuyingResultText}
-    <div class="absolute-container absolute-container-invisible">
-      
-    </div>
-  {/if} -->
   {#if $itemsQuery.status === "loading"}
     <div class="spacer" />
     <h2 class="empty-text">Loading items</h2>
@@ -182,8 +158,6 @@
     position: relative;
     padding: var(--padding-of-shelf-main);
     width: min(100%, 1000px);
-
-    /* border: solid 1px black; */
   }
 
   .absolute-container {
@@ -195,25 +169,12 @@
     flex-direction: column;
     justify-content: center;
     left: 0;
-    /* opacity: 0; */
     right: 0;
     position: fixed;
     padding: var(--padding-of-shelf-main);
     top: 0;
-    /* height: 100%; */
     transition: all 0.25s ease-in-out;
-    /* visibility: hidden; */
     z-index: 1000;
-
-    /* border: solid 1px white; */
-  }
-
-  .absolute-container-invisible {
-    background-color: rgba(0, 0, 0, 0);
-    justify-content: flex-end;
-  }
-
-  .buying-result-text {
   }
 
   .seen-item-container {
@@ -278,21 +239,6 @@
     flex-grow: 1;
   }
 
-  .add-new-button {
-    align-self: center;
-    background-color: rgb(var(--primary-color));
-    border-radius: var(--button-smaller-radius);
-    color: rgb(var(--text-on-primary-element-color));
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.25s ease-in-out;
-    /* font-size: 1em; */
-    margin: 0;
-    pointer-events: all;
-    padding: 7px;
-    /* width: 75px; */
-  }
-
   .buy-in-see-button {
     background-color: rgb(var(--text-on-primary-element-color));
     border-radius: var(--button-smaller-radius);
@@ -314,17 +260,13 @@
       auto-fill,
       minmax(var(--minimum-item-width), 1fr)
     );
-    /* grid-template-rows: repeat(auto-fit, 150px); */
     gap: var(--gap-size);
-    /* flex-grow: 1; */
-    /* padding: 0.5em; */
     width: 100%;
   }
 
   .sort-container {
     align-items: center;
     display: flex;
-    /* flex-direction: column; */
     gap: 0.5em;
     justify-content: center;
     width: 100%;
@@ -336,9 +278,7 @@
   }
 
   .sort-text {
-    /* line-height: 2; */
     user-select: none;
-    /* text-align: center; */
   }
 
   .sort-text span {
@@ -352,13 +292,10 @@
     gap: 0.25em;
     text-align: left;
     justify-content: flex-end;
-
-    /* border: solid 1px white; */
   }
 
   .sort-button {
     background-color: rgb(var(--text-on-primary-element-color));
-    /* box-sizing: border-box; */
     color: rgb(var(--primary-color));
     border-radius: var(--button-radius);
     cursor: pointer;

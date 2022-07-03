@@ -1,8 +1,5 @@
 <script lang="ts">
   import { appState } from "../stores";
-  // function sendGameHasStarted() {
-  //   dispatch("gameStarted");
-  // }
 </script>
 
 <head>
@@ -17,7 +14,6 @@
 <main>
   <div id="content-container">
     <h1 id="title">Honest<br />Canteen</h1>
-    <!-- <div class="spacer" /> -->
     <div id="button-container">
       <button
         class="option-container"
@@ -26,7 +22,6 @@
         }}
       >
         <h3 class="start-button-title">Start Trading</h3>
-        <!-- <p>Save your game and high score on this device</p> -->
       </button>
     </div>
   </div>
@@ -59,7 +54,6 @@
     justify-content: center;
     gap: 1.5em;
     height: 300px;
-    /* border: solid 1px white; */
   }
   #button-container {
     align-items: center;
@@ -67,7 +61,6 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 1.5em;
-    /* border: solid 1px white; */
   }
   #button-container button {
     margin: 0;
@@ -85,7 +78,6 @@
     flex-direction: column;
     gap: 0.5em;
     justify-content: center;
-    /* max-width: 200px; */
     padding: 0.25em;
     text-align: center;
     transition: all 0.25s ease-in-out;
@@ -106,23 +98,11 @@
     font-weight: 700;
     line-height: 1.25em;
   }
-  .spacer {
-    flex-grow: 1;
-  }
+
   .start-button-title {
     font-size: 1.75em;
     font-weight: 700;
     transition: all 0.1s ease-in-out;
     width: 100%;
-  }
-  /* .start-button:hover {
-      background-color: rgb(var(--secondary-color));
-      color: rgb(var(--text-on-secondary-selected-element-color));
-      font-size: 2em;
-    } */
-  .clicked {
-    background-color: rgb(var(--secondary-active-color)) !important;
-    color: rgb(var(--text-on-secondary-active-element-color)) !important;
-    transition: all 0.25s ease-in-out !important;
   }
 </style>

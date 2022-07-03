@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { storeBalance } from "../stores";
   import type {
     PossibleFooterState,
     PossibleInputProblem,
