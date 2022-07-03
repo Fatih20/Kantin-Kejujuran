@@ -38,10 +38,6 @@
           compareFunctionGenerator($sortCondition[0], $sortCondition[1])
         );
 
-  $: {
-    console.log(sortedItems);
-  }
-
   onMount(() => {
     soldItemList.resort($sortCondition);
   });

@@ -69,7 +69,6 @@ export function objToString(obj, ndeep) {
 export async function errorHandlingWrapperCloudinary (formdata : FormData) {
     try {
         const response = await axios.post(`${CLOUDINARY.path}${CLOUDINARY.name}/image/upload`, formdata);
-        console.log(response);
         return {
             statusCode : response.status,
             isError : false,
@@ -77,7 +76,6 @@ export async function errorHandlingWrapperCloudinary (formdata : FormData) {
             retrievedData : response.data
         };
     } catch (error) {
-        console.log(error);
         return {
             statusCode : error.response.status,
             isError : true,
