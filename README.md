@@ -1,6 +1,6 @@
 # Honest Canteen
 
-A place where everybody can sell anything for however much and pay how ever much.
+A place where everybody can sell and buy anything for however much.
 
 ## Run the Client Locally
 
