@@ -5,12 +5,25 @@
     successTextDuration,
   } from "../config";
 
+  import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+  } from "@sveltestack/svelte-query";
+
   import { fade } from "svelte/transition";
 
   import { appState, soldItemList } from "../stores";
   import { uploadImage } from "../utilities/photosAPI";
-  import type { ISoldItemLite, PossibleNameProblem } from "../utilities/types";
-  import { validImageChecker } from "../utilities/utilities";
+  import type {
+    ISoldItem,
+    ISoldItemLite,
+    PossibleNameProblem,
+  } from "../utilities/types";
+  import { fillItemInfo, validImageChecker } from "../utilities/utilities";
+  import { addItem } from "../utilities/storeAPI";
+
+  const queryClient = useQueryClient();
 
   let showingResultText = false;
   let justFailed = false;
@@ -142,6 +155,23 @@
   $: imageValid = validImageChecker(imageFilename) && imageList !== null;
   // let imageLink : string;
 
+  const mutateItems = useMutation(
+    "items",
+    async (addedItem: ISoldItem) => {
+      await addItem(addedItem);
+    },
+    {
+      onSuccess: () => {
+        justFailed = false;
+        queryClient.invalidateQueries("items");
+        reset();
+      },
+      onError: () => {
+        justFailed = true;
+      },
+    }
+  );
+
   function reset() {
     imageInputKey = {};
     name = "";
@@ -159,10 +189,7 @@
   async function handleSubmit(e) {
     isSubmitting = true;
     e.preventDefault();
-    console.log("Is submitting");
     const { isError, retrievedData } = await uploadImage(imageList[0]);
-    showingResultText = true;
-    isSubmitting = false;
     if (!isError) {
       const { url: imageLink } = retrievedData;
       const newSoldItem = {
@@ -171,12 +198,13 @@
         description,
         imageLink,
       } as ISoldItemLite;
-      soldItemList.insert(newSoldItem);
-      justFailed = false;
-      reset();
+      await $mutateItems.mutateAsync(fillItemInfo(newSoldItem));
+      // soldItemList.insert(newSoldItem);
     } else {
       justFailed = true;
     }
+    isSubmitting = false;
+    showingResultText = true;
     setTimeout(() => {
       showingResultText = false;
     }, successTextDuration);

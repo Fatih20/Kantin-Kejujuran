@@ -1,6 +1,6 @@
 import axios from "axios";
 import { backendAddress } from "../config";
-import type { IAPIReturn, ISoldItemRaw } from "./types";
+import type { IAPIReturn, ISoldItem, ISoldItemRaw } from "./types";
 
 export const OPTIONS = {
     headers : {'Content-Type' : 'application/json'},
@@ -41,6 +41,16 @@ export async function buyItem (boughtItem : ISoldItemRaw) {
 
     if (error !== null) {
         throw new Error("Failed to buy item");
+    }
+
+    return response;
+}
+
+export async function addItem (addedItem : ISoldItem) {
+    const {data : {error, message, response}} = await axios.post(`${backendAddress}/store/addItem`, {addedItem}, OPTIONS);
+
+    if (error !== null) {
+        throw new Error("Failed to add item");
     }
 
     console.log(response);

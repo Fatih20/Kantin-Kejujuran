@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CLOUDINARY, validImageExtensionList } from "../config";
-import type { ISoldItem } from "./types";
+import type { ISoldItem, ISoldItemLite } from "./types";
 
 export function priceDenominator (rawPrice : number) : string {
     const formatter = new Intl.NumberFormat('id-ID', {
@@ -99,3 +99,10 @@ export async function fetchDataRetry (functionToCall : () => Promise<any>, times
 
     return response;
 }  
+
+export function fillItemInfo (addedItem : ISoldItemLite) {
+        const date = new Date()
+        const dateCreated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
+        const timeAppendedNewSoldItem = {...addedItem, dateCreated, milisecondCreated : date.getTime()} as ISoldItem;
+        return timeAppendedNewSoldItem;
+}
