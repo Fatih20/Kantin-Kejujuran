@@ -1,14 +1,40 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+  } from "@sveltestack/svelte-query";
 
   import { soldItemList, appState, sortCondition } from "../stores";
   import type {
     ISoldItem,
+    ISoldItemRaw,
     ShelfState,
     SortingCondition,
   } from "../utilities/types";
-  import { priceDenominator } from "../utilities/utilities";
+  import {
+    compareFunctionGenerator,
+    priceDenominator,
+  } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
+  import type { AxiosError } from "axios";
+  import { getAllItems } from "../utilities/storeAPI";
+
+  const queryClient = useQueryClient();
+
+  const itemsQuery = useQuery<ISoldItemRaw[], AxiosError>("items", getAllItems);
+
+  $: sortedItems =
+    $itemsQuery.data === undefined
+      ? []
+      : $itemsQuery.data.sort(
+          compareFunctionGenerator($sortCondition[0], $sortCondition[1])
+        );
+
+  $: {
+    console.log(sortedItems);
+  }
 
   onMount(() => {
     soldItemList.resort($sortCondition);
@@ -96,28 +122,38 @@
       > -->
     </div>
   {/if}
-  {#if $soldItemList.length === 0}
+  {#if $itemsQuery.status === "loading"}
     <div class="spacer" />
-    <h2 class="empty-text">No items are currently sold</h2>
+    <h2 class="empty-text">Loading items</h2>
     <div class="spacer" />
-  {:else}
-    <div class="sort-container">
-      <p class="sort-text">Sort Method: <span>{overallSortingText}</span></p>
+  {:else if $itemsQuery.status === "error"}
+    <div class="spacer" />
+    <h2 class="empty-text">Error getting items. Try reloading</h2>
+    <div class="spacer" />
+  {:else if $itemsQuery.status === "success"}
+    {#if $itemsQuery.data.length === 0}
       <div class="spacer" />
-      <div class="sort-button-container">
-        <button class="sort-button" on:click={() => handleSortChanges(true)}
-          >{secondSortingText}</button
-        >
-        <button class="sort-button" on:click={() => handleSortChanges(false)}
-          >{firstSortingText}</button
-        >
+      <h2 class="empty-text">No items are currently sold</h2>
+      <div class="spacer" />
+    {:else}
+      <div class="sort-container">
+        <p class="sort-text">Sort Method: <span>{overallSortingText}</span></p>
+        <div class="spacer" />
+        <div class="sort-button-container">
+          <button class="sort-button" on:click={() => handleSortChanges(true)}
+            >{secondSortingText}</button
+          >
+          <button class="sort-button" on:click={() => handleSortChanges(false)}
+            >{firstSortingText}</button
+          >
+        </div>
       </div>
-    </div>
-    <div class="shelf">
-      {#each $soldItemList as soldItem (soldItem.milisecondCreated)}
-        <SoldItem on:seeItem={seeItem} {soldItem} />
-      {/each}
-    </div>
+      <div class="shelf">
+        {#each sortedItems as soldItem (soldItem.id)}
+          <SoldItem on:seeItem={seeItem} {soldItem} />
+        {/each}
+      </div>
+    {/if}
   {/if}
 </main>
 

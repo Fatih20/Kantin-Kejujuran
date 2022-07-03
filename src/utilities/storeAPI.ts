@@ -1,6 +1,6 @@
 import axios from "axios";
 import { backendAddress } from "../config";
-import type { IAPIReturn } from "./types";
+import type { IAPIReturn, ISoldItemRaw } from "./types";
 
 export const OPTIONS = {
     headers : {'Content-Type' : 'application/json'},
@@ -23,4 +23,15 @@ export async function incrementBalance(increment : number) {
      }
 
      return response;
+}
+
+export async function getAllItems () {
+    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.get(`${backendAddress}/store/allItems`, OPTIONS);
+
+    if (error !== null) {
+        throw new Error("Failed to get all items");
+    }
+
+    return response as ISoldItemRaw[];
+    
 }
