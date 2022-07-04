@@ -11,7 +11,6 @@
   } from "@sveltestack/svelte-query";
   import { getBalance, incrementBalance } from "../utilities/storeAPI";
   import type { AxiosError } from "axios";
-  import useIsLoggedIn from "../utilities/useMe";
 
   const queryClient = useQueryClient();
 
@@ -33,6 +32,8 @@
 
   let footerState = "default" as PossibleFooterState;
   let inputtedNumber: number | undefined = undefined;
+  let firstStart = true;
+
   let validInput = true;
   let inputProblem = "none" as PossibleInputProblem;
 
@@ -40,24 +41,26 @@
 
   function reset() {
     operating = false;
+    firstStart = true;
     inputtedNumber = undefined;
     footerState = "default";
   }
 
   $: {
     if (footerState === "take" && inputtedNumber > $balanceQuery.data) {
-      validInput = false;
       inputProblem = "overdraw";
     } else if (inputtedNumber === null) {
-      validInput = false;
       inputProblem = "NaN";
     } else if (inputtedNumber < 0) {
-      validInput = false;
       inputProblem = "negative";
+    } else if (inputtedNumber === undefined) {
+      inputProblem = "undefined";
     } else {
-      validInput = true;
+      inputProblem = "none";
     }
   }
+
+  $: validInput = inputProblem === "none";
 
   async function handleOperate() {
     operating = true;
@@ -149,6 +152,7 @@
       <button
         class="operate-button"
         class:invalid-operate-button={!validInput || operating}
+        disabled={!validInput || operating}
         on:click={handleOperate}
       >
         {#if footerState === "give"}
