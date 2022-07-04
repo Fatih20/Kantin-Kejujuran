@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { ISoldItem } from "../../../utilities/types";
-  import { mockLoginData } from "../../../stores";
-  import { priceDenominator } from "../../../utilities/utilities";
-
+  import useIsLoggedIn from "../../../utilities/useMe";
+  import {
+    isLoggedInProcessor,
+    priceDenominator,
+  } from "../../../utilities/utilities";
   export let item: ISoldItem;
   const {
     name,
@@ -14,6 +16,8 @@
   } = item;
 
   export let handleBuyClick: () => void;
+
+  const isLoggedIn = useIsLoggedIn();
 </script>
 
 <main on:click={(e) => e.stopPropagation()}>
@@ -28,7 +32,7 @@
     <h2 class="price">{priceDenominator(price)}</h2>
     <p class="description">{description}</p>
   </div>
-  {#if $mockLoginData}
+  {#if isLoggedInProcessor($isLoggedIn)}
     <button class="buy-in-see-button" on:click={handleBuyClick}>Buy Item</button
     >
   {/if}

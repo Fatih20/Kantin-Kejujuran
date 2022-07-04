@@ -20,6 +20,6 @@ export async function getMe () {
 }
 
 export async function logout () {
-    const data = await axios.post(`${backendAddress}/user/me`, {}, OPTIONS);
+    const data = await axios.post(`${backendAddress}/user/logout`, {}, OPTIONS);
     return data;
 }

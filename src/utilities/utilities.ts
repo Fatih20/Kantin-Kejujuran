@@ -114,4 +114,19 @@ export async function fetchDataRetry (functionToCall : () => Promise<any>, times
     }
 
     return response;
-}  
+}
+
+export function isLoggedInProcessor (isLoggedInSubscribe) {
+    // console.log(isLoggedInSubscribe);
+    if (isLoggedInSubscribe?.data?.message === undefined) {
+        return false;
+    }
+
+    console.log(isLoggedInSubscribe.data.message);
+
+    if (isLoggedInSubscribe.data.message === "You are still logged in") {
+        return true;
+    } else if (isLoggedInSubscribe.data.message === "You're not logged in") {
+        return false;
+    }
+}

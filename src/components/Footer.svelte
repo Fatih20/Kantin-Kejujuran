@@ -11,6 +11,7 @@
   } from "@sveltestack/svelte-query";
   import { getBalance, incrementBalance } from "../utilities/storeAPI";
   import type { AxiosError } from "axios";
+  import useIsLoggedIn from "../utilities/useMe";
 
   const queryClient = useQueryClient();
 

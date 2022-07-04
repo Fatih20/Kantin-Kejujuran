@@ -151,28 +151,28 @@
 
       if (apiResponse.data.error !== null) {
         justFailed = true;
-        if (apiResponse.status >= 500) {
-          failMessage = "Failed to contact the server. Please try again";
-        } else if (apiResponse.status >= 400) {
-          const manMadeError = apiResponse.data
-            .error as PossibleAuthenticationErrorManMade;
-          if (manMadeError === "notRegistered") {
-            failMessage = "User isn't registered. Please register first.";
-          } else if (manMadeError === "registeredAlready") {
-            failMessage = "User is already registered. Please login instead.";
-          } else if (manMadeError === "wrongPassword") {
-            failMessage = "Wrong Student ID or password";
-          } else {
-            failMessage = "Please try again.";
-          }
-        }
       } else {
         justFailed = false;
         failMessage = "";
       }
     } catch (error) {
       justFailed = true;
-      failMessage = "Failed to contact the server. Please try again";
+      if (error.response.status >= 500) {
+        failMessage = "Failed to contact the server. Please try again";
+      } else if (error.response.status >= 400) {
+        const manMadeError = error.response.data
+          .error as PossibleAuthenticationErrorManMade;
+        console.log(error.response);
+        if (manMadeError === "notRegistered") {
+          failMessage = "User isn't registered. Please register first.";
+        } else if (manMadeError === "registeredAlready") {
+          failMessage = "User is already registered. Please login instead.";
+        } else if (manMadeError === "wrongPassword") {
+          failMessage = "Wrong Student ID or password";
+        } else {
+          failMessage = "Please try again.";
+        }
+      }
       console.log(error);
     }
 

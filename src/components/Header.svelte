@@ -1,6 +1,33 @@
 <script lang="ts">
-  import { appState, mockLoginData } from "../stores";
+  import { appState } from "../stores";
+  import useIsLoggedIn from "../utilities/useMe";
+  import { useQueryClient } from "@sveltestack/svelte-query";
+  import { isLoggedInProcessor } from "../utilities/utilities";
   import Spacer from "./parts/Spacer.svelte";
+  import { logout } from "../utilities/userAPI";
+
+  const isLoggedIn = useIsLoggedIn();
+
+  async function handleAuthenticationClick() {
+    if (isLoggedInProcessor($isLoggedIn)) {
+      try {
+        const { data } = await logout();
+        console.log("Done running logout");
+        // console.log(data);
+        // console.log(data.message);
+        if (data.message !== "Logout successful") {
+          console.log("Shouldn't be printed if logout is successful");
+          return;
+        }
+        console.log("Should be invalidating");
+        await useQueryClient().invalidateQueries("isLoggedIn");
+        console.log("Should be invalidated");
+        // console.log("Should be invalidating")
+      } catch (error) {}
+    } else {
+      appState.set("login");
+    }
+  }
 </script>
 
 <head>
@@ -29,13 +56,13 @@
       class:header-button-disabled={$appState === "login" ||
         $appState === "register"}
       disabled={$appState === "login" || $appState === "register"}
-      on:click={() => appState.set("login")}
+      on:click={handleAuthenticationClick}
     >
       <!-- class:fa-flip-horizontal={} -->
-      {#if $mockLoginData}
-        <i class="fa-solid fa-arrow-right-to-bracket" />
-      {:else}
+      {#if isLoggedInProcessor($isLoggedIn)}
         <i class="fa-solid fa-arrow-right-to-bracket fa-flip-horizontal" />
+      {:else}
+        <i class="fa-solid fa-arrow-right-to-bracket" />
       {/if}
     </button>
     <Spacer />
@@ -45,9 +72,9 @@
       class="header-button add-button"
       on:click={() => appState.set("add")}
       class:header-button-disabled={$appState === "add"}
-      disabled={$appState === "add" || !$mockLoginData}
+      disabled={$appState === "add" || isLoggedInProcessor($isLoggedIn)}
     >
-      {#if $mockLoginData}
+      {#if isLoggedInProcessor($isLoggedIn)}
         <i class="fa-solid fa-plus" />
       {/if}
     </button>

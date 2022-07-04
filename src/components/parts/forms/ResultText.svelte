@@ -19,6 +19,7 @@
     transition: opacity 0.25s ease-in-out;
     text-align: center;
     padding: 3px 6px;
+    width: 100%;
   }
 
   .success-text {

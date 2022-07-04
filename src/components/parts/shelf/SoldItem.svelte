@@ -2,7 +2,6 @@
   import {
     buyingProcess,
     justFailedBuying,
-    mockLoginData,
     showBuyingResultText,
   } from "../../../stores";
   import type { ISoldItemRaw } from "../../../utilities/types";
@@ -15,9 +14,13 @@
     useQuery,
     useQueryClient,
   } from "@sveltestack/svelte-query";
+  import useIsLoggedIn from "../../../utilities/useMe";
+  import { isLoggedInProcessor } from "../../../utilities/utilities";
   import { buyItem } from "../../../utilities/storeAPI";
   import { showBuyingResultDuration } from "../../../config";
   import Spacer from "../Spacer.svelte";
+
+  const isLoggedIn = useIsLoggedIn();
 
   const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
@@ -72,7 +75,7 @@
   <Spacer />
   <div class="button-container">
     <button on:click={() => handleSeeItem()}> See Item </button>
-    {#if $mockLoginData}
+    {#if isLoggedInProcessor($isLoggedIn)}
       <button on:click={() => handleBuyingItem()}> Buy Item </button>
     {/if}
   </div>

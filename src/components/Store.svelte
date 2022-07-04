@@ -2,11 +2,15 @@
   import Header from "./Header.svelte";
   import Shelf from "./Shelf.svelte";
   import Footer from "./Footer.svelte";
-  import { appState, mockLoginData } from "../stores";
+  import { appState } from "../stores";
   import NewItemForm from "./NewItemForm.svelte";
   import Login from "./Login.svelte";
+  import { isLoggedInProcessor } from "../utilities/utilities";
+  import useIsLoggedIn from "../utilities/useMe";
 
   let formKey = {};
+  const isLoggedIn = useIsLoggedIn();
+  // $: console.log(isLoggedInProcessor($isLoggedIn));
 
   function resetForm() {
     formKey = {};
@@ -23,7 +27,7 @@
     <Login />
   {:else if $appState === "trade"}
     <Shelf />
-    {#if $mockLoginData}
+    {#if isLoggedInProcessor($isLoggedIn)}
       <Footer />
     {/if}
   {/if}
