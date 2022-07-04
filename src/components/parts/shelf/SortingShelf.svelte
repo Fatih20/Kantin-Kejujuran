@@ -27,6 +27,8 @@
     gap: 0.5em;
     justify-content: center;
     width: 100%;
+
+    /* border: solid 1px white; */
   }
 
   .sort-text,
@@ -35,6 +37,7 @@
   }
 
   .sort-text {
+    align-self: flex-start;
     user-select: none;
   }
 
@@ -54,7 +57,6 @@
   .sort-button {
     background-color: rgb(var(--text-on-primary-element-color));
     color: rgb(var(--primary-color));
-    border-radius: var(--button-radius);
     cursor: pointer;
     margin: 0;
     padding: 0.2em;

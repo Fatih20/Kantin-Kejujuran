@@ -61,9 +61,9 @@
     border-bottom: solid 2px rgb(var(--primary-border-color));
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
-    height: 50px;
+    /* height: 50px; */
     /* justify-content: space-between; */
-    padding: 0 0.5em;
+    padding: 0 var(--side-edge-gap);
     width: 100%;
 
     /* border: solid 1px white; */

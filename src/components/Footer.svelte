@@ -143,7 +143,6 @@
               return;
             }
           }}
-          on:keyup={() => {}}
         />
       </div>
       <button
@@ -175,7 +174,7 @@
     gap: 0.5em;
     justify-content: center;
     /* position: fixed; */
-    padding: 0.5em;
+    padding: 0.5em var(--side-edge-gap);
     width: 100%;
   }
 
@@ -192,10 +191,6 @@
     justify-content: center;
     width: 100%;
     max-width: 300px;
-  }
-
-  .spacer {
-    flex-grow: 1;
   }
 
   .money-container {

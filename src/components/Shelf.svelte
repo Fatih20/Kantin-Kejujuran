@@ -10,12 +10,12 @@
     SortingCondition,
   } from "../utilities/types";
   import { compareFunctionGenerator } from "../utilities/utilities";
-  import SoldItem from "./SoldItem.svelte";
+  import SoldItem from "./parts/shelf/SoldItem.svelte";
   import type { AxiosError } from "axios";
   import { getAllItems } from "../utilities/storeAPI";
-  import SeenItem from "./SeenItem.svelte";
+  import SeenItem from "../components/parts/shelf/SeenItem.svelte";
   import Spacer from "./parts/Spacer.svelte";
-  import SortingShelf from "./SortingShelf.svelte";
+  import SortingShelf from "../components/parts/shelf/SortingShelf.svelte";
 
   const queryClient = useQueryClient();
 
@@ -131,7 +131,7 @@
     gap: 0.75em;
     overflow-y: auto;
     position: relative;
-    padding: var(--padding-of-shelf-main);
+    padding: var(--padding-of-shelf-main) var(--side-edge-gap);
     width: min(100%, 1000px);
   }
 
