@@ -186,11 +186,11 @@
   .footer-container {
     align-items: center;
     display: flex;
+    max-width: var(--headfoot-max-width);
     height: 2em;
     gap: 1.5em;
     justify-content: center;
     width: 100%;
-    max-width: 300px;
   }
 
   .money-container {

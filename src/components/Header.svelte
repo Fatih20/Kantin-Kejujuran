@@ -23,33 +23,35 @@
 </head>
 
 <main class:header-in-add={$appState === "add"}>
-  <button
-    class="header-button login-button"
-    class:header-button-disabled={$appState === "login" ||
-      $appState === "register"}
-    disabled={$appState === "login" || $appState === "register"}
-    on:click={() => appState.set("login")}
-  >
-    <!-- class:fa-flip-horizontal={} -->
-    {#if $mockLoginData}
-      <i class="fa-solid fa-arrow-right-to-bracket" />
-    {:else}
-      <i class="fa-solid fa-arrow-right-to-bracket fa-flip-horizontal" />
-    {/if}
-  </button>
-  <Spacer />
-  <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
-  <Spacer />
-  <button
-    class="header-button add-button"
-    on:click={() => appState.set("add")}
-    class:header-button-disabled={$appState === "add"}
-    disabled={$appState === "add" || !$mockLoginData}
-  >
-    {#if $mockLoginData}
-      <i class="fa-solid fa-plus" />
-    {/if}
-  </button>
+  <div class="header-container">
+    <button
+      class="header-button login-button"
+      class:header-button-disabled={$appState === "login" ||
+        $appState === "register"}
+      disabled={$appState === "login" || $appState === "register"}
+      on:click={() => appState.set("login")}
+    >
+      <!-- class:fa-flip-horizontal={} -->
+      {#if $mockLoginData}
+        <i class="fa-solid fa-arrow-right-to-bracket" />
+      {:else}
+        <i class="fa-solid fa-arrow-right-to-bracket fa-flip-horizontal" />
+      {/if}
+    </button>
+    <Spacer />
+    <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
+    <Spacer />
+    <button
+      class="header-button add-button"
+      on:click={() => appState.set("add")}
+      class:header-button-disabled={$appState === "add"}
+      disabled={$appState === "add" || !$mockLoginData}
+    >
+      {#if $mockLoginData}
+        <i class="fa-solid fa-plus" />
+      {/if}
+    </button>
+  </div>
 </main>
 
 <style>
@@ -62,11 +64,19 @@
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
     /* height: 50px; */
-    /* justify-content: space-between; */
+    justify-content: center;
     padding: 0 var(--side-edge-gap);
     width: 100%;
 
     /* border: solid 1px white; */
+  }
+
+  .header-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    max-width: var(--headfoot-max-width);
+    width: 100%;
   }
 
   .header-in-add {
