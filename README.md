@@ -9,3 +9,10 @@ A place where everybody can sell and buy anything for however much.
 3. Go to `localhost:8080`
 
 *It's recommended however to just open the hosted site for convenience sake through the link **[here](https://courageous-gumdrop-00bd28.netlify.app/)***
+
+## Features
+Feel for yourself the creature comfort that will accompany you in using this app
+#### Synchronized marketplace
+Your action has wide-reaching consequences to the whole marketplace as your action, from selling questionable items to withdrawing the store's whole funds, directly affects all other users using this app
+#### Helpful message
+The app will tell you if something goes wrong, never leaving you in the dark thinking whether your action is registered or not
