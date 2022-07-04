@@ -3,13 +3,13 @@ import axios from "axios";
 import type { User } from "./types";
 
 export async function login (loggingUser : User) {
-    const data = await axios.post(`${backendAddress}/user/login`, {loggingUser}, OPTIONS);
+    const data = await axios.post(`${backendAddress}/user/login`, loggingUser, OPTIONS);
 
     return data;
 }
 
 export async function register (registeringUser : User) {
-    const data = await axios.post(`${backendAddress}/user/register`, {registeringUser}, OPTIONS);
+    const data = await axios.post(`${backendAddress}/user/register`, registeringUser, OPTIONS);
 
     return data;
 }

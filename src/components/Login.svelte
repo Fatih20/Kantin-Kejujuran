@@ -226,7 +226,9 @@
           Back
         </button>
         {#if justFailed}
-          <ResultText isSuccess={false} />
+          <ResultText isSuccess={false}>
+            {failMessage}
+          </ResultText>
         {:else}
           <Spacer />
         {/if}
