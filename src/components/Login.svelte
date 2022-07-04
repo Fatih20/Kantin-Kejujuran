@@ -10,8 +10,10 @@
   import { appState } from "../stores";
   import type {
     ISoldItem,
+    PossibleAuthenticationErrorManMade,
     PossibleIDProblem,
     PossiblePasswordProblem,
+    User,
   } from "../utilities/types";
   import { addItem } from "../utilities/storeAPI";
   import Spacer from "./parts/Spacer.svelte";
@@ -24,6 +26,7 @@
   import InputWarning from "./parts/forms/InputWarning.svelte";
   import ResultText from "./parts/forms/ResultText.svelte";
   import { IDValidation } from "../utilities/utilities";
+  import { login, register } from "../utilities/userAPI";
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
@@ -42,6 +45,7 @@
   let nameJustStarted = true;
   let passwordJustStarted = true;
   let justFailed = false;
+  let failMessage = "";
 
   let nameWarningText = "";
   let passwordWarningText = "";
@@ -123,17 +127,45 @@
   async function handleSubmit(e) {
     isSubmitting = true;
     e.preventDefault();
+    const user = { student_id: name.toString(), password } as User;
     try {
+      const apiResponse = await ($appState === "login"
+        ? login(user)
+        : register(user));
+
+      if (apiResponse.data.error !== null) {
+        justFailed = true;
+        if (apiResponse.status >= 500) {
+          failMessage = "Failed to contact the server. Please try again";
+        } else if (apiResponse.status >= 400) {
+          const manMadeError = apiResponse.data
+            .error as PossibleAuthenticationErrorManMade;
+          if (manMadeError === "notRegistered") {
+            failMessage = "User isn't registered. Please register first.";
+          } else if (manMadeError === "registeredAlready") {
+            failMessage = "User is already registered. Please login instead.";
+          } else if (manMadeError === "wrongPassword") {
+            failMessage = "Wrong Student ID or password";
+          } else {
+            failMessage = "Please try again.";
+          }
+        }
+      } else {
+        justFailed = false;
+        failMessage = "";
+      }
     } catch (error) {
       justFailed = true;
+      failMessage = "Failed to contact the server. Please try again";
       console.log(error);
     }
+
+    isSubmitting = false;
 
     if (justFailed) {
       return;
     }
 
-    isSubmitting = false;
     appState.set("trade");
   }
 </script>

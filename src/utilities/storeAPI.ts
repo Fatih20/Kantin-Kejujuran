@@ -1,11 +1,6 @@
 import axios from "axios";
-import { backendAddress } from "../config";
+import { backendAddress, OPTIONS } from "../config";
 import type { IAPIReturn, ISoldItem, ISoldItemRaw } from "./types";
-
-export const OPTIONS = {
-    headers : {'Content-Type' : 'application/json'},
-    withCredentials : true
-}
 
 export async function getBalance() {
     const {data : {error, message, response}} : {data : IAPIReturn<number>} = await axios.get(`${backendAddress}/store/balance`, OPTIONS);

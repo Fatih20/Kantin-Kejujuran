@@ -17,3 +17,7 @@ export const CLOUDINARY = {
 }
 export const maxIDLength = 5;
 export const maxPasswordLength = 254;
+export const OPTIONS = {
+    headers : {'Content-Type' : 'application/json'},
+    withCredentials : true
+}

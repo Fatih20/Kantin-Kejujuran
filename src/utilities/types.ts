@@ -55,3 +55,24 @@ export type PossiblePasswordProblem = typeof possiblePasswordProblemList[number]
 const possibleIDProblemList = ["none", "empty", "invalid"] as const;
 export type PossibleIDProblem = typeof possibleIDProblemList[number];
 
+export type User = {
+    student_id : string,
+    password : string
+}
+
+export type UserOpaque = Omit<User, "password"> & {
+    password : undefined
+}
+
+const possibleLoginErrorPositionList = ["Checking uniqueness", "Getting new password", "Done"] as const;
+
+export type LoginErrorPosition = typeof possibleLoginErrorPositionList[number];
+
+const possibleLoginErrorManMadeList = ["notRegistered", "wrongPassword"] as const;
+
+export type LoginErrorManMade = (typeof possibleLoginErrorManMadeList[number])
+
+const possibleRegisterErrorManMadeList = ["registeredAlready"] as const;
+export type RegisterErrorManMade = (typeof possibleRegisterErrorManMadeList[number]);
+
+export type PossibleAuthenticationErrorManMade = LoginErrorManMade | RegisterErrorManMade;
