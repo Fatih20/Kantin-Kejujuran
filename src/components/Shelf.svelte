@@ -15,6 +15,7 @@
   import { getAllItems } from "../utilities/storeAPI";
   import SeenItem from "./SeenItem.svelte";
   import Spacer from "./parts/Spacer.svelte";
+  import SortingShelf from "./SortingShelf.svelte";
 
   const queryClient = useQueryClient();
 
@@ -103,18 +104,12 @@
       <h2 class="empty-text">No items are currently sold</h2>
       <Spacer />
     {:else}
-      <div class="sort-container">
-        <p class="sort-text">Sort Method: <span>{overallSortingText}</span></p>
-        <Spacer />
-        <div class="sort-button-container">
-          <button class="sort-button" on:click={() => handleSortChanges(true)}
-            >{secondSortingText}</button
-          >
-          <button class="sort-button" on:click={() => handleSortChanges(false)}
-            >{firstSortingText}</button
-          >
-        </div>
-      </div>
+      <SortingShelf
+        {overallSortingText}
+        {firstSortingText}
+        {secondSortingText}
+        {handleSortChanges}
+      />
       <div class="shelf">
         {#each sortedItems as soldItem (soldItem.id)}
           <SoldItem on:seeItem={seeItem} {soldItem} />
@@ -162,10 +157,6 @@
     text-align: center;
   }
 
-  .spacer {
-    flex-grow: 1;
-  }
-
   .shelf {
     --gap-size: 0.75em;
     --minimum-item-width: 200px;
@@ -177,44 +168,5 @@
     );
     gap: var(--gap-size);
     width: 100%;
-  }
-
-  .sort-container {
-    align-items: center;
-    display: flex;
-    gap: 0.5em;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .sort-text,
-  .sort-button {
-    font-weight: 500;
-  }
-
-  .sort-text {
-    user-select: none;
-  }
-
-  .sort-text span {
-    font-weight: 400;
-  }
-
-  .sort-button-container {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25em;
-    text-align: left;
-    justify-content: flex-end;
-  }
-
-  .sort-button {
-    background-color: rgb(var(--text-on-primary-element-color));
-    color: rgb(var(--primary-color));
-    border-radius: var(--button-radius);
-    cursor: pointer;
-    margin: 0;
-    padding: 0.2em;
   }
 </style>
