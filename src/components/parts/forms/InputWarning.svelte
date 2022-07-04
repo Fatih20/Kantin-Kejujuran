@@ -13,7 +13,7 @@
     box-sizing: border-box;
     border-radius: var(--button-radius);
     color: rgb(var(--warning-color-fg));
-    font-weight: 500;
+    font-weight: 400;
     padding: 3px 6px;
   }
 

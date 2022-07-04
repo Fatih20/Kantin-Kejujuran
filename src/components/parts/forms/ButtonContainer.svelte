@@ -7,7 +7,7 @@
     align-items: center;
     display: flex;
     gap: 0.5em;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
   }
 </style>

@@ -63,6 +63,12 @@
   }
 
   $: {
+    if (password !== "") {
+      passwordJustStarted = false;
+    }
+  }
+
+  $: {
     if (name === null) {
       nameProblem = "empty";
     } else if (!IDValidation(name)) {
@@ -89,6 +95,16 @@
       passwordProblem = "long";
     } else {
       passwordProblem = "none";
+    }
+  }
+
+  $: {
+    if (passwordProblem === "none") {
+      passwordWarningText = "";
+    } else if (passwordProblem === "empty") {
+      passwordWarningText = "Please enter a password";
+    } else if (passwordProblem === "long") {
+      passwordWarningText = "Password is too long";
     }
   }
 
@@ -217,6 +233,11 @@
           </InputWarning>
         </InputContainer>
       </InputElement>
+      {#if justFailed}
+        <ResultText isSuccess={false}>
+          {failMessage}
+        </ResultText>
+      {/if}
       <ButtonContainer>
         <button
           class="form-button return-button"
@@ -225,13 +246,6 @@
         >
           Back
         </button>
-        {#if justFailed}
-          <ResultText isSuccess={false}>
-            {failMessage}
-          </ResultText>
-        {:else}
-          <Spacer />
-        {/if}
         <button
           class="form-button submit-button"
           type="submit"
