@@ -121,6 +121,7 @@
 
 <style>
   main {
+    --padding-of-items-container: 0.75em;
     --padding-of-shelf-main: 0.75em;
     align-items: center;
     box-sizing: border-box;
@@ -146,7 +147,7 @@
     left: 0;
     right: 0;
     position: fixed;
-    padding: var(--padding-of-shelf-main);
+    padding: var(--padding-of-shelf-main) var(--side-edge-gap);
     top: 0;
     transition: all 0.25s ease-in-out;
     z-index: 1000;

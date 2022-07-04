@@ -90,7 +90,7 @@
     flex-direction: column;
     gap: 0.25em;
     height: 300px;
-    padding: 0.75em;
+    padding: var(--padding-of-items-container);
     word-break: break-word;
   }
 

@@ -17,14 +17,14 @@
 </script>
 
 <main on:click={(e) => e.stopPropagation()}>
+  <div class="title-part-container">
+    <h3 class="name">{name}</h3>
+    <p class="date">Entered the market on {datecreated}</p>
+  </div>
   <div class="image-container">
     <img class="image" src={imagelink} alt="Product chosen" />
   </div>
   <div class="main-item-container">
-    <div class="title-part-container">
-      <h3 class="name">{name}</h3>
-      <p class="date">{datecreated}</p>
-    </div>
     <h2 class="price">{priceDenominator(price)}</h2>
     <p class="description">{description}</p>
   </div>
@@ -45,7 +45,7 @@
     flex-direction: column;
     gap: 0.5em;
     justify-content: center;
-    padding: 0.5em;
+    padding: var(--padding-of-items-container);
     width: min(300px, 100%);
   }
 
@@ -72,7 +72,6 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 0.25em;
   }
 
   .date {
