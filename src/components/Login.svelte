@@ -53,7 +53,7 @@
   );
 
   $: {
-    if (name >= 10000) {
+    if (name >= 10000 || name < 0) {
       nameJustStarted = false;
     }
   }
