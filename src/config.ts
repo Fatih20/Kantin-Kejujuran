@@ -16,3 +16,4 @@ export const CLOUDINARY = {
     path : "https://api.cloudinary.com/v1_1/"
 }
 export const maxIDLength = 5;
+export const maxPasswordLength = 254;

@@ -7,13 +7,11 @@
     useQueryClient,
   } from "@sveltestack/svelte-query";
 
-  import { fade } from "svelte/transition";
-
   import { appState } from "../stores";
   import type {
     ISoldItem,
-    ISoldItemLite,
-    PossibleNameProblem,
+    PossibleIDProblem,
+    PossiblePasswordProblem,
   } from "../utilities/types";
   import { addItem } from "../utilities/storeAPI";
   import Spacer from "./parts/Spacer.svelte";
@@ -25,6 +23,7 @@
   import Title from "./parts/forms/Title.svelte";
   import InputWarning from "./parts/forms/InputWarning.svelte";
   import ResultText from "./parts/forms/ResultText.svelte";
+  import { IDValidation } from "../utilities/utilities";
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
@@ -34,11 +33,11 @@
       ? "Don't have an account yet?"
       : "Already have an account?";
 
-  let name: string = "";
+  let name: number | null | undefined = undefined;
   let password: string = "";
 
-  let nameProblem = "empty" as PossibleNameProblem;
-  let passwordProblem = "empty" as "empty" | "none" | "tooLong";
+  let nameProblem = "empty" as PossibleIDProblem;
+  let passwordProblem = "empty" as PossiblePasswordProblem;
 
   let nameJustStarted = true;
   let passwordJustStarted = true;
@@ -49,19 +48,21 @@
 
   let dataValid = false;
 
-  $: dataValid = [nameValid].every((validity) => validity === true);
+  $: dataValid = [nameValid, passwordValid].every(
+    (validity) => validity === true
+  );
 
   $: {
-    if (name !== "") {
+    if (name >= 10000) {
       nameJustStarted = false;
     }
   }
 
   $: {
-    if (name === "") {
+    if (name === null) {
       nameProblem = "empty";
-    } else if (name.length > maxIDLength) {
-      nameProblem = "long";
+    } else if (!IDValidation(name)) {
+      nameProblem = "invalid";
     } else {
       nameProblem = "none";
     }
@@ -71,9 +72,9 @@
     if (nameProblem === "none") {
       nameWarningText = "";
     } else if (nameProblem === "empty") {
-      nameWarningText = "Please enter a name";
-    } else if (nameProblem === "long") {
-      nameWarningText = "Name entered is too long";
+      nameWarningText = "Please enter a student ID";
+    } else if (nameProblem === "invalid") {
+      nameWarningText = "Not a valid student ID";
     }
   }
 
@@ -81,7 +82,7 @@
     if (password === "") {
       passwordProblem = "empty";
     } else if (password.length >= 255 && $appState === "register") {
-      passwordProblem = "tooLong";
+      passwordProblem = "long";
     } else {
       passwordProblem = "none";
     }
@@ -92,7 +93,7 @@
 
   $: title = $appState === "login" ? "Login" : "Register";
   $: submitButtonText = $appState === "login" ? "Login" : "Register";
-  $: redirectAddress = $appState === "login" ? "Login" : "Register";
+  $: redirectAddress = $appState === "login" ? "Register" : "Login";
 
   const mutateItems = useMutation(
     "items",
@@ -112,7 +113,11 @@
   );
 
   function reset() {
-    appState.set("trade");
+    name = undefined;
+    password = "";
+
+    nameJustStarted = true;
+    passwordJustStarted = true;
   }
 
   async function handleSubmit(e) {
@@ -129,7 +134,7 @@
     }
 
     isSubmitting = false;
-    reset();
+    appState.set("trade");
   }
 </script>
 
@@ -151,11 +156,13 @@
     <Title>{title}</Title>
     <form on:submit={handleSubmit}>
       <InputElement>
-        <label for="name-input">Student ID</label>
+        <label for="name-input">Student ID (Must be 5 characters)</label>
         <InputContainer>
           <input
             id="name-input"
             name="name-input"
+            type="number"
+            min="0"
             bind:value={name}
             disabled={isSubmitting}
           />
@@ -204,6 +211,7 @@
         {redirectText}
         <span
           on:click={() => {
+            reset();
             if ($appState === "login") {
               appState.set("register");
             } else {

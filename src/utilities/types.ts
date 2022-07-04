@@ -48,3 +48,10 @@ export type PossibleLoginProblem = typeof possibleLoginProblemList[number];
 
 const possibleRegisterProblemList = ["none", "alreadyExist"] as const;
 export type PosibleRegisterProblem = typeof possibleRegisterProblemList[number];
+
+const possiblePasswordProblemList = ["none", "long", "empty"] as const;
+export type PossiblePasswordProblem = typeof possiblePasswordProblemList[number];
+
+const possibleIDProblemList = ["none", "empty", "invalid"] as const;
+export type PossibleIDProblem = typeof possibleIDProblemList[number];
+

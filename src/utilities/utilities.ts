@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CLOUDINARY, validImageExtensionList } from "../config";
+import { CLOUDINARY, maxIDLength, validImageExtensionList } from "../config";
 import type { ISoldItem, ISoldItemLite } from "./types";
 
 export function priceDenominator (rawPrice : number) : string {
@@ -89,4 +89,16 @@ export function fillItemInfo (addedItem : ISoldItemLite) {
         const datecreated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`
         const timeAppendedNewSoldItem = {...addedItem, datecreated, milisecondcreated : date.getTime()} as ISoldItem;
         return timeAppendedNewSoldItem;
+}
+
+export function IDValidation (studentID : number | undefined | null) {
+    if (typeof studentID !== "number") {
+        return false;
+    }
+    if (studentID < 10**(maxIDLength - 1) || studentID > 10**(maxIDLength)) {
+        return false;
+    }
+    const firstThreeSum = (studentID).toString().split('').slice(0, 3).map((digit) => parseInt(digit)).reduce((convertedDigit, sum) => convertedDigit + sum);
+    const secondNumber = parseInt(studentID.toString().slice(3, 5));
+    return firstThreeSum === secondNumber
 }
