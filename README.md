@@ -16,3 +16,5 @@ Feel for yourself the creature comfort that will accompany you in using this app
 Your action has wide-reaching consequences to the whole marketplace as your action, from selling questionable items to withdrawing the store's whole funds, directly affects all other users using this app
 #### Helpful message
 The app will tell you if something goes wrong, never leaving you in the dark thinking whether your action is registered or not
+#### Secure trading
+Only registered and logged in students (all of whom are definitely honest in nature) can buy and sell items in the marketplace, as well as taking or giving money to the store's balance. Thus preventing leeches and parasites from stealing items or the store's money.
