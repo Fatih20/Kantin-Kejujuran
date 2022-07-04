@@ -60,9 +60,9 @@
     >
       <!-- class:fa-flip-horizontal={} -->
       {#if isLoggedInProcessor($isLoggedIn)}
-        <i class="fa-solid fa-arrow-right-to-bracket fa-flip-horizontal" />
+        <i class="fa-solid fa-person-booth fa-flip-horizontal" />
       {:else}
-        <i class="fa-solid fa-arrow-right-to-bracket" />
+        <i class="fa-solid fa-person-booth" />
       {/if}
     </button>
     <Spacer />
