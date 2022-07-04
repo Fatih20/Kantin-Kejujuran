@@ -27,10 +27,6 @@
   import ResultText from "./parts/forms/ResultText.svelte";
 
   const queryClient = useQueryClient();
-
-  let showingResultText = false;
-  let justFailed = false;
-
   let isSubmitting = false;
 
   $: redirectText =
@@ -46,6 +42,7 @@
 
   let nameJustStarted = true;
   let passwordJustStarted = true;
+  let justFailed = false;
 
   let nameWarningText = "";
   let passwordWarningText = "";
@@ -83,6 +80,10 @@
   $: nameValid = nameProblem === "none";
   $: passwordValid = passwordProblem === "none";
 
+  $: title = $appState === "login" ? "Login" : "Register";
+  $: submitButtonText = $appState === "login" ? "Login" : "Register";
+  $: redirectAddress = $appState === "login" ? "Login" : "Register";
+
   const mutateItems = useMutation(
     "items",
     async (addedItem: ISoldItem) => {
@@ -109,14 +110,16 @@
     e.preventDefault();
     try {
     } catch (error) {
+      justFailed = true;
       console.log(error);
     }
 
+    if (justFailed) {
+      return;
+    }
+
     isSubmitting = false;
-    showingResultText = true;
-    setTimeout(() => {
-      reset();
-    }, successTextDuration);
+    reset();
   }
 </script>
 
@@ -135,7 +138,7 @@
 
 <MainOfForm on:click={(e) => e.stopPropagation()}>
   <FormContainer>
-    <Title>{$appState === "login" ? "Login" : "Register"}</Title>
+    <Title>{title}</Title>
     <form on:submit={handleSubmit}>
       <InputElement>
         <label for="name-input">Student ID</label>
@@ -173,14 +176,8 @@
         >
           Back
         </button>
-        {#if showingResultText}
-          {#if justFailed}
-            <ResultText isSuccess={false}>
-              Adding new item failed. Try again.
-            </ResultText>
-          {:else}
-            <ResultText isSuccess={true}>Item succesfully added.</ResultText>
-          {/if}
+        {#if justFailed}
+          <ResultText isSuccess={false} />
         {:else}
           <Spacer />
         {/if}
@@ -190,7 +187,7 @@
           class:disabled-button={!dataValid}
           disabled={!dataValid}
         >
-          {$appState === "login" ? "Login" : "Register"}
+          {submitButtonText}
         </button>
       </ButtonContainer>
       <p class="redirect">
@@ -202,7 +199,7 @@
             } else {
               appState.set("login");
             }
-          }}>{$appState === "login" ? "Register" : "Login"}</span
+          }}>{redirectAddress}</span
         >
       </p>
     </form>
@@ -259,7 +256,12 @@
     color: rgba(var(--text-on-disabled-element-color), 0.5);
   }
 
+  .redirect {
+    font-size: 0.8em;
+  }
+
   .redirect span {
     cursor: pointer;
+    color: rgb(var(--secondary-color));
   }
 </style>

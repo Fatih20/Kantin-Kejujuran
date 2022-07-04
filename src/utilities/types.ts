@@ -42,3 +42,9 @@ export type IAPIReturn<T> = {
     message : string,
     response : T,
 }
+
+const possibleLoginProblemList = ["none", "wrongName", "wrongPassword"] as const;
+export type PossibleLoginProblem = typeof possibleLoginProblemList[number];
+
+const possibleRegisterProblemList = ["none", "alreadyExist"] as const;
+export type PosibleRegisterProblem = typeof possibleRegisterProblemList[number];
