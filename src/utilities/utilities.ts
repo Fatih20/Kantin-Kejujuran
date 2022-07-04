@@ -102,3 +102,16 @@ export function IDValidation (studentID : number | undefined | null) {
     const secondNumber = parseInt(studentID.toString().slice(3, 5));
     return firstThreeSum === secondNumber
 }
+
+export async function fetchDataRetry (functionToCall : () => Promise<any>, timesFunctionIsCalled : number, limitOfCalling : number) : Promise<any>{
+    const response = await functionToCall();
+    if (response.statusCode < 500) {
+        return response;
+    }
+
+    if (timesFunctionIsCalled < limitOfCalling) {
+        return fetchDataRetry(functionToCall, timesFunctionIsCalled + 1, limitOfCalling)
+    }
+
+    return response;
+}  
