@@ -122,8 +122,6 @@ export function isLoggedInProcessor (isLoggedInSubscribe) {
         return false;
     }
 
-    console.log(isLoggedInSubscribe.data.message);
-
     if (isLoggedInSubscribe.data.message === "You are still logged in") {
         return true;
     } else if (isLoggedInSubscribe.data.message === "You're not logged in") {
