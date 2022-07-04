@@ -2,17 +2,14 @@
   import { onMount } from "svelte";
   import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
-  import { mockLoginData, sortCondition } from "../stores";
+  import { sortCondition } from "../stores";
   import type {
     ISoldItem,
     ISoldItemRaw,
     ShelfState,
     SortingCondition,
   } from "../utilities/types";
-  import {
-    compareFunctionGenerator,
-    priceDenominator,
-  } from "../utilities/utilities";
+  import { compareFunctionGenerator } from "../utilities/utilities";
   import SoldItem from "./SoldItem.svelte";
   import type { AxiosError } from "axios";
   import { getAllItems } from "../utilities/storeAPI";
@@ -36,12 +33,6 @@
 
   let shelfState = "all" as ShelfState;
   let seenItem: ISoldItem;
-
-  $: seenName = seenItem?.name;
-  $: seenPrice = seenItem?.price;
-  $: seenDescription = seenItem?.description;
-  $: seenDate = seenItem?.datecreated;
-  $: seenImageLink = seenItem?.imagelink;
 
   let currentBuyItemFunction;
 
