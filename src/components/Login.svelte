@@ -38,7 +38,7 @@
   let password: string = "";
 
   let nameProblem = "empty" as PossibleNameProblem;
-  let passwordProblem = "empty" as "empty" | "none";
+  let passwordProblem = "empty" as "empty" | "none" | "tooLong";
 
   let nameJustStarted = true;
   let passwordJustStarted = true;
@@ -74,6 +74,16 @@
       nameWarningText = "Please enter a name";
     } else if (nameProblem === "long") {
       nameWarningText = "Name entered is too long";
+    }
+  }
+
+  $: {
+    if (password === "") {
+      passwordProblem = "empty";
+    } else if (password.length >= 255 && $appState === "register") {
+      passwordProblem = "tooLong";
+    } else {
+      passwordProblem = "none";
     }
   }
 
