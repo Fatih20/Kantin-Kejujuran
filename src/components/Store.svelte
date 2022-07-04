@@ -4,6 +4,7 @@
   import Footer from "./Footer.svelte";
   import { appState } from "../stores";
   import NewItemForm from "./NewItemForm.svelte";
+  import Login from "./Login.svelte";
 
   let formKey = {};
 
@@ -18,6 +19,8 @@
     {#key formKey}
       <NewItemForm on:reset={resetForm} />
     {/key}
+  {:else if $appState === "login" || $appState === "register"}
+    <Login />
   {:else if $appState === "trade"}
     <Shelf />
     <Footer />

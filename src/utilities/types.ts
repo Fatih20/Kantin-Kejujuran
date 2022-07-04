@@ -1,4 +1,4 @@
-const possibleAppStateList = ["startPage", "trade", "add"] as const;
+const possibleAppStateList = ["startPage", "trade", "add", "login", "register"] as const;
 
 export type PossibleAppState = typeof possibleAppStateList[number];
 
