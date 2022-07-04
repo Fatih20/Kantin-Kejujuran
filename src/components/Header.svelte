@@ -77,7 +77,7 @@
     /* align-self: center; */
     cursor: pointer;
     font-family: "Kalam", cursive;
-    font-size: 1.7 5em;
+    font-size: 1.75em;
     user-select: none;
 
     /* border: solid 1px black; */
