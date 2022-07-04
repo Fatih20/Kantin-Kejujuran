@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    maxDescriptionLength,
-    maxNameLength,
-    successTextDuration,
-  } from "../config";
+  import { maxIDLength, successTextDuration } from "../config";
 
   import {
     useMutation,
@@ -14,14 +10,21 @@
   import { fade } from "svelte/transition";
 
   import { appState } from "../stores";
-  import { uploadImage } from "../utilities/photosAPI";
   import type {
     ISoldItem,
     ISoldItemLite,
     PossibleNameProblem,
   } from "../utilities/types";
-  import { fillItemInfo, validImageChecker } from "../utilities/utilities";
   import { addItem } from "../utilities/storeAPI";
+  import Spacer from "./parts/Spacer.svelte";
+  import FormContainer from "./parts/forms/FormContainer.svelte";
+  import MainOfForm from "./parts/forms/MainOfForm.svelte";
+  import InputContainer from "./parts/forms/InputContainer.svelte";
+  import InputElement from "./parts/forms/InputContainer.svelte";
+  import ButtonContainer from "./parts/forms/ButtonContainer.svelte";
+  import Title from "./parts/forms/Title.svelte";
+  import InputWarning from "./parts/forms/InputWarning.svelte";
+  import ResultText from "./parts/forms/ResultText.svelte";
 
   const queryClient = useQueryClient();
 
@@ -30,32 +33,26 @@
 
   let isSubmitting = false;
 
-  let imageInputKey = {};
+  $: redirectText =
+    $appState === "login"
+      ? "Don't have an account yet?"
+      : "Already have an account?";
 
   let name: string = "";
-  let price: number | null | undefined = undefined;
-  let description: string = "";
-  let imageFilename: string | null = null;
-  let imageList: FileList | null = null;
+  let password: string = "";
 
   let nameProblem = "empty" as PossibleNameProblem;
-  let descriptionProblem = "empty" as PossibleNameProblem;
+  let passwordProblem = "empty" as "empty" | "none";
 
   let nameJustStarted = true;
-  let priceJustStarted = true;
-  let descriptionJustStarted = true;
-  let imageJustStarted = true;
+  let passwordJustStarted = true;
 
   let nameWarningText = "";
-  let descriptionWarningText = "";
-  let priceWarningText = "";
-  let imageWarningText = "";
+  let passwordWarningText = "";
 
   let dataValid = false;
 
-  $: dataValid = [nameValid, priceValid, descriptionValid, imageValid].every(
-    (validity) => validity === true
-  );
+  $: dataValid = [nameValid].every((validity) => validity === true);
 
   $: {
     if (name !== "") {
@@ -64,28 +61,12 @@
   }
 
   $: {
-    if (description !== "") {
-      descriptionJustStarted = false;
-    }
-  }
-
-  $: {
     if (name === "") {
       nameProblem = "empty";
-    } else if (name.length > maxNameLength) {
+    } else if (name.length > maxIDLength) {
       nameProblem = "long";
     } else {
       nameProblem = "none";
-    }
-  }
-
-  $: {
-    if (description === "") {
-      descriptionProblem = "empty";
-    } else if (description.length > maxDescriptionLength) {
-      descriptionProblem = "long";
-    } else {
-      descriptionProblem = "none";
     }
   }
 
@@ -99,60 +80,8 @@
     }
   }
 
-  $: {
-    if (descriptionProblem === "none") {
-      descriptionWarningText = "";
-    } else if (descriptionProblem === "empty") {
-      descriptionWarningText = "Please enter a description";
-    } else if (descriptionProblem === "long") {
-      descriptionWarningText = "Description entered is too long";
-    }
-  }
-
-  $: {
-    if (!priceValid) {
-      priceWarningText = "Please enter a positive number";
-    } else {
-      priceWarningText = "";
-    }
-  }
-
-  $: {
-    if (price !== undefined) {
-      priceJustStarted = false;
-    } else {
-      priceJustStarted = true;
-    }
-  }
-
-  $: {
-    if (!imageValid) {
-      imageWarningText = "Not an acceptable image";
-    } else {
-      imageWarningText = "";
-    }
-  }
-
-  $: {
-    if (imageFilename !== null) {
-      imageJustStarted = false;
-    } else {
-      imageJustStarted = true;
-    }
-  }
-
-  $: {
-    if (!validImageChecker(imageFilename)) {
-      imageWarningText = "Invalid type of image";
-    } else if (imageFilename === null) {
-      imageWarningText = "Please upload an image";
-    }
-  }
-
   $: nameValid = nameProblem === "none";
-  $: priceValid = price > 0 && price !== null;
-  $: descriptionValid = descriptionProblem === "none";
-  $: imageValid = validImageChecker(imageFilename) && imageList !== null;
+  $: passwordValid = passwordProblem === "none";
 
   const mutateItems = useMutation(
     "items",
@@ -172,43 +101,21 @@
   );
 
   function reset() {
-    imageInputKey = {};
-    name = "";
-    price = undefined;
-    description = "";
-    imageFilename = null;
-    imageList = null;
-
-    nameJustStarted = true;
-    priceJustStarted = true;
-    descriptionJustStarted = true;
-    imageJustStarted = true;
+    appState.set("trade");
   }
 
   async function handleSubmit(e) {
     isSubmitting = true;
     e.preventDefault();
-    const { isError, retrievedData } = await uploadImage(imageList[0]);
-    if (!isError) {
-      const { url: imagelink } = retrievedData;
-      const newSoldItem = {
-        name,
-        price,
-        description,
-        imagelink,
-      } as ISoldItemLite;
-      try {
-        await $mutateItems.mutateAsync(fillItemInfo(newSoldItem));
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      justFailed = true;
+    try {
+    } catch (error) {
+      console.log(error);
     }
+
     isSubmitting = false;
     showingResultText = true;
     setTimeout(() => {
-      showingResultText = false;
+      reset();
     }, successTextDuration);
   }
 </script>
@@ -226,97 +133,41 @@
   />
 </head>
 
-<main on:click={(e) => e.stopPropagation()}>
-  <div class="form-container">
-    <h2 class="title">What's the item?</h2>
+<MainOfForm on:click={(e) => e.stopPropagation()}>
+  <FormContainer>
+    <Title>{$appState === "login" ? "Login" : "Register"}</Title>
     <form on:submit={handleSubmit}>
-      <div class="input-element">
-        <label for="image-input">Any photo of it? (JPG or PNG)</label>
-        <div class="input-container">
-          {#key imageInputKey}
-            <input
-              id="image-input"
-              name="image-input"
-              type="file"
-              accept="image/png, image/jpeg"
-              bind:value={imageFilename}
-              bind:files={imageList}
-              disabled={isSubmitting}
-            />
-          {/key}
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!imageValid && !imageJustStarted}
-          >
-            {imageWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
-        <label for="name-input"
-          >What's its name? ({`${name.length} / ${maxNameLength}`})</label
-        >
-        <div class="input-container">
+      <InputElement>
+        <label for="name-input">Student ID</label>
+        <InputContainer>
           <input
             id="name-input"
             name="name-input"
             bind:value={name}
             disabled={isSubmitting}
           />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!nameValid && !nameJustStarted}
-          >
+          <InputWarning valid={nameValid || nameJustStarted}>
             {nameWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
-        <label for="price-input">What is it worth? (Rp)</label>
-        <div class="input-container">
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <InputElement>
+        <label for="password-input">Password</label>
+        <InputContainer>
           <input
-            id="price-input"
-            name="price-input"
-            type="number"
-            min="0"
-            bind:value={price}
+            id="password-input"
+            name="password-input"
+            bind:value={password}
             disabled={isSubmitting}
           />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!priceValid && !priceJustStarted}
-          >
-            {priceWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
-        <label for="description-input"
-          >Describe it ({`${description.length} / ${maxDescriptionLength}`})</label
-        >
-        <div class="input-container">
-          <textarea
-            id="description-input"
-            name="description"
-            type="text"
-            min="0"
-            bind:value={description}
-            rows="5"
-            cols="20"
-            disabled={isSubmitting}
-          />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!descriptionValid &&
-              !descriptionJustStarted}
-          >
-            {descriptionWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="button-container">
+          <InputWarning valid={passwordValid || passwordJustStarted}>
+            {passwordWarningText}
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <ButtonContainer>
         <button
-          class="return-button"
+          class="form-button return-button"
           type="button"
           on:click={() => appState.set("trade")}
         >
@@ -324,65 +175,41 @@
         </button>
         {#if showingResultText}
           {#if justFailed}
-            <p class="result-text fail-text" transition:fade>
+            <ResultText isSuccess={false}>
               Adding new item failed. Try again.
-            </p>
+            </ResultText>
           {:else}
-            <p class="result-text success-text" transition:fade>
-              Item succesfully added.
-            </p>
+            <ResultText isSuccess={true}>Item succesfully added.</ResultText>
           {/if}
         {:else}
-          <div class="spacer" />
+          <Spacer />
         {/if}
         <button
-          class="submit-button"
+          class="form-button submit-button"
           type="submit"
-          class:submit-button-disabled={!dataValid}
+          class:disabled-button={!dataValid}
           disabled={!dataValid}
         >
-          Sell
+          {$appState === "login" ? "Login" : "Register"}
         </button>
-      </div>
+      </ButtonContainer>
+      <p class="redirect">
+        {redirectText}
+        <span
+          on:click={() => {
+            if ($appState === "login") {
+              appState.set("register");
+            } else {
+              appState.set("login");
+            }
+          }}>{$appState === "login" ? "Register" : "Login"}</span
+        >
+      </p>
     </form>
-  </div>
-</main>
+  </FormContainer>
+</MainOfForm>
 
 <style>
-  main {
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0);
-    box-sizing: border-box;
-    /* border: solid 2px white; */
-    color: rgb(var(--primary-color));
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    padding: 0.5em 1em;
-    width: 100%;
-  }
-
-  .form-container {
-    align-items: center;
-    background-color: rgb(var(--primary-color));
-    box-sizing: border-box;
-    border-radius: var(--button-radius);
-    color: rgb(var(--text-on-primary-element-color));
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 1em;
-  }
-
-  .title {
-    border-bottom: solid 2px rgb(var(--text-on-primary-element-color));
-    display: inline-block;
-    text-align: center;
-    padding-bottom: 0.25em;
-    width: 100%;
-  }
-
   form {
     padding-top: 0.75em;
     align-items: center;
@@ -390,69 +217,21 @@
     flex-direction: column;
     justify-content: center;
     gap: 1em;
+
+    /* border: solid 1px white; */
   }
 
-  .input-element {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.175em;
-    padding: 0;
-    width: 100%;
-  }
   label {
     font-weight: 400;
     margin: 0;
-  }
-
-  .input-container {
-    align-content: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.5em;
-    width: 100%;
-  }
-
-  input,
-  textarea {
-    border-radius: var(--button-radius);
-    outline-color: rgb(var(--primary-color));
   }
 
   input {
     margin: 0;
     width: 100%;
   }
-  .input-warning {
-    display: none;
-    background-color: rgb(var(--warning-color-bg));
-    box-sizing: border-box;
-    border-radius: var(--button-radius);
-    color: rgb(var(--warning-color-fg));
-    font-weight: 500;
-    padding: 3px 6px;
-  }
-  .input-not-valid-warning {
-    display: inline-block;
-  }
 
-  textarea {
-    resize: vertical;
-    margin: 0;
-    max-width: 100%;
-    width: 100%;
-  }
-  .button-container {
-    align-items: center;
-    display: flex;
-    gap: 0.5em;
-    justify-content: center;
-    width: 100%;
-  }
-
-  button {
+  .form-button {
     background-color: rgba(var(--primary-color), 0);
     border-radius: var(--button-smaller-radius);
     border: none;
@@ -460,46 +239,27 @@
     font-weight: 600;
     transition: all 0.25s ease-in-out;
     margin: 0;
+    user-select: none;
     padding: 7px;
   }
 
-  .spacer {
-    flex-grow: 1;
-  }
-
-  button:hover {
+  .form-button:hover {
     background-color: rgb(var(--text-on-primary-element-color));
     color: rgb(var(--primary-color));
   }
 
-  .submit-button-disabled {
+  .disabled-button {
     --border-color: var(--disabled-color);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
     cursor: initial;
   }
 
-  .submit-button-disabled:hover {
+  .disabled-button:hover {
     background-color: rgba(var(--primary-color), 0);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
   }
 
-  .result-text {
-    border-radius: var(--button-radius);
-    display: inline-block;
-    font-weight: 500;
-    flex-grow: 1;
-    transition: opacity 0.25s ease-in-out;
-    text-align: center;
-    padding: 3px 6px;
-  }
-
-  .success-text {
-    background-color: rgb(var(--success-color-bg));
-    color: rgb(var(--success-color-fg));
-  }
-
-  .fail-text {
-    background-color: rgb(var(--warning-color-bg));
-    color: rgb(var(--warning-color-fg));
+  .redirect span {
+    cursor: pointer;
   }
 </style>

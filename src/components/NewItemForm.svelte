@@ -22,6 +22,15 @@
   } from "../utilities/types";
   import { fillItemInfo, validImageChecker } from "../utilities/utilities";
   import { addItem } from "../utilities/storeAPI";
+  import Spacer from "./parts/Spacer.svelte";
+  import FormContainer from "./parts/forms/FormContainer.svelte";
+  import MainOfForm from "./parts/forms/MainOfForm.svelte";
+  import InputContainer from "./parts/forms/InputContainer.svelte";
+  import InputElement from "./parts/forms/InputContainer.svelte";
+  import ButtonContainer from "./parts/forms/ButtonContainer.svelte";
+  import InputWarning from "./parts/forms/InputWarning.svelte";
+  import ResultText from "./parts/forms/ResultText.svelte";
+  import Title from "./parts/forms/Title.svelte";
 
   const queryClient = useQueryClient();
 
@@ -226,13 +235,13 @@
   />
 </head>
 
-<main on:click={(e) => e.stopPropagation()}>
-  <div class="form-container">
-    <h2 class="title">What's the item?</h2>
+<MainOfForm on:click={(e) => e.stopPropagation()}>
+  <FormContainer>
+    <Title>What's the item?</Title>
     <form on:submit={handleSubmit}>
-      <div class="input-element">
+      <InputElement>
         <label for="image-input">Any photo of it? (JPG or PNG)</label>
-        <div class="input-container">
+        <InputContainer>
           {#key imageInputKey}
             <input
               id="image-input"
@@ -244,36 +253,30 @@
               disabled={isSubmitting}
             />
           {/key}
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!imageValid && !imageJustStarted}
-          >
+          <InputWarning valid={imageValid || imageJustStarted}>
             {imageWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <InputElement>
         <label for="name-input"
           >What's its name? ({`${name.length} / ${maxNameLength}`})</label
         >
-        <div class="input-container">
+        <InputContainer>
           <input
             id="name-input"
             name="name-input"
             bind:value={name}
             disabled={isSubmitting}
           />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!nameValid && !nameJustStarted}
-          >
+          <InputWarning valid={nameValid || nameJustStarted}>
             {nameWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <InputElement>
         <label for="price-input">What is it worth? (Rp)</label>
-        <div class="input-container">
+        <InputContainer>
           <input
             id="price-input"
             name="price-input"
@@ -282,19 +285,16 @@
             bind:value={price}
             disabled={isSubmitting}
           />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!priceValid && !priceJustStarted}
-          >
+          <InputWarning valid={priceValid || priceJustStarted}>
             {priceWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="input-element">
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <InputElement>
         <label for="description-input"
           >Describe it ({`${description.length} / ${maxDescriptionLength}`})</label
         >
-        <div class="input-container">
+        <InputContainer>
           <textarea
             id="description-input"
             name="description"
@@ -305,18 +305,14 @@
             cols="20"
             disabled={isSubmitting}
           />
-          <p
-            class="input-warning"
-            class:input-not-valid-warning={!descriptionValid &&
-              !descriptionJustStarted}
-          >
+          <InputWarning valid={descriptionValid || descriptionJustStarted}>
             {descriptionWarningText}
-          </p>
-        </div>
-      </div>
-      <div class="button-container">
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <ButtonContainer>
         <button
-          class="return-button"
+          class="form-button"
           type="button"
           on:click={() => appState.set("trade")}
         >
@@ -324,65 +320,29 @@
         </button>
         {#if showingResultText}
           {#if justFailed}
-            <p class="result-text fail-text" transition:fade>
+            <ResultText isSuccess={false}>
               Adding new item failed. Try again.
-            </p>
+            </ResultText>
           {:else}
-            <p class="result-text success-text" transition:fade>
-              Item succesfully added.
-            </p>
+            <ResultText isSuccess={true}>Item succesfully added.</ResultText>
           {/if}
         {:else}
-          <div class="spacer" />
+          <Spacer />
         {/if}
         <button
-          class="submit-button"
+          class="form-button"
           type="submit"
-          class:submit-button-disabled={!dataValid}
+          class:disabled-button={!dataValid}
           disabled={!dataValid}
         >
           Sell
         </button>
-      </div>
+      </ButtonContainer>
     </form>
-  </div>
-</main>
+  </FormContainer>
+</MainOfForm>
 
 <style>
-  main {
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0);
-    box-sizing: border-box;
-    /* border: solid 2px white; */
-    color: rgb(var(--primary-color));
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    padding: 0.5em 1em;
-    width: 100%;
-  }
-
-  .form-container {
-    align-items: center;
-    background-color: rgb(var(--primary-color));
-    box-sizing: border-box;
-    border-radius: var(--button-radius);
-    color: rgb(var(--text-on-primary-element-color));
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 1em;
-  }
-
-  .title {
-    border-bottom: solid 2px rgb(var(--text-on-primary-element-color));
-    display: inline-block;
-    text-align: center;
-    padding-bottom: 0.25em;
-    width: 100%;
-  }
-
   form {
     padding-top: 0.75em;
     align-items: center;
@@ -390,52 +350,18 @@
     flex-direction: column;
     justify-content: center;
     gap: 1em;
+
+    /* border: solid 1px white; */
   }
 
-  .input-element {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.175em;
-    padding: 0;
-    width: 100%;
-  }
   label {
     font-weight: 400;
     margin: 0;
   }
 
-  .input-container {
-    align-content: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.5em;
-    width: 100%;
-  }
-
-  input,
-  textarea {
-    border-radius: var(--button-radius);
-    outline-color: rgb(var(--primary-color));
-  }
-
   input {
     margin: 0;
     width: 100%;
-  }
-  .input-warning {
-    display: none;
-    background-color: rgb(var(--warning-color-bg));
-    box-sizing: border-box;
-    border-radius: var(--button-radius);
-    color: rgb(var(--warning-color-fg));
-    font-weight: 500;
-    padding: 3px 6px;
-  }
-  .input-not-valid-warning {
-    display: inline-block;
   }
 
   textarea {
@@ -444,15 +370,8 @@
     max-width: 100%;
     width: 100%;
   }
-  .button-container {
-    align-items: center;
-    display: flex;
-    gap: 0.5em;
-    justify-content: center;
-    width: 100%;
-  }
 
-  button {
+  .form-button {
     background-color: rgba(var(--primary-color), 0);
     border-radius: var(--button-smaller-radius);
     border: none;
@@ -460,46 +379,23 @@
     font-weight: 600;
     transition: all 0.25s ease-in-out;
     margin: 0;
+    user-select: none;
     padding: 7px;
   }
 
-  .spacer {
-    flex-grow: 1;
-  }
-
-  button:hover {
+  .form-button:hover {
     background-color: rgb(var(--text-on-primary-element-color));
     color: rgb(var(--primary-color));
   }
 
-  .submit-button-disabled {
+  .disabled-button {
     --border-color: var(--disabled-color);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
     cursor: initial;
   }
 
-  .submit-button-disabled:hover {
+  .disabled-button:hover {
     background-color: rgba(var(--primary-color), 0);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
-  }
-
-  .result-text {
-    border-radius: var(--button-radius);
-    display: inline-block;
-    font-weight: 500;
-    flex-grow: 1;
-    transition: opacity 0.25s ease-in-out;
-    text-align: center;
-    padding: 3px 6px;
-  }
-
-  .success-text {
-    background-color: rgb(var(--success-color-bg));
-    color: rgb(var(--success-color-fg));
-  }
-
-  .fail-text {
-    background-color: rgb(var(--warning-color-bg));
-    color: rgb(var(--warning-color-fg));
   }
 </style>

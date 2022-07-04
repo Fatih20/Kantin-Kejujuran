@@ -1,5 +1,6 @@
 <script lang="ts">
   import { appState } from "../stores";
+  import Spacer from "./parts/Spacer.svelte";
 </script>
 
 <head>
@@ -32,9 +33,9 @@
     <!-- class:fa-flip-horizontal={} -->
     <i class="fa-solid fa-arrow-right-to-bracket" />
   </button>
-  <div class="spacer" />
+  <Spacer />
   <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
-  <div class="spacer" />
+  <Spacer />
   <button
     class="header-button add-button"
     on:click={() => appState.set("add")}
@@ -74,10 +75,6 @@
     user-select: none;
 
     /* border: solid 1px black; */
-  }
-
-  .spacer {
-    flex-grow: 1;
   }
 
   .header-button {
