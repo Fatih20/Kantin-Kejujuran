@@ -17,6 +17,7 @@
   } from "@sveltestack/svelte-query";
   import { buyItem } from "../../../utilities/storeAPI";
   import { showBuyingResultDuration } from "../../../config";
+  import Spacer from "../Spacer.svelte";
 
   const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
@@ -68,7 +69,7 @@
     <p class="title">{name}</p>
     <h4>{priceDenominator(price)}</h4>
   </div>
-  <div class="spacer" />
+  <Spacer />
   <div class="button-container">
     <button on:click={() => handleSeeItem()}> See Item </button>
     {#if $mockLoginData}
@@ -103,10 +104,6 @@
 
   .title {
     font-size: 1.1em;
-  }
-
-  .spacer {
-    flex-grow: 1;
   }
 
   .button-container {
