@@ -1,4 +1,4 @@
-const possibleAppStateList = ["startPage", "trade", "add"] as const;
+const possibleAppStateList = ["startPage", "trade", "add", "login", "register"] as const;
 
 export type PossibleAppState = typeof possibleAppStateList[number];
 
@@ -42,3 +42,9 @@ export type IAPIReturn<T> = {
     message : string,
     response : T,
 }
+
+const possibleLoginProblemList = ["none", "wrongName", "wrongPassword", "notRegistered"] as const;
+export type PossibleLoginProblem = typeof possibleLoginProblemList[number];
+
+const possibleRegisterProblemList = ["none", "alreadyExist"] as const;
+export type PosibleRegisterProblem = typeof possibleRegisterProblemList[number];

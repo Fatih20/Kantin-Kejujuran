@@ -1,5 +1,6 @@
 <script lang="ts">
   import { appState } from "../stores";
+  import Spacer from "./parts/Spacer.svelte";
 </script>
 
 <head>
@@ -23,16 +24,23 @@
 
 <main class:header-in-add={$appState === "add"}>
   <button
-    class="header-button add-button"
-    class:header-button-disabled={$appState === "add"}
+    class="header-button login-button"
+    class:header-button-disabled={$appState === "login" ||
+      $appState === "register"}
+    disabled={$appState === "login" || $appState === "register"}
+    on:click={() => appState.set("login")}
   >
-    <!-- <i class="fa-solid fa-plus" /> -->
+    <!-- class:fa-flip-horizontal={} -->
+    <i class="fa-solid fa-arrow-right-to-bracket" />
   </button>
+  <Spacer />
   <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
+  <Spacer />
   <button
     class="header-button add-button"
     on:click={() => appState.set("add")}
     class:header-button-disabled={$appState === "add"}
+    disabled={$appState === "add"}
   >
     <i class="fa-solid fa-plus" />
   </button>
@@ -48,7 +56,7 @@
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
     height: 50px;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     padding: 0 0.5em;
     width: 100%;
 
@@ -86,11 +94,12 @@
     /* border: solid 1px black; */
   }
 
-  .header-button-disabled {
-    display: none;
+  .add-button:hover {
+    transform: rotate(180deg);
   }
 
-  .header-button:hover {
-    transform: rotate(180deg);
+  .header-button-disabled {
+    /* display: none; */
+    opacity: 0;
   }
 </style>

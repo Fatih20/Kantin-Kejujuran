@@ -32,6 +32,10 @@
           compareFunctionGenerator($sortCondition[0], $sortCondition[1])
         );
 
+  $: {
+    console.log(sortedItems, "newSortedItem");
+  }
+
   let shelfState = "all" as ShelfState;
   let seenItem: ISoldItem;
 

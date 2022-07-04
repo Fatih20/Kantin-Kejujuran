@@ -15,3 +15,4 @@ export const CLOUDINARY = {
     preset : "phyfm8du",
     path : "https://api.cloudinary.com/v1_1/"
 }
+export const maxIDLength = 5;
