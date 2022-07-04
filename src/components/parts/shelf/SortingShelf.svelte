@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Spacer from "./parts/Spacer.svelte";
+  import Spacer from "../Spacer.svelte";
 
   export let overallSortingText: string;
   export let secondSortingText: string;

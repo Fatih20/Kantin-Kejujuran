@@ -28,7 +28,7 @@
   {:else if $showBuyingResultText}
     {#if $justFailedBuying}
       <h4 class="buying-result-text fail-text">
-        Your purchase has just just failed. Please try again.
+        Your purchase has just failed. Please try again.
       </h4>
     {:else}
       <h4 class="buying-result-text success-text">

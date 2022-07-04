@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { ISoldItem } from "../utilities/types";
-  import { mockLoginData } from "../stores";
-  import { priceDenominator } from "../utilities/utilities";
+  import type { ISoldItem } from "../../../utilities/types";
+  import { mockLoginData } from "../../../stores";
+  import { priceDenominator } from "../../../utilities/utilities";
 
   export let item: ISoldItem;
   const {

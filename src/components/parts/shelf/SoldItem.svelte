@@ -4,9 +4,9 @@
     justFailedBuying,
     mockLoginData,
     showBuyingResultText,
-  } from "../stores";
-  import type { ISoldItemRaw } from "../utilities/types";
-  import { priceDenominator } from "../utilities/utilities";
+  } from "../../../stores";
+  import type { ISoldItemRaw } from "../../../utilities/types";
+  import { priceDenominator } from "../../../utilities/utilities";
   import { createEventDispatcher } from "svelte";
   export let soldItem: ISoldItemRaw;
   const { name, price, imagelink } = soldItem;
@@ -15,8 +15,8 @@
     useQuery,
     useQueryClient,
   } from "@sveltestack/svelte-query";
-  import { buyItem } from "../utilities/storeAPI";
-  import { showBuyingResultDuration } from "../config";
+  import { buyItem } from "../../../utilities/storeAPI";
+  import { showBuyingResultDuration } from "../../../config";
 
   const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
