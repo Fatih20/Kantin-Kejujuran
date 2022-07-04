@@ -7,23 +7,19 @@
   import { logout } from "../utilities/userAPI";
 
   const isLoggedIn = useIsLoggedIn();
+  const queryClient = useQueryClient();
 
   async function handleAuthenticationClick() {
     if (isLoggedInProcessor($isLoggedIn)) {
       try {
         const { data } = await logout();
-        console.log("Done running logout");
-        // console.log(data);
-        // console.log(data.message);
         if (data.message !== "Logout successful") {
-          console.log("Shouldn't be printed if logout is successful");
           return;
         }
-        console.log("Should be invalidating");
-        await useQueryClient().invalidateQueries("isLoggedIn");
-        console.log("Should be invalidated");
-        // console.log("Should be invalidating")
-      } catch (error) {}
+        await queryClient.invalidateQueries("isLoggedIn");
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       appState.set("login");
     }
@@ -72,7 +68,7 @@
       class="header-button add-button"
       on:click={() => appState.set("add")}
       class:header-button-disabled={$appState === "add"}
-      disabled={$appState === "add" || isLoggedInProcessor($isLoggedIn)}
+      disabled={$appState === "add" || !isLoggedInProcessor($isLoggedIn)}
     >
       {#if isLoggedInProcessor($isLoggedIn)}
         <i class="fa-solid fa-plus" />
