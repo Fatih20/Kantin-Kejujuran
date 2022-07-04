@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
-  import { sortCondition } from "../stores";
+  import { mockLoginData, sortCondition } from "../stores";
   import type {
     ISoldItem,
     ISoldItemRaw,
@@ -99,13 +99,15 @@
           <h2 class="seen-price">{priceDenominator(seenPrice)}</h2>
           <p class="seen-description">{seenDescription}</p>
         </div>
-        <button
-          class="buy-in-see-button"
-          on:click={async () => {
-            await currentBuyItemFunction();
-            handleCloseSeeItem();
-          }}>Buy Item</button
-        >
+        {#if $mockLoginData}
+          <button
+            class="buy-in-see-button"
+            on:click={async () => {
+              await currentBuyItemFunction();
+              handleCloseSeeItem();
+            }}>Buy Item</button
+          >
+        {/if}
       </div>
     </div>
   {/if}

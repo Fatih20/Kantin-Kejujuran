@@ -38,8 +38,10 @@ function createSortCondition () {
     }
 }
 
-export const appState = writable("login" as PossibleAppState)
+export const appState = writable("trade" as PossibleAppState)
 export const sortCondition = createSortCondition();
 export const buyingProcess = writable(false);
 export const justFailedBuying = writable(false);
 export const showBuyingResultText = writable(false);
+
+export const mockLoginData = writable(true);

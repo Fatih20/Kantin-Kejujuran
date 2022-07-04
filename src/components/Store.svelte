@@ -2,7 +2,7 @@
   import Header from "./Header.svelte";
   import Shelf from "./Shelf.svelte";
   import Footer from "./Footer.svelte";
-  import { appState } from "../stores";
+  import { appState, mockLoginData } from "../stores";
   import NewItemForm from "./NewItemForm.svelte";
   import Login from "./Login.svelte";
 
@@ -23,7 +23,9 @@
     <Login />
   {:else if $appState === "trade"}
     <Shelf />
-    <Footer />
+    {#if $mockLoginData}
+      <Footer />
+    {/if}
   {/if}
 </main>
 

@@ -2,6 +2,7 @@
   import {
     buyingProcess,
     justFailedBuying,
+    mockLoginData,
     showBuyingResultText,
   } from "../stores";
   import type { ISoldItemRaw } from "../utilities/types";
@@ -70,7 +71,9 @@
   <div class="spacer" />
   <div class="button-container">
     <button on:click={() => handleSeeItem()}> See Item </button>
-    <button on:click={() => handleBuyingItem()}> Buy Item </button>
+    {#if $mockLoginData}
+      <button on:click={() => handleBuyingItem()}> Buy Item </button>
+    {/if}
   </div>
 </main>
 

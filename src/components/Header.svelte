@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { appState } from "../stores";
+  import { appState, mockLoginData } from "../stores";
   import Spacer from "./parts/Spacer.svelte";
 </script>
 
@@ -31,7 +31,11 @@
     on:click={() => appState.set("login")}
   >
     <!-- class:fa-flip-horizontal={} -->
-    <i class="fa-solid fa-arrow-right-to-bracket" />
+    {#if $mockLoginData}
+      <i class="fa-solid fa-arrow-right-to-bracket" />
+    {:else}
+      <i class="fa-solid fa-arrow-right-to-bracket fa-flip-horizontal" />
+    {/if}
   </button>
   <Spacer />
   <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
@@ -40,9 +44,11 @@
     class="header-button add-button"
     on:click={() => appState.set("add")}
     class:header-button-disabled={$appState === "add"}
-    disabled={$appState === "add"}
+    disabled={$appState === "add" || !$mockLoginData}
   >
-    <i class="fa-solid fa-plus" />
+    {#if $mockLoginData}
+      <i class="fa-solid fa-plus" />
+    {/if}
   </button>
 </main>
 
