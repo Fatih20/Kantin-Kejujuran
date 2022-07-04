@@ -45,7 +45,7 @@ export function validImageChecker (imageName : string) {
     return false;
 }
 
-export function objToString(obj, ndeep) {
+function objToString(obj, ndeep) {
     switch(typeof obj){
       case "string": return '"'+obj+'"';
       case "function": return obj.name || obj.toString();
@@ -83,19 +83,6 @@ export async function errorHandlingWrapperCloudinary (formdata : FormData) {
         };
     }
 }
-
-export async function fetchDataRetry (functionToCall : () => Promise<any>, timesFunctionIsCalled : number, limitOfCalling : number) : Promise<any>{
-    const response = await functionToCall();
-    if (response.statusCode < 500) {
-        return response;
-    }
-
-    if (timesFunctionIsCalled < limitOfCalling) {
-        return fetchDataRetry(functionToCall, timesFunctionIsCalled + 1, limitOfCalling)
-    }
-
-    return response;
-}  
 
 export function fillItemInfo (addedItem : ISoldItemLite) {
         const date = new Date()
