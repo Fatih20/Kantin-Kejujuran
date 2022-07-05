@@ -2,7 +2,7 @@ import type { PossibleAppState } from "./utilities/types";
 
 export const shootToProduction = true;
 export const startPageInDevelopment = "register" as PossibleAppState;
-export const isInProduction = false;;
+export const isInProduction = true;
 export const initialStoreBalance = 100000;
 export const maxNameLength = 40;
 export const maxDescriptionLength = 100;
