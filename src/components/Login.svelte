@@ -146,6 +146,7 @@
         justFailed = false;
         failMessage = "";
         await queryClient.invalidateQueries("items");
+        appState.set("trade");
       },
       onError: errorHandling,
       onSettled: () => {
