@@ -92,7 +92,7 @@
   {/if}
   {#if $itemsQuery.status === "loading"}
     <Spacer />
-    <h2 class="empty-text">Loading items</h2>
+    <i class="fa-solid fa-spinner spinner-icon" />
     <Spacer />
   {:else if $itemsQuery.status === "error"}
     <Spacer />
@@ -151,6 +151,25 @@
     top: 0;
     transition: all 0.25s ease-in-out;
     z-index: 1000;
+  }
+
+  @keyframes spinning {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    50% {
+      transform: rotate(180deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spinner-icon {
+    font-size: 2em;
+    animation: spinning 1s linear 0s infinite;
   }
 
   .empty-text {
