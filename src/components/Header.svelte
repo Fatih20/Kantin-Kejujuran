@@ -6,19 +6,18 @@
   import Spacer from "./parts/Spacer.svelte";
   import { logout } from "../utilities/userAPI";
 
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedInRaw = useIsLoggedIn();
   const queryClient = useQueryClient();
 
-  $: disableLoginButton =
-    $appState === "login" ||
-    $appState === "register" ||
-    isLoggedInProcessor($isLoggedIn);
+  $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
 
-  $: disableAddButton =
-    $appState === "add" || !isLoggedInProcessor($isLoggedIn);
+  $: disableLoginButton =
+    $appState === "login" || $appState === "register" || isLoggedIn;
+
+  $: disableAddButton = $appState === "add" || !isLoggedIn;
 
   async function handleAuthenticationClick() {
-    if (isLoggedInProcessor($isLoggedIn)) {
+    if (isLoggedIn) {
       try {
         const { data } = await logout();
         if (data.message !== "Logout successful") {
@@ -62,7 +61,7 @@
       on:click={handleAuthenticationClick}
     >
       <!-- class:fa-flip-horizontal={} -->
-      {#if isLoggedInProcessor($isLoggedIn)}
+      {#if isLoggedIn}
         <i class="fa-solid fa-person-booth fa-flip-horizontal" />
       {:else}
         <i class="fa-solid fa-person-booth" />

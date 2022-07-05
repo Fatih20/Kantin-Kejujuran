@@ -9,8 +9,10 @@
   import useIsLoggedIn from "../utilities/useMe";
 
   let formKey = {};
-  const isLoggedIn = useIsLoggedIn();
-  // $: console.log(isLoggedInProcessor($isLoggedIn));
+  const isLoggedInRaw = useIsLoggedIn();
+
+  $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
+  // $: console.log(isLoggedInProcessor($isLoggedInRaw));
 
   function resetForm() {
     formKey = {};
@@ -27,7 +29,7 @@
     <Login />
   {:else if $appState === "trade"}
     <Shelf />
-    {#if isLoggedInProcessor($isLoggedIn)}
+    {#if isLoggedIn}
       <Footer />
     {/if}
   {/if}

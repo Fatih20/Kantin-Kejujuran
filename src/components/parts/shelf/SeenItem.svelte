@@ -17,7 +17,9 @@
 
   export let handleBuyClick: () => void;
 
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedInRaw = useIsLoggedIn();
+
+  $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
 </script>
 
 <main on:click={(e) => e.stopPropagation()}>
@@ -32,7 +34,7 @@
     <h2 class="price">{priceDenominator(price)}</h2>
     <p class="description">{description}</p>
   </div>
-  {#if isLoggedInProcessor($isLoggedIn)}
+  {#if isLoggedIn}
     <button class="buy-in-see-button" on:click={handleBuyClick}>Buy Item</button
     >
   {/if}

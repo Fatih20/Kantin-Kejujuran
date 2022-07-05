@@ -20,7 +20,9 @@
   import { showBuyingResultDuration } from "../../../config";
   import Spacer from "../Spacer.svelte";
 
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedInRaw = useIsLoggedIn();
+
+  $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
 
   const queryClient = useQueryClient();
   const dispatch = createEventDispatcher();
@@ -75,7 +77,7 @@
   <Spacer />
   <div class="button-container">
     <button on:click={() => handleSeeItem()}> See Item </button>
-    {#if isLoggedInProcessor($isLoggedIn)}
+    {#if isLoggedIn}
       <button on:click={() => handleBuyingItem()}> Buy Item </button>
     {/if}
   </div>
