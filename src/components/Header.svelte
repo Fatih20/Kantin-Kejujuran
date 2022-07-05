@@ -1,31 +1,49 @@
 <script lang="ts">
-  import { appState } from "../stores";
+  import {
+    appState,
+    isLoggingOut,
+    showLogoutResultText,
+    justFailedLogout,
+  } from "../stores";
   import useIsLoggedIn from "../utilities/useMe";
   import { useQueryClient } from "@sveltestack/svelte-query";
   import { isLoggedInProcessor } from "../utilities/utilities";
   import Spacer from "./parts/Spacer.svelte";
   import { logout } from "../utilities/userAPI";
+  import { showBuyingResultDuration } from "../config";
 
   const isLoggedInRaw = useIsLoggedIn();
   const queryClient = useQueryClient();
 
   $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
 
-  $: disableLoginButton =
-    $appState === "login" || $appState === "register" || isLoggedIn;
+  $: disableLoginButton = $appState === "login" || $appState === "register";
 
   $: disableAddButton = $appState === "add" || !isLoggedIn;
 
   async function handleAuthenticationClick() {
     if (isLoggedIn) {
+      isLoggingOut.set(true);
       try {
         const { data } = await logout();
         if (data.message !== "Logout successful") {
+          justFailedLogout.set(true);
           return;
         }
         await queryClient.invalidateQueries("isLoggedIn");
       } catch (error) {
+        justFailedLogout.set(true);
         console.log(error);
+      }
+
+      showLogoutResultText.set(true);
+      isLoggingOut.set(false);
+      if (!$justFailedLogout) {
+        window.location.reload();
+      } else {
+        await setTimeout(() => {
+          showLogoutResultText.set(false);
+        }, showBuyingResultDuration);
       }
     } else {
       appState.set("login");

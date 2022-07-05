@@ -43,5 +43,10 @@ export const sortCondition = createSortCondition();
 export const buyingProcess = writable(false);
 export const justFailedBuying = writable(false);
 export const showBuyingResultText = writable(false);
+export const isLoggingOut = writable(false);
+export const justFailedLogout = writable(false);
+export const showLogoutResultText = writable(false);
+
+
 
 // export const mockLoginData = writable(true);

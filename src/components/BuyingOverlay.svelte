@@ -3,7 +3,14 @@
     buyingProcess,
     showBuyingResultText,
     justFailedBuying,
+    justFailedLogout,
+    showLogoutResultText,
+    isLoggingOut,
   } from "../stores";
+
+  $: processText = $buyingProcess
+    ? "Processing your purchase"
+    : "Logging you out";
 </script>
 
 <head>
@@ -20,11 +27,11 @@
 </head>
 
 <main>
-  {#if $buyingProcess}
+  {#if $buyingProcess || $isLoggingOut}
     <div class="icon-container">
       <i class="fa-solid fa-spinner" />
     </div>
-    <h2>Processing your purchase</h2>
+    <h2>{processText}</h2>
   {:else if $showBuyingResultText}
     {#if $justFailedBuying}
       <h4 class="buying-result-text fail-text">
@@ -34,6 +41,12 @@
       <h4 class="buying-result-text success-text">
         Succesfully bought the item!
       </h4>
+    {/if}
+  {:else if $showLogoutResultText}
+    {#if $justFailedLogout}
+      <h4 class="buying-result-text fail-text">Log out failed</h4>
+    {:else}
+      <h4 class="buying-result-text success-text">Log out successful</h4>
     {/if}
   {/if}
 </main>
