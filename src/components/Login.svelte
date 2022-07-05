@@ -9,14 +9,11 @@
 
   import { appState } from "../stores";
   import type {
-    ISoldItem,
     PossibleAuthenticationErrorManMade,
     PossibleIDProblem,
     PossiblePasswordProblem,
     User,
   } from "../utilities/types";
-  import { addItem } from "../utilities/storeAPI";
-  import Spacer from "./parts/Spacer.svelte";
   import FormContainer from "./parts/forms/FormContainer.svelte";
   import MainOfForm from "./parts/forms/MainOfForm.svelte";
   import InputContainer from "./parts/forms/InputContainer.svelte";
@@ -38,6 +35,8 @@
 
   let name: number | null | undefined = undefined;
   let password: string = "";
+
+  let showPassword = true;
 
   let nameProblem = "empty" as PossibleIDProblem;
   let passwordProblem = "empty" as PossiblePasswordProblem;
@@ -211,12 +210,39 @@
       <InputElement>
         <label for="password-input">Password</label>
         <InputContainer>
-          <input
-            id="password-input"
-            name="password-input"
-            bind:value={password}
-            disabled={isSubmitting}
-          />
+          <div class="input-and-button-container">
+            {#if showPassword}
+              <input
+                id="password-input"
+                name="password-input"
+                type="text"
+                bind:value={password}
+                disabled={isSubmitting}
+              />
+              <button
+                class="toggle-visibility-button"
+                type="button"
+                on:click={() => (showPassword = !showPassword)}
+              >
+                <i class="fa-solid fa-eye" />
+              </button>
+            {:else}
+              <input
+                id="password-input"
+                name="password-input"
+                type="password"
+                bind:value={password}
+                disabled={isSubmitting}
+              />
+              <button
+                class="toggle-visibility-button"
+                type="button"
+                on:click={() => (showPassword = !showPassword)}
+              >
+                <i class="fa-solid fa-eye-slash" />
+              </button>
+            {/if}
+          </div>
           <InputWarning valid={passwordValid || passwordJustStarted}>
             {passwordWarningText}
           </InputWarning>
@@ -284,6 +310,24 @@
   input {
     margin: 0;
     width: 100%;
+  }
+
+  .input-and-button-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+  }
+
+  .toggle-visibility-button {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    color: rgb(var(--text-on-primary-element-color));
+    display: flex;
+    justify-content: center;
+    padding: 0 5px;
+    width: 20px;
   }
 
   .form-button {
