@@ -158,7 +158,7 @@
       onSuccess: async () => {
         justFailed = false;
         failMessage = "";
-        await queryClient.invalidateQueries("items");
+        await queryClient.invalidateQueries("isLoggedIn");
         appState.set("trade");
       },
       onError: errorHandling,

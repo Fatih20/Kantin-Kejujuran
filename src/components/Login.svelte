@@ -141,7 +141,7 @@
       onSuccess: async () => {
         justFailed = false;
         failMessage = "";
-        await queryClient.invalidateQueries("items");
+        await queryClient.invalidateQueries("isLoggedIn");
         appState.set("trade");
       },
       onError: errorHandling,
@@ -333,14 +333,5 @@
   .disabled-button:hover {
     background-color: rgba(var(--primary-color), 0);
     color: rgba(var(--text-on-disabled-element-color), 0.5);
-  }
-
-  .redirect {
-    font-size: 0.8em;
-  }
-
-  .redirect span {
-    cursor: pointer;
-    color: rgb(var(--secondary-color));
   }
 </style>
