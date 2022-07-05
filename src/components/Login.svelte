@@ -24,6 +24,7 @@
   import ResultText from "./parts/forms/ResultText.svelte";
   import { IDValidation } from "../utilities/utilities";
   import { login, register } from "../utilities/userAPI";
+  import RedirectText from "./parts/forms/RedirectText.svelte";
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
@@ -174,7 +175,7 @@
 
 <MainOfForm on:click={(e) => e.stopPropagation()}>
   <FormContainer>
-    <Title>Login}</Title>
+    <Title>Login</Title>
     <form on:submit|preventDefault={handleSubmit}>
       <InputElement>
         <label for="name-input">Student ID (Must be 5 characters)</label>
@@ -257,14 +258,11 @@
           Login
         </button>
       </ButtonContainer>
-      <p class="redirect">
-        {redirectText}
-        <span
-          on:click={() => {
-            appState.set("register");
-          }}>Register</span
-        >
-      </p>
+      <RedirectText
+        redirectAddress={"Register"}
+        redirectText={"Don't have an account yet?"}
+        redirectFunction={() => appState.set("register")}
+      />
     </form>
   </FormContainer>
 </MainOfForm>

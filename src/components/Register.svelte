@@ -17,6 +17,7 @@
   import { IDValidation } from "../utilities/utilities";
   import ResultText from "./parts/forms/ResultText.svelte";
   import ButtonContainer from "./parts/forms/ButtonContainer.svelte";
+  import RedirectText from "./parts/forms/RedirectText.svelte";
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
@@ -252,13 +253,11 @@
           Register
         </button>
       </ButtonContainer>
-      <p class="redirect">
-        Already have an account? <span
-          on:click={() => {
-            appState.set("login");
-          }}>Login</span
-        >
-      </p>
+      <RedirectText
+        redirectAddress={"Login"}
+        redirectText={"Already have an account?"}
+        redirectFunction={() => appState.set("login")}
+      />
     </form>
   </FormContainer>
 </MainOfForm>
