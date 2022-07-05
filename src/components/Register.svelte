@@ -1,57 +1,47 @@
 <script lang="ts">
-  import { maxIDLength, successTextDuration } from "../config";
-
-  import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-  } from "@sveltestack/svelte-query";
-
-  import { appState } from "../stores";
+  import FormContainer from "./parts/forms/FormContainer.svelte";
+  import MainOfForm from "./parts/forms/MainOfForm.svelte";
+  import Title from "./parts/forms/Title.svelte";
+  import InputElement from "./parts/forms/InputElement.svelte";
+  import InputContainer from "./parts/forms/InputContainer.svelte";
+  import InputWarning from "./parts/forms/InputWarning.svelte";
   import type {
     PossibleAuthenticationErrorManMade,
     PossibleIDProblem,
     PossiblePasswordProblem,
     User,
   } from "../utilities/types";
-  import FormContainer from "./parts/forms/FormContainer.svelte";
-  import MainOfForm from "./parts/forms/MainOfForm.svelte";
-  import InputContainer from "./parts/forms/InputContainer.svelte";
-  import InputElement from "./parts/forms/InputContainer.svelte";
-  import ButtonContainer from "./parts/forms/ButtonContainer.svelte";
-  import Title from "./parts/forms/Title.svelte";
-  import InputWarning from "./parts/forms/InputWarning.svelte";
-  import ResultText from "./parts/forms/ResultText.svelte";
+  import { appState } from "../stores";
+  import { useMutation, useQueryClient } from "@sveltestack/svelte-query";
+  import { register } from "../utilities/userAPI";
   import { IDValidation } from "../utilities/utilities";
-  import { login, register } from "../utilities/userAPI";
+  import ResultText from "./parts/forms/ResultText.svelte";
+  import ButtonContainer from "./parts/forms/ButtonContainer.svelte";
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
 
-  $: redirectText =
-    $appState === "login"
-      ? "Don't have an account yet?"
-      : "Already have an account?";
-
   let name: number | null | undefined = undefined;
   let password: string = "";
-
-  let showPassword = true;
+  let passwordSecond: string = "";
 
   let nameProblem = "empty" as PossibleIDProblem;
   let passwordProblem = "empty" as PossiblePasswordProblem;
+  let passwordSecondProblem = "none" as "none" | "different";
 
   let nameJustStarted = true;
   let passwordJustStarted = true;
+  let passwordSecondJustStarted = true;
   let justFailed = false;
   let failMessage = "";
 
   let nameWarningText = "";
   let passwordWarningText = "";
+  let passwordSecondWarningText = "";
 
   let dataValid = false;
 
-  $: dataValid = [nameValid, passwordValid].every(
+  $: dataValid = [nameValid, passwordValid, passwordSecondValid].every(
     (validity) => validity === true
   );
 
@@ -64,6 +54,16 @@
   $: {
     if (password !== "") {
       passwordJustStarted = false;
+    }
+  }
+
+  $: {
+    if (
+      passwordSecond.length >= password.length &&
+      passwordSecond !== "" &&
+      password !== ""
+    ) {
+      passwordSecondJustStarted = false;
     }
   }
 
@@ -98,6 +98,14 @@
   }
 
   $: {
+    if (passwordSecond !== password) {
+      passwordSecondProblem = "different";
+    } else {
+      passwordSecondProblem = "none";
+    }
+  }
+
+  $: {
     if (passwordProblem === "none") {
       passwordWarningText = "";
     } else if (passwordProblem === "empty") {
@@ -107,8 +115,17 @@
     }
   }
 
+  $: {
+    if (passwordSecondProblem === "none") {
+      passwordSecondWarningText = "";
+    } else if (passwordSecondProblem === "different") {
+      passwordSecondWarningText = "Confirmation is different!";
+    }
+  }
+
   $: nameValid = nameProblem === "none";
   $: passwordValid = passwordProblem === "none";
+  $: passwordSecondValid = passwordSecondProblem === "none";
 
   function errorHandling(error: any) {
     justFailed = true;
@@ -134,7 +151,7 @@
   const mutateIsLoggedIn = useMutation(
     "isLoggedIn",
     async (user: User) => {
-      return await login(user);
+      return await register(user);
     },
     {
       onSuccess: async () => {
@@ -159,22 +176,9 @@
   }
 </script>
 
-<head>
-  <script
-    src="https://kit.fontawesome.com/31a5898fa1.js"
-    crossorigin="anonymous"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-</head>
-
-<MainOfForm on:click={(e) => e.stopPropagation()}>
+<MainOfForm>
   <FormContainer>
-    <Title>Login}</Title>
+    <Title>Register</Title>
     <form on:submit|preventDefault={handleSubmit}>
       <InputElement>
         <label for="name-input">Student ID (Must be 5 characters)</label>
@@ -195,41 +199,32 @@
       <InputElement>
         <label for="password-input">Password</label>
         <InputContainer>
-          <div class="input-and-button-container">
-            {#if showPassword}
-              <input
-                id="password-input"
-                name="password-input"
-                type="text"
-                bind:value={password}
-                disabled={isSubmitting}
-              />
-              <button
-                class="toggle-visibility-button"
-                type="button"
-                on:click={() => (showPassword = !showPassword)}
-              >
-                <i class="fa-solid fa-eye" />
-              </button>
-            {:else}
-              <input
-                id="password-input"
-                name="password-input"
-                type="password"
-                bind:value={password}
-                disabled={isSubmitting}
-              />
-              <button
-                class="toggle-visibility-button"
-                type="button"
-                on:click={() => (showPassword = !showPassword)}
-              >
-                <i class="fa-solid fa-eye-slash" />
-              </button>
-            {/if}
-          </div>
+          <input
+            id="password-input"
+            name="password-input"
+            type="password"
+            bind:value={password}
+            disabled={isSubmitting}
+          />
           <InputWarning valid={passwordValid || passwordJustStarted}>
             {passwordWarningText}
+          </InputWarning>
+        </InputContainer>
+      </InputElement>
+      <InputElement>
+        <label for="password-second-input">Confirm Password</label>
+        <InputContainer>
+          <input
+            id="password-second-input"
+            name="password-input"
+            type="password"
+            bind:value={passwordSecond}
+            disabled={isSubmitting}
+          />
+          <InputWarning
+            valid={passwordSecondValid || passwordSecondJustStarted}
+          >
+            {passwordSecondWarningText}
           </InputWarning>
         </InputContainer>
       </InputElement>
@@ -254,15 +249,14 @@
           class:disabled-button={!dataValid}
           disabled={!dataValid}
         >
-          Login
+          Register
         </button>
       </ButtonContainer>
       <p class="redirect">
-        {redirectText}
-        <span
+        Already have an account? <span
           on:click={() => {
-            appState.set("register");
-          }}>Register</span
+            appState.set("login");
+          }}>Login</span
         >
       </p>
     </form>
@@ -289,24 +283,6 @@
   input {
     margin: 0;
     width: 100%;
-  }
-
-  .input-and-button-container {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    gap: 0.5em;
-  }
-
-  .toggle-visibility-button {
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    color: rgb(var(--text-on-primary-element-color));
-    display: flex;
-    justify-content: center;
-    padding: 0 5px;
-    width: 20px;
   }
 
   .form-button {

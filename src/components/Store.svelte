@@ -7,6 +7,7 @@
   import Login from "./Login.svelte";
   import { isLoggedInProcessor } from "../utilities/utilities";
   import useIsLoggedIn from "../utilities/useMe";
+  import Register from "./Register.svelte";
 
   let formKey = {};
   const isLoggedInRaw = useIsLoggedIn();
@@ -25,8 +26,10 @@
     {#key formKey}
       <NewItemForm on:reset={resetForm} />
     {/key}
-  {:else if $appState === "login" || $appState === "register"}
+  {:else if $appState === "login"}
     <Login />
+  {:else if $appState === "register"}
+    <Register />
   {:else if $appState === "trade"}
     <Shelf />
     {#if isLoggedIn}
