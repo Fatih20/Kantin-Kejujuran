@@ -37,7 +37,7 @@
   let name: number | null | undefined = undefined;
   let password: string = "";
 
-  let showPassword = true;
+  let showPassword = false;
 
   let nameProblem = "empty" as PossibleIDProblem;
   let passwordProblem = "empty" as PossiblePasswordProblem;
