@@ -115,19 +115,41 @@
   $: submitButtonText = $appState === "login" ? "Login" : "Register";
   $: redirectAddress = $appState === "login" ? "Register" : "Login";
 
-  const mutateItems = useMutation(
-    "items",
-    async (addedItem: ISoldItem) => {
-      await addItem(addedItem);
+  function errorHandling(error: any) {
+    justFailed = true;
+    if (error.response.status >= 500) {
+      failMessage = "Failed to contact the server. Please try again";
+    } else if (error.response.status >= 400) {
+      const manMadeError = error.response.data
+        .error as PossibleAuthenticationErrorManMade;
+      console.log(error.response);
+      if (manMadeError === "notRegistered") {
+        failMessage = "User isn't registered. Please register first.";
+      } else if (manMadeError === "registeredAlready") {
+        failMessage = "User is already registered. Please login instead.";
+      } else if (manMadeError === "wrongPassword") {
+        failMessage = "Wrong Student ID or password";
+      } else {
+        failMessage = "Please try again.";
+      }
+    }
+    console.log(error);
+  }
+
+  const mutateIsLoggedIn = useMutation(
+    "isLoggedIn",
+    async (user: User) => {
+      return await ($appState === "login" ? login(user) : register(user));
     },
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         justFailed = false;
-        queryClient.invalidateQueries("items");
-        reset();
+        failMessage = "";
+        await queryClient.invalidateQueries("items");
       },
-      onError: () => {
-        justFailed = true;
+      onError: errorHandling,
+      onSettled: () => {
+        isSubmitting = false;
       },
     }
   );
@@ -138,6 +160,8 @@
 
     nameJustStarted = true;
     passwordJustStarted = true;
+    failMessage = "";
+    justFailed = false;
   }
 
   async function handleSubmit(e) {
@@ -145,44 +169,8 @@
     e.preventDefault();
     const user = { student_id: name.toString(), password } as User;
     try {
-      const apiResponse = await ($appState === "login"
-        ? login(user)
-        : register(user));
-
-      if (apiResponse.data.error !== null) {
-        justFailed = true;
-      } else {
-        justFailed = false;
-        failMessage = "";
-      }
-    } catch (error) {
-      justFailed = true;
-      if (error.response.status >= 500) {
-        failMessage = "Failed to contact the server. Please try again";
-      } else if (error.response.status >= 400) {
-        const manMadeError = error.response.data
-          .error as PossibleAuthenticationErrorManMade;
-        console.log(error.response);
-        if (manMadeError === "notRegistered") {
-          failMessage = "User isn't registered. Please register first.";
-        } else if (manMadeError === "registeredAlready") {
-          failMessage = "User is already registered. Please login instead.";
-        } else if (manMadeError === "wrongPassword") {
-          failMessage = "Wrong Student ID or password";
-        } else {
-          failMessage = "Please try again.";
-        }
-      }
-      console.log(error);
-    }
-
-    isSubmitting = false;
-
-    if (justFailed) {
-      return;
-    }
-
-    appState.set("trade");
+      await $mutateIsLoggedIn.mutateAsync(user);
+    } catch {}
   }
 </script>
 
@@ -242,7 +230,10 @@
         <button
           class="form-button return-button"
           type="button"
-          on:click={() => appState.set("trade")}
+          on:click={() => {
+            appState.set("trade");
+            reset();
+          }}
         >
           Back
         </button>
