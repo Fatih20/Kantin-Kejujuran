@@ -9,6 +9,14 @@
   const isLoggedIn = useIsLoggedIn();
   const queryClient = useQueryClient();
 
+  $: disableLoginButton =
+    $appState === "login" ||
+    $appState === "register" ||
+    isLoggedInProcessor($isLoggedIn);
+
+  $: disableAddButton =
+    $appState === "add" || !isLoggedInProcessor($isLoggedIn);
+
   async function handleAuthenticationClick() {
     if (isLoggedInProcessor($isLoggedIn)) {
       try {
@@ -49,9 +57,8 @@
   <div class="header-container">
     <button
       class="header-button login-button"
-      class:header-button-disabled={$appState === "login" ||
-        $appState === "register"}
-      disabled={$appState === "login" || $appState === "register"}
+      class:header-button-disabled={disableLoginButton}
+      disabled={disableLoginButton}
       on:click={handleAuthenticationClick}
     >
       <!-- class:fa-flip-horizontal={} -->
@@ -67,12 +74,10 @@
     <button
       class="header-button add-button"
       on:click={() => appState.set("add")}
-      class:header-button-disabled={$appState === "add"}
-      disabled={$appState === "add" || !isLoggedInProcessor($isLoggedIn)}
+      class:header-button-disabled={disableAddButton}
+      disabled={disableAddButton}
     >
-      {#if isLoggedInProcessor($isLoggedIn)}
-        <i class="fa-solid fa-plus" />
-      {/if}
+      <i class="fa-solid fa-plus" />
     </button>
   </div>
 </main>
