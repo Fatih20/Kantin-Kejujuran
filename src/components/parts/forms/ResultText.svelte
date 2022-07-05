@@ -3,10 +3,7 @@
   export let isSuccess: boolean;
 </script>
 
-<p
-  class={`result-text ${isSuccess ? "success-text" : "fail-text"}`}
-  transition:fade
->
+<p class={`result-text ${isSuccess ? "success-text" : "fail-text"}`}>
   <slot />
 </p>
 
