@@ -114,9 +114,11 @@
 
       <div class="money-container">
         <div class="money-container-second">
-          <i class="fa-solid fa-money-bill-wave money-icon" />
           {#if $balanceQuery.status === "success"}
+            <i class="fa-solid fa-money-bill-wave money-icon" />
             <p class="store-balance">{priceDenominator($balanceQuery.data)}</p>
+          {:else if $balanceQuery.status === "loading"}
+            <i class="fa-solid fa-spinner spinner-icon" />
           {/if}
         </div>
       </div>
@@ -218,6 +220,25 @@
     flex-grow: 1;
     /* overflow-x: auto; */
     height: 100%;
+  }
+
+  @keyframes spinning {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    50% {
+      transform: rotate(180deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spinner-icon {
+    font-size: 1.25em;
+    animation: spinning 1s linear 0s infinite;
   }
 
   .store-balance {
