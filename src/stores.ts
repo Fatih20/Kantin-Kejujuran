@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { initialSortCondition } from "./config";
+import { initialSortCondition, isInProduction, startPageInDevelopment } from "./config";
 import type { PossibleAppState, SortingCondition } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
@@ -38,7 +38,7 @@ function createSortCondition () {
     }
 }
 
-export const appState = writable("trade" as PossibleAppState)
+export const appState = writable(isInProduction ? "startPage" : startPageInDevelopment as PossibleAppState);
 export const sortCondition = createSortCondition();
 export const buyingProcess = writable(false);
 export const justFailedBuying = writable(false);
@@ -46,7 +46,3 @@ export const showBuyingResultText = writable(false);
 export const isLoggingOut = writable(false);
 export const justFailedLogout = writable(false);
 export const showLogoutResultText = writable(false);
-
-
-
-// export const mockLoginData = writable(true);
