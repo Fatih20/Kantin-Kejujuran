@@ -196,6 +196,6 @@
     gap: var(--gap-size);
     width: 100%;
 
-    border: solid 1px white;
+    /* border: solid 1px white; */
   }
 </style>
