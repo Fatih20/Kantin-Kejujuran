@@ -35,7 +35,7 @@
   let firstStart = true;
   let warningText = "";
 
-  let validInput = true;
+  let validInput = false;
   let inputProblem = "none" as PossibleInputProblem;
 
   let operating = false;
@@ -72,7 +72,13 @@
     }
   }
 
-  $: validInput = inputProblem === "none" || inputProblem === "undefined";
+  $: {
+    if (inputtedNumber !== undefined) {
+      firstStart = false;
+    }
+  }
+
+  $: validInput = inputProblem === "none";
 
   async function handleOperate() {
     operating = true;
@@ -107,7 +113,11 @@
   />
 </head>
 
-<main class:input-invalid-main={footerState !== "default" && !validInput}>
+<main
+  class:input-invalid-main={footerState !== "default" &&
+    !validInput &&
+    !firstStart}
+>
   <p class="warning-text" class:visible={!validInput}>{warningText}</p>
   <div class="footer-container">
     {#if footerState === "default"}
