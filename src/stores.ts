@@ -51,4 +51,7 @@ export const justFailedBuying = writable(false);
 export const showBuyingResultText = writable(false);
 export const isLoggingOut = writable(false);
 export const justFailedLogout = writable(false);
+export const isDeletingAccount = writable(false);
+export const justFailedDeletingAccount = writable(false);
+export const showDeleteAccountResultText = writable(false);
 export const showLogoutResultText = writable(false);

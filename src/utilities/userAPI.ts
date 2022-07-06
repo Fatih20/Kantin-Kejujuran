@@ -23,3 +23,8 @@ export async function logout () {
     const data = await axios.post(`${backendAddress}/user/logout`, {}, OPTIONS);
     return data;
 }
+
+export async function deleteAccount () {
+    const data = await axios.delete(`${backendAddress}/user/delete`, OPTIONS);
+    return data;
+}

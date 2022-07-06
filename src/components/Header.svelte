@@ -4,12 +4,15 @@
     isLoggingOut,
     showLogoutResultText,
     justFailedLogout,
+    isDeletingAccount,
+    justFailedDeletingAccount,
+    showDeleteAccountResultText,
   } from "../stores";
   import useIsLoggedIn from "../utilities/useMe";
   import { useQueryClient, useMutation } from "@sveltestack/svelte-query";
   import { isLoggedInProcessor } from "../utilities/utilities";
   import Spacer from "./parts/Spacer.svelte";
-  import { logout } from "../utilities/userAPI";
+  import { logout, deleteAccount } from "../utilities/userAPI";
   import { showBuyingResultDuration } from "../config";
 
   const isLoggedInRaw = useIsLoggedIn();
@@ -21,7 +24,9 @@
 
   $: disableAddButton = $appState === "add" || !isLoggedIn;
 
-  const mutateIsLoggedIn = useMutation(
+  let showDropdownAccount = false;
+
+  const logoutMutation = useMutation(
     "isLoggedIn",
     async () => {
       return await logout();
@@ -42,13 +47,47 @@
       },
     }
   );
-  async function handleAuthenticationClick() {
-    if (isLoggedIn) {
-      isLoggingOut.set(true);
-      $mutateIsLoggedIn.mutateAsync();
-    } else {
-      appState.set("login");
+
+  const deleteAccountMutation = useMutation(
+    "isLoggedIn",
+    async () => {
+      return await deleteAccount();
+    },
+    {
+      onSuccess: async () => {
+        await setTimeout(() => {
+          showDeleteAccountResultText.set(false);
+        }, showBuyingResultDuration);
+        window.location.reload();
+      },
+      onError: () => {
+        justFailedDeletingAccount.set(true);
+      },
+      onSettled: () => {
+        showDeleteAccountResultText.set(true);
+        isDeletingAccount.set(false);
+      },
     }
+  );
+
+  async function handleLogout() {
+    isLoggingOut.set(true);
+    $logoutMutation.mutateAsync();
+  }
+
+  async function handleDeleteAccount() {
+    isDeletingAccount.set(true);
+    $deleteAccountMutation.mutateAsync();
+  }
+
+  async function handleAuthenticationClick() {
+    showDropdownAccount = !showDropdownAccount;
+    // if (isLoggedIn) {
+    //   isLoggingOut.set(true);
+    //   $mutateIsLoggedIn.mutateAsync();
+    // } else {
+    //   appState.set("login");
+    // }
   }
 </script>
 
@@ -73,19 +112,49 @@
 
 <main class:header-in-add={$appState === "add"}>
   <div class="header-container">
-    <button
-      class="header-button login-button"
-      class:header-button-disabled={disableLoginButton}
-      disabled={disableLoginButton}
-      on:click={handleAuthenticationClick}
-    >
-      <!-- class:fa-flip-horizontal={} -->
-      {#if isLoggedIn}
-        <i class="fa-solid fa-person-booth fa-flip-horizontal" />
-      {:else}
-        <i class="fa-solid fa-person-booth" />
-      {/if}
-    </button>
+    <div class="dropdown-account-container">
+      <button
+        class="header-button user-button"
+        class:header-button-disabled={disableLoginButton}
+        disabled={disableLoginButton}
+        on:click={handleAuthenticationClick}
+      >
+        <i class="fa-solid fa-user" />
+        <!-- class:fa-flip-horizontal={} -->
+        <!-- {#if isLoggedIn}
+          <i class="fa-solid fa-person-booth fa-flip-horizontal" />
+        {:else}
+          <i class="fa-solid fa-person-booth" />
+        {/if} -->
+      </button>
+      <div
+        class="dropdown-account"
+        class:dropdown-account-visible={showDropdownAccount}
+      >
+        {#if isLoggedIn}
+          <p on:click|stopPropagation={handleDeleteAccount}>Delete Account</p>
+          <p on:click|stopPropagation={handleLogout}>Log Out</p>
+        {:else}
+          <p
+            on:click|stopPropagation={() => {
+              showDropdownAccount = false;
+              appState.set("register");
+            }}
+          >
+            Register
+          </p>
+          <p
+            on:click|stopPropagation={() => {
+              showDropdownAccount = false;
+              appState.set("login");
+            }}
+          >
+            Sign In
+          </p>
+          <!-- <i class="fa-solid fa-person-booth" /> -->
+        {/if}
+      </div>
+    </div>
     <Spacer />
     <h1 class="title" on:click={() => appState.set("startPage")}>HC</h1>
     <Spacer />
@@ -102,6 +171,7 @@
 
 <style>
   main {
+    --dropdown-gap-to-header: 10px;
     align-items: center;
     align-self: flex-start;
     background-color: rgb(var(--primary-color));
@@ -123,6 +193,9 @@
     justify-content: space-between;
     max-width: var(--headfoot-max-width);
     width: 100%;
+    height: 100%;
+
+    /* border: solid 1px white; */
   }
 
   .header-in-add {
@@ -163,5 +236,38 @@
   .header-button-disabled {
     /* display: none; */
     opacity: 0;
+  }
+
+  .dropdown-account-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+
+    /* border: solid 1px white; */
+  }
+
+  .dropdown-account {
+    align-items: flex-start;
+    background-color: rgb(var(--primary-color));
+    border-radius: var(--button-radius);
+    display: none;
+    flex-direction: column;
+    gap: 0.25em;
+    justify-content: center;
+    padding: 0.25em;
+    position: absolute;
+    left: 0;
+    top: calc(100% + var(--dropdown-gap-to-header));
+    /* transform: translate(0, -20px); */
+    width: 100px;
+    z-index: 1;
+  }
+
+  .dropdown-account-visible {
+    display: flex;
+    transform: none;
   }
 </style>
