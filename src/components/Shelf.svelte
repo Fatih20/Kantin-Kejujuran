@@ -186,14 +186,16 @@
 
   .shelf {
     --gap-size: 0.75em;
-    --minimum-item-width: 200px;
     box-sizing: border-box;
     display: grid;
+    justify-items: center;
     grid-template-columns: repeat(
       auto-fill,
-      minmax(var(--minimum-item-width), 1fr)
+      minmax(var(--card-min-width), 1fr)
     );
     gap: var(--gap-size);
     width: 100%;
+
+    border: solid 1px white;
   }
 </style>

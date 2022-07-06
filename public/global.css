@@ -26,6 +26,8 @@ body {
   --text-on-white-unintrusive-color: 102 102 102;
   --side-edge-gap: 0.75em;
   --headfoot-max-width: 300px;
+  --card-max-width: 250px;
+  --card-min-width: 200px;
 
   background-color: #1a1a1a;
   color: #fff;

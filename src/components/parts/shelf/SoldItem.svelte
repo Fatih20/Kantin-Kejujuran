@@ -90,8 +90,12 @@
     flex-direction: column;
     gap: 0.5em;
     height: 250px;
+    max-width: var(--card-max-width);
     padding: var(--padding-of-items-container);
     word-break: break-word;
+    width: 100%;
+
+    border: solid 1px white;
   }
 
   .logged-in {
