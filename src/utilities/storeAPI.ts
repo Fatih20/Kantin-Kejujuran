@@ -1,9 +1,9 @@
 import axios from "axios";
-import { backendAddress, OPTIONS } from "../config";
+import { backendAddress, apiOPTIONS } from "../config/configTechnical";
 import type { IAPIReturn, ISoldItem, ISoldItemRaw } from "./types";
 
 export async function getBalance() {
-    const {data : {error, message, response}} : {data : IAPIReturn<number>} = await axios.get(`${backendAddress}/store/balance`, OPTIONS);
+    const {data : {error, message, response}} : {data : IAPIReturn<number>} = await axios.get(`${backendAddress}/store/balance`, apiOPTIONS);
     
     if (error !== null) {
         throw new Error("Failed to get balance")
@@ -12,7 +12,7 @@ export async function getBalance() {
 }   
 
 export async function incrementBalance(increment : number) {
-     const {data : {error, message, response}} : {data : IAPIReturn<any>} = await axios.put(`${backendAddress}/store/balance`, {"balanceIncrement" : increment}, OPTIONS);
+     const {data : {error, message, response}} : {data : IAPIReturn<any>} = await axios.put(`${backendAddress}/store/balance`, {"balanceIncrement" : increment}, apiOPTIONS);
      if (error !== null) {
          throw new Error("Failed to increment balance")
      }
@@ -21,7 +21,7 @@ export async function incrementBalance(increment : number) {
 }
 
 export async function getAllItems () {
-    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.get(`${backendAddress}/store/allItems`, OPTIONS);
+    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.get(`${backendAddress}/store/allItems`, apiOPTIONS);
 
     if (error !== null) {
         throw new Error("Failed to get all items");
@@ -32,7 +32,7 @@ export async function getAllItems () {
 }
 
 export async function buyItem (boughtItem : ISoldItemRaw) {
-    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.put(`${backendAddress}/store/buyItem`, {boughtItem}, OPTIONS);
+    const {data : {error, message, response}} : {data : IAPIReturn<ISoldItemRaw[]>} = await axios.put(`${backendAddress}/store/buyItem`, {boughtItem}, apiOPTIONS);
 
     if (error !== null) {
         throw new Error("Failed to buy item");
@@ -42,7 +42,7 @@ export async function buyItem (boughtItem : ISoldItemRaw) {
 }
 
 export async function addItem (addedItem : ISoldItem) {
-    const {data : {error, message, response}} = await axios.post(`${backendAddress}/store/addItem`, {addedItem}, OPTIONS);
+    const {data : {error, message, response}} = await axios.post(`${backendAddress}/store/addItem`, {addedItem}, apiOPTIONS);
 
     if (error !== null) {
         throw new Error("Failed to add item");

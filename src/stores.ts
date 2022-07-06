@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
-import { initialSortCondition, isInProduction, startPageInDevelopment } from "./config";
+import { isInProduction, startPageInDevelopment } from "./config/configTechnical";
+import { initialOverlayState, initialSortCondition } from "./config/initialCondition";
 import { OverlayEvent, OverlayEventState, OverlayState, PossibleAppState, possibleSortByList, SortingCondition } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
@@ -45,7 +46,7 @@ function cycleSortBy (cycleUp : boolean = true) {
 }
 
 function createOverlayState () {
-    const {subscribe, update, set} = writable({event : "none", state : "inactive"} as OverlayState)
+    const {subscribe, update, set} = writable(initialOverlayState)
 
     function updateState(newEvent : OverlayEvent, newState : OverlayEventState) {
         update (previousOverlayState => {return {

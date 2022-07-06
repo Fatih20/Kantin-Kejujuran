@@ -9,7 +9,7 @@
   import useIsLoggedIn from "../../../utilities/useMe";
   import { isLoggedInProcessor } from "../../../utilities/utilities";
   import { buyItem } from "../../../utilities/storeAPI";
-  import { showBuyingResultDuration } from "../../../config";
+  import { showBuyingResultDuration } from "../../../config/settings";
 
   const isLoggedInRaw = useIsLoggedIn();
 

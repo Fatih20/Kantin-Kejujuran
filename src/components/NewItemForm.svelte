@@ -3,7 +3,7 @@
     maxDescriptionLength,
     maxNameLength,
     successTextDuration,
-  } from "../config";
+  } from "../config/settings";
 
   import {
     useMutation,

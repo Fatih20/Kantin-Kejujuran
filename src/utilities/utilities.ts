@@ -1,5 +1,6 @@
 import axios from "axios";
-import { CLOUDINARY, maxIDLength, validImageExtensionList } from "../config";
+import { CLOUDINARY, maxIDLength } from "../config/configTechnical";
+import { validImageExtensionList } from "../config/settings";
 import { ISoldItem, ISoldItemLite, PossibleSortBy, PossibleSortOrder, referenceKeyToSort } from "./types";
 
 export function priceDenominator (rawPrice : number) : string {

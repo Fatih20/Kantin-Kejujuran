@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { useQuery } from '@sveltestack/svelte-query';
-import { backendAddress, OPTIONS } from '../config';
+import { backendAddress, apiOPTIONS } from '../config/configTechnical';
 
 export default function useIsLoggedIn() {
   try {
     const queryResult = useQuery('isLoggedIn', () =>
-      axios.get(backendAddress + '/user/me', OPTIONS).then((res) => res.data), {onError : (error) => {
+      axios.get(backendAddress + '/user/me', apiOPTIONS).then((res) => res.data), {onError : (error) => {
         
       }}
       );

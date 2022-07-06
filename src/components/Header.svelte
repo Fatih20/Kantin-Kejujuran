@@ -5,7 +5,7 @@
   import { isLoggedInProcessor } from "../utilities/utilities";
   import Spacer from "./parts/Spacer.svelte";
   import { logout, deleteAccount } from "../utilities/userAPI";
-  import { showBuyingResultDuration } from "../config";
+  import { showBuyingResultDuration } from "../config/settings";
 
   const isLoggedInRaw = useIsLoggedIn();
   const queryClient = useQueryClient();

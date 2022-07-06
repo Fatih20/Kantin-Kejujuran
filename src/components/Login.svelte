@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { maxIDLength, successTextDuration } from "../config";
+  import { maxIDLength } from "../config/configTechnical";
+  import { successTextDuration } from "../config/settings";
 
   import {
     useMutation,

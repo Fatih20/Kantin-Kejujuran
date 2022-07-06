@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { overlayEventText } from "../config";
+  import { overlayEventText } from "../config/settings";
 
   import { overlayState } from "../stores";
 </script>
