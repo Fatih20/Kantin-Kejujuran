@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CLOUDINARY, maxIDLength, validImageExtensionList } from "../config";
-import type { ISoldItem, ISoldItemLite } from "./types";
+import { ISoldItem, ISoldItemLite, PossibleSortBy, PossibleSortOrder, referenceKeyToSort } from "./types";
 
 export function priceDenominator (rawPrice : number) : string {
     const formatter = new Intl.NumberFormat('id-ID', {
@@ -20,19 +20,17 @@ export function fetchItemFromLocalStorage (key : string){
     }
 }
 
-export function compareFunctionGenerator (isDate : boolean, isAscending : boolean) {
-    const compareFunction = (isDate ? 
+export function compareFunctionGenerator (sortBy : PossibleSortBy, sortOrder : PossibleSortOrder) {
+    const referenceKey = referenceKeyToSort[sortBy];
+    const compareFunction = 
         (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
-        return soldItem1["milisecondcreated"] < soldItem2["milisecondcreated"] ? -1 : (soldItem1["milisecondcreated"] > soldItem2["milisecondcreated"] ? 1 : 0)
-    } : (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
-        return soldItem1["name"] < soldItem2["name"] ? -1 : (soldItem1["name"] > soldItem2["name"] ? 1 : 0)
-    })
+        return soldItem1[referenceKey] < soldItem2[referenceKey] ? -1 : (soldItem1[referenceKey] > soldItem2[referenceKey] ? 1 : 0)}
 
     const alternateCompareFunction = (soldItem1 : ISoldItem, soldItem2 : ISoldItem) => {
         return -1 * compareFunction(soldItem1, soldItem2);
     }
 
-    return isAscending ? compareFunction : alternateCompareFunction;
+    return sortOrder === "ascending" ? compareFunction : alternateCompareFunction;
 }
 
 export function validImageChecker (imageName : string) {
@@ -127,4 +125,8 @@ export function isLoggedInProcessor (isLoggedInSubscribe) {
     } else if (isLoggedInSubscribe.data.message === "You're not logged in") {
         return false;
     }
+}
+
+export function capitalize(string : string) {
+    return string[0].toUpperCase() + string.slice(1);
 }

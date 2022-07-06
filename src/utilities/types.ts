@@ -28,7 +28,22 @@ export interface ISoldItemRaw extends ISoldItem {
 const possibleNameProblemList = ["none", "long", "empty"] as const;
 export type PossibleNameProblem = typeof possibleNameProblemList[number];
 
-export type SortingCondition = [boolean, boolean];
+export const possibleSortOrderList = ["ascending", "descending"] as const;
+export type PossibleSortOrder = typeof possibleSortOrderList[number];
+
+export const possibleSortByList = ["date", "price", "name"] as const;
+export type PossibleSortBy = typeof possibleSortByList[number];
+
+export const referenceKeyToSort = {
+    "price" : "price",
+    "name" : "name",
+    "date" : "milisecondcreated"
+} as Record<PossibleSortBy, keyof ISoldItem>;
+
+export type SortTextForEachSortBy = Record<PossibleSortOrder, string>
+export type SortingTextObject = Record<PossibleSortBy, SortTextForEachSortBy>
+
+export type SortingCondition = [PossibleSortBy, PossibleSortOrder];
 // The first is whether to sort by date or name, date = true. The second is whether to sort in ascending order
 
 const possibleShelfState = ["all", "one"] as const;

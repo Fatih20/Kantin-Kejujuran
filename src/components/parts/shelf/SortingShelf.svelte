@@ -25,7 +25,7 @@
     align-items: center;
     display: flex;
     gap: 0.5em;
-    justify-content: center;
+    justify-content: space-between;
     /* max-width: (--headfoot-max-width); */
     width: (--headfoot-max-width);
 

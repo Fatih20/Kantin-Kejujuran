@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { initialSortCondition, isInProduction, startPageInDevelopment } from "./config";
-import type { PossibleAppState, SortingCondition } from "./utilities/types";
+import { PossibleAppState, possibleSortByList, SortingCondition } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createSortCondition () {
@@ -12,9 +12,11 @@ function createSortCondition () {
         return newSortCondition;
     }
 
-    function alternateSortBy () {
+function cycleSortBy (cycleUp : boolean = true) {
         update(previousSortCondition => {
-            previousSortCondition[0] = !previousSortCondition[0];
+            let newIndex = possibleSortByList.indexOf(previousSortCondition[0]) + (cycleUp ? 1 : -1);
+            newIndex = newIndex < 0 ? (possibleSortByList.length - 1) : newIndex % possibleSortByList.length;
+            previousSortCondition[0] = possibleSortByList[newIndex]
             localStorage.setItem("sortCondition", JSON.stringify(previousSortCondition));
             return previousSortCondition
         })
@@ -22,7 +24,11 @@ function createSortCondition () {
 
     function alternateSortOrder () {
         update(previousSortCondition => {
-            previousSortCondition[1] = !previousSortCondition[1];
+            if (previousSortCondition[1] === "ascending") {
+                previousSortCondition[1] = "descending"; 
+            } else {
+                previousSortCondition[1] = "ascending"; 
+            }
             localStorage.setItem("sortCondition", JSON.stringify(previousSortCondition));
             return previousSortCondition
         })
@@ -33,7 +39,7 @@ function createSortCondition () {
         subscribe,
         set,
         update,
-        alternateSortBy,
+        cycleSortBy,
         alternateSortOrder
     }
 }

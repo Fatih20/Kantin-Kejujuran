@@ -8,8 +8,9 @@
     ISoldItemRaw,
     ShelfState,
     SortingCondition,
+    SortingTextObject,
   } from "../utilities/types";
-  import { compareFunctionGenerator } from "../utilities/utilities";
+  import { capitalize, compareFunctionGenerator } from "../utilities/utilities";
   import SoldItem from "./parts/shelf/SoldItem.svelte";
   import type { AxiosError } from "axios";
   import { getAllItems } from "../utilities/storeAPI";
@@ -37,18 +38,24 @@
 
   let currentBuyItemFunction;
 
-  function overallSortingTextGenerator(sortCondition: SortingCondition) {
-    if (sortCondition[0]) {
-      return sortCondition[1] ? "From oldest" : "From newest";
-    } else {
-      return sortCondition[1]
-        ? "Alphabetical order"
-        : "Reverse alphabetical order";
-    }
-  }
-  $: firstSortingText = $sortCondition[0] ? "Date" : "Name";
-  $: secondSortingText = $sortCondition[1] ? "Ascending" : "Descending";
-  $: overallSortingText = overallSortingTextGenerator($sortCondition);
+  const sortingText = {
+    date: {
+      ascending: "From oldest",
+      descending: "From newest",
+    },
+    name: {
+      ascending: "Alphabetical order",
+      descending: "Reverse alphabetical order",
+    },
+    price: {
+      ascending: "From least expensive",
+      descending: "From most expensive",
+    },
+  } as SortingTextObject;
+
+  $: firstSortingText = capitalize($sortCondition[0]);
+  $: secondSortingText = capitalize($sortCondition[1]);
+  $: overallSortingText = sortingText[$sortCondition[0]][$sortCondition[1]];
 
   function seeItem(e: CustomEvent) {
     shelfState = "one";
@@ -72,7 +79,7 @@
     if (isOrder) {
       sortCondition.alternateSortOrder();
     } else {
-      sortCondition.alternateSortBy();
+      sortCondition.cycleSortBy();
     }
   }
 </script>
