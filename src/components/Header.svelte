@@ -12,6 +12,9 @@
 
   $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
 
+  let disableLoginButton = true;
+  let disableAddButton = true;
+
   $: disableLoginButton = $appState === "login" || $appState === "register";
 
   $: disableAddButton = $appState === "add" || !isLoggedIn;
