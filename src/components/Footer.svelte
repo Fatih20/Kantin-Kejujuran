@@ -11,7 +11,6 @@
   } from "@sveltestack/svelte-query";
   import { getBalance, incrementBalance } from "../utilities/storeAPI";
   import type { AxiosError } from "axios";
-  import Button from "./parts/footer/Button.svelte";
 
   const queryClient = useQueryClient();
 
@@ -73,7 +72,7 @@
     }
   }
 
-  $: validInput = inputProblem === "none";
+  $: validInput = inputProblem === "none" || inputProblem === "undefined";
 
   async function handleOperate() {
     operating = true;
@@ -108,10 +107,8 @@
   />
 </head>
 
-<main>
-  {#if !validInput}
-    <p class="warning-text">{warningText}</p>
-  {/if}
+<main class:input-invalid-main={footerState !== "default" && !validInput}>
+  <p class="warning-text" class:visible={!validInput}>{warningText}</p>
   <div class="footer-container">
     {#if footerState === "default"}
       <button on:click={() => (footerState = "take")}>
@@ -177,15 +174,24 @@
     color: rgb(var(--text-on-primary-element-color));
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    /* gap: 0; */
     justify-content: center;
     padding: 0.5em var(--side-edge-gap);
     width: 100%;
   }
 
+  .input-invalid-main {
+    gap: 0.5em;
+  }
+
   .warning-text {
     font-weight: 600;
     text-align: center;
+    display: none;
+  }
+
+  .visible {
+    display: initial;
   }
 
   .footer-container {
@@ -196,6 +202,8 @@
     gap: 1.5em;
     justify-content: center;
     width: 100%;
+
+    /* border: solid 1px white; */
   }
 
   .money-container {
