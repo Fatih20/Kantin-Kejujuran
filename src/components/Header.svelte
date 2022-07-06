@@ -132,10 +132,18 @@
         class:dropdown-account-visible={showDropdownAccount}
       >
         {#if isLoggedIn}
-          <p on:click|stopPropagation={handleDeleteAccount}>Delete Account</p>
-          <p on:click|stopPropagation={handleLogout}>Log Out</p>
+          <p
+            class="dropdown-option"
+            on:click|stopPropagation={handleDeleteAccount}
+          >
+            Delete Account
+          </p>
+          <p class="dropdown-option" on:click|stopPropagation={handleLogout}>
+            Log Out
+          </p>
         {:else}
           <p
+            class="dropdown-option"
             on:click|stopPropagation={() => {
               showDropdownAccount = false;
               appState.set("register");
@@ -144,12 +152,13 @@
             Register
           </p>
           <p
+            class="dropdown-option"
             on:click|stopPropagation={() => {
               showDropdownAccount = false;
               appState.set("login");
             }}
           >
-            Sign In
+            Log In
           </p>
           <!-- <i class="fa-solid fa-person-booth" /> -->
         {/if}
@@ -255,9 +264,9 @@
     border-radius: var(--button-radius);
     display: none;
     flex-direction: column;
-    gap: 0.25em;
+    /* gap: 0.25em; */
     justify-content: center;
-    padding: 0.25em;
+    padding: 0 0.5em;
     position: absolute;
     left: 0;
     top: calc(100% + var(--dropdown-gap-to-header));
@@ -269,5 +278,13 @@
   .dropdown-account-visible {
     display: flex;
     transform: none;
+  }
+
+  .dropdown-option {
+    padding: 0.25em 0;
+  }
+
+  .dropdown-option:not(.dropdown-option:nth-last-child(1)) {
+    border-bottom: solid 1px rgba(var(--text-on-primary-element-color), 0.5);
   }
 </style>
