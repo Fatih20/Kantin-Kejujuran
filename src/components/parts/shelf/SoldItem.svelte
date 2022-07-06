@@ -9,16 +9,11 @@
   import { createEventDispatcher } from "svelte";
   export let soldItem: ISoldItemRaw;
   const { name, price, imagelink } = soldItem;
-  import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-  } from "@sveltestack/svelte-query";
+  import { useMutation, useQueryClient } from "@sveltestack/svelte-query";
   import useIsLoggedIn from "../../../utilities/useMe";
   import { isLoggedInProcessor } from "../../../utilities/utilities";
   import { buyItem } from "../../../utilities/storeAPI";
   import { showBuyingResultDuration } from "../../../config";
-  import Spacer from "../Spacer.svelte";
 
   const isLoggedInRaw = useIsLoggedIn();
 
@@ -66,7 +61,7 @@
   }
 </script>
 
-<main>
+<main on:click={() => handleSeeItem()} class:logged-in={isLoggedIn}>
   <div class="image-container">
     <img src={imagelink} alt="product" class="image" />
   </div>
@@ -74,13 +69,12 @@
     <p class="title">{name}</p>
     <h4>{priceDenominator(price)}</h4>
   </div>
-  <Spacer />
-  <div class="button-container">
-    <button on:click={() => handleSeeItem()}> See Item </button>
-    {#if isLoggedIn}
-      <button on:click={() => handleBuyingItem()}> Buy Item </button>
-    {/if}
-  </div>
+  <!-- <Spacer /> -->
+  {#if isLoggedIn}
+    <button on:click|stopPropagation={() => handleBuyingItem()}>
+      Buy Item
+    </button>
+  {/if}
 </main>
 
 <style>
@@ -89,14 +83,20 @@
     border-radius: var(--button-radius);
     box-sizing: border-box;
     color: rgb(var(--text-on-secondary-element-color));
+    cursor: pointer;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: 1fr 1fr 1fr 2fr 1fr;
     flex-direction: column;
-    gap: 0.25em;
-    height: 300px;
+    gap: 0.5em;
+    height: 250px;
     padding: var(--padding-of-items-container);
     word-break: break-word;
+  }
+
+  .logged-in {
+    grid-template-rows: repeat(5, 1fr);
+    height: 300px;
   }
 
   .text-container {
@@ -111,25 +111,13 @@
     font-size: 1.1em;
   }
 
-  .button-container {
-    align-items: flex-end;
-    display: flex;
-    grid-row: 5 / 6;
-    justify-content: center;
-    gap: 0.5em;
-    width: 100%;
-  }
-
-  .button-container button {
-    flex-grow: 1;
-  }
-
   button {
     background-color: rgb(var(--text-on-primary-element-color));
     border-radius: var(--button-smaller-radius);
     border: none;
     color: rgb(var(--primary-color));
     font-weight: 600;
+    grid-row: 5 / 6;
     transition: all 0.25s ease-in-out;
     margin: 0;
     padding: 7px;
