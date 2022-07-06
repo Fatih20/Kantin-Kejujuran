@@ -1,4 +1,4 @@
-<main>
+<main on:click|stopPropagation>
   <slot />
 </main>
 

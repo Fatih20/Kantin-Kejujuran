@@ -13,7 +13,6 @@
   const isLoggedInRaw = useIsLoggedIn();
 
   $: isLoggedIn = isLoggedInProcessor($isLoggedInRaw);
-  // $: console.log(isLoggedInProcessor($isLoggedInRaw));
 
   function resetForm() {
     formKey = {};

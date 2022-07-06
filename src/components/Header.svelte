@@ -5,7 +5,7 @@
   import { isLoggedInProcessor } from "../utilities/utilities";
   import Spacer from "./parts/Spacer.svelte";
   import { logout, deleteAccount } from "../utilities/userAPI";
-  import { showBuyingResultDuration } from "../config/settings";
+  import { showResultInOverayDuration } from "../config/settings";
 
   const isLoggedInRaw = useIsLoggedIn();
   const queryClient = useQueryClient();
@@ -28,7 +28,7 @@
         overlayState.updateState("logout", "success");
         setTimeout(() => {
           window.location.reload();
-        }, showBuyingResultDuration);
+        }, showResultInOverayDuration);
       },
       onError: () => {
         overlayState.updateState("logout", "fail");
@@ -36,7 +36,7 @@
       onSettled: () => {
         setTimeout(() => {
           overlayState.resetState();
-        }, showBuyingResultDuration);
+        }, showResultInOverayDuration);
       },
     }
   );
@@ -51,7 +51,7 @@
         overlayState.updateState("logout", "success");
         setTimeout(() => {
           window.location.reload();
-        }, showBuyingResultDuration);
+        }, showResultInOverayDuration);
       },
       onError: () => {
         overlayState.updateState("logout", "fail");
@@ -59,7 +59,7 @@
       onSettled: () => {
         setTimeout(() => {
           overlayState.resetState();
-        }, showBuyingResultDuration);
+        }, showResultInOverayDuration);
       },
     }
   );

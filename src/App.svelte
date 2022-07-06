@@ -15,7 +15,7 @@
     {/if}
     {#if $appState === "startPage"}
       <StartPage />
-    {:else if ["add", "trade", "login", "register"].some((possibleState) => possibleState === $appState)}
+    {:else}
       <Store />
     {/if}
   </main>

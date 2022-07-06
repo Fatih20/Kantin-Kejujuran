@@ -1,15 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
   import { sortCondition } from "../stores";
-  import type {
-    ISoldItem,
-    ISoldItemRaw,
-    ShelfState,
-    SortingCondition,
-    SortingTextObject,
-  } from "../utilities/types";
+  import type { ISoldItem, ISoldItemRaw, ShelfState } from "../utilities/types";
   import { capitalize, compareFunctionGenerator } from "../utilities/utilities";
   import SoldItem from "./parts/shelf/SoldItem.svelte";
   import type { AxiosError } from "axios";
@@ -17,6 +10,7 @@
   import SeenItem from "../components/parts/shelf/SeenItem.svelte";
   import Spacer from "./parts/Spacer.svelte";
   import SortingShelf from "../components/parts/shelf/SortingShelf.svelte";
+  import { sortingText } from "../config/settings";
 
   const queryClient = useQueryClient();
 
@@ -38,34 +32,22 @@
 
   let currentBuyItemFunction;
 
-  const sortingText = {
-    date: {
-      ascending: "From oldest",
-      descending: "From newest",
-    },
-    name: {
-      ascending: "Alphabetical order",
-      descending: "Reverse alphabetical order",
-    },
-    price: {
-      ascending: "From least expensive",
-      descending: "From most expensive",
-    },
-  } as SortingTextObject;
-
   $: firstSortingText = capitalize($sortCondition[0]);
   $: secondSortingText = capitalize($sortCondition[1]);
   $: overallSortingText = sortingText[$sortCondition[0]][$sortCondition[1]];
 
+  $: onlyContainText =
+    $itemsQuery.status === "loading" ||
+    $itemsQuery.status === "error" ||
+    ($itemsQuery.status === "success" && $itemsQuery.data.length === 0);
+
   function seeItem(e: CustomEvent) {
     shelfState = "one";
-    const { detail } = e;
-    const { soldItem, buyItemFunction } = detail as {
-      soldItem: ISoldItem;
-      buyItemFunction: () => void;
-    };
-    currentBuyItemFunction = buyItemFunction;
+    const {
+      detail: { soldItem, buyItemFunction },
+    }: { detail: { soldItem: ISoldItem; buyItemFunction: () => void } } = e;
 
+    currentBuyItemFunction = buyItemFunction;
     seenItem = soldItem;
   }
 
@@ -84,10 +66,9 @@
   }
 </script>
 
-<main>
+<main class:only-contain-text={onlyContainText}>
   {#if shelfState === "one"}
     <div class="absolute-container" on:click={handleCloseSeeItem}>
-      <!--     <Spacer /> -->
       <SeenItem
         item={seenItem}
         handleBuyClick={async () => {
@@ -98,18 +79,12 @@
     </div>
   {/if}
   {#if $itemsQuery.status === "loading"}
-    <Spacer />
     <i class="fa-solid fa-spinner spinner-icon" />
-    <Spacer />
   {:else if $itemsQuery.status === "error"}
-    <Spacer />
     <h2 class="empty-text">Error getting items. Try reloading</h2>
-    <Spacer />
   {:else if $itemsQuery.status === "success"}
     {#if $itemsQuery.data.length === 0}
-      <Spacer />
       <h2 class="empty-text">No items are currently sold</h2>
-      <Spacer />
     {:else}
       <SortingShelf
         {overallSortingText}
@@ -141,6 +116,10 @@
     position: relative;
     padding: var(--padding-of-shelf-main) var(--side-edge-gap);
     width: min(100%, 1000px);
+  }
+
+  .only-contain-text {
+    justify-content: center;
   }
 
   .absolute-container {

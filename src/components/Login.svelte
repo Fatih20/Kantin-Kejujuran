@@ -142,7 +142,7 @@
     }
   );
 
-  async function handleSubmit(e) {
+  async function handleSubmit() {
     isSubmitting = true;
     const user = { student_id: name.toString(), password } as User;
     try {
@@ -164,7 +164,7 @@
   />
 </head>
 
-<MainOfForm on:click={(e) => e.stopPropagation()}>
+<MainOfForm>
   <FormContainer>
     <Title>Login</Title>
     <form on:submit|preventDefault={handleSubmit}>

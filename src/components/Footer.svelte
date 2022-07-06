@@ -110,8 +110,6 @@
       <button class="money-button" on:click={() => (footerState = "take")}>
         <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
       </button>
-      <!-- <div class="spacer" /> -->
-
       <div class="money-container">
         <div class="money-container-second">
           {#if $balanceQuery.status === "success"}
@@ -122,7 +120,6 @@
           {/if}
         </div>
       </div>
-      <!-- <div class="spacer" /> -->
       <button class="money-button" on:click={() => (footerState = "give")}>
         <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
       </button>
@@ -180,7 +177,6 @@
     flex-direction: column;
     gap: 0.5em;
     justify-content: center;
-    /* position: fixed; */
     padding: 0.5em var(--side-edge-gap);
     width: 100%;
   }
@@ -208,8 +204,6 @@
     justify-content: flex-start;
     overflow-x: auto;
     height: 100%;
-
-    /* border: solid 1px black; */
   }
 
   .money-container-second {
@@ -218,7 +212,6 @@
     gap: 0.5em;
     justify-content: center;
     flex-grow: 1;
-    /* overflow-x: auto; */
     height: 100%;
   }
 
@@ -242,7 +235,6 @@
   }
 
   .store-balance {
-    /* font-size: 1.25em; */
     font-weight: 600;
   }
 
@@ -252,11 +244,9 @@
     border: none;
     color: white;
     cursor: pointer;
-    /* display: none; */
     display: flex;
     margin: 0;
     padding: 0;
-    /* width: 50px; */
   }
 
   .invalid-operate-button {
@@ -285,10 +275,6 @@
   }
 
   .input-operator {
-    /* background-color: rgb(var(--primary-color));
-    color: rgb(var(--text-on-primary-element-color));
-    outline: none;
-    border: solid 1.5px rgb(var(--text-on-primary-element-color)); */
     color: rgb(var(--primary-color));
     flex-grow: 1;
     font-weight: 700;

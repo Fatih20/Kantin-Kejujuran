@@ -11,8 +11,6 @@
     useQueryClient,
   } from "@sveltestack/svelte-query";
 
-  import { fade } from "svelte/transition";
-
   import { appState } from "../stores";
   import { uploadImage } from "../utilities/photosAPI";
   import type {
@@ -194,9 +192,8 @@
     imageJustStarted = true;
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit() {
     isSubmitting = true;
-    e.preventDefault();
     const { isError, retrievedData } = await uploadImage(imageList[0]);
     if (!isError) {
       const { url: imagelink } = retrievedData;
@@ -235,10 +232,10 @@
   />
 </head>
 
-<MainOfForm on:click={(e) => e.stopPropagation()}>
+<MainOfForm>
   <FormContainer>
     <Title>What's the item?</Title>
-    <form on:submit={handleSubmit}>
+    <form on:submit|preventDefault={handleSubmit}>
       <InputElement>
         <label for="image-input">Any photo of it? (JPG or PNG)</label>
         <InputContainer>
@@ -319,13 +316,11 @@
           Back
         </button>
         {#if showingResultText}
-          {#if justFailed}
-            <ResultText isSuccess={false}>
-              Adding new item failed. Try again.
-            </ResultText>
-          {:else}
-            <ResultText isSuccess={true}>Item succesfully added.</ResultText>
-          {/if}
+          <ResultText isSuccess={!justFailed}>
+            {justFailed
+              ? "Adding new item failed. Try again."
+              : "Item succesfully added."}
+          </ResultText>
         {:else}
           <Spacer />
         {/if}

@@ -1,6 +1,6 @@
-import type { OverlayEventText } from "../utilities/types";
+import type { OverlayEventText, SortingTextObject } from "../utilities/types";
 
-export const showBuyingResultDuration = 500;
+export const showResultInOverayDuration = 500;
 export const successTextDuration = 1000;
 export const maxNameLength = 40;
 export const maxDescriptionLength = 100;
@@ -31,3 +31,18 @@ export const overlayEventText = {
         success : ""
     }
 } as OverlayEventText;
+
+export const sortingText = {
+    date: {
+      ascending: "From oldest",
+      descending: "From newest",
+    },
+    name: {
+      ascending: "Alphabetical order",
+      descending: "Reverse alphabetical order",
+    },
+    price: {
+      ascending: "From least expensive",
+      descending: "From most expensive",
+    },
+  } as SortingTextObject;

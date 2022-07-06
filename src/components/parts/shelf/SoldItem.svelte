@@ -9,7 +9,7 @@
   import useIsLoggedIn from "../../../utilities/useMe";
   import { isLoggedInProcessor } from "../../../utilities/utilities";
   import { buyItem } from "../../../utilities/storeAPI";
-  import { showBuyingResultDuration } from "../../../config/settings";
+  import { showResultInOverayDuration } from "../../../config/settings";
 
   const isLoggedInRaw = useIsLoggedIn();
 
@@ -37,7 +37,7 @@
       onSettled: () => {
         setTimeout(() => {
           overlayState.resetState();
-        }, showBuyingResultDuration);
+        }, showResultInOverayDuration);
       },
       onError: () => {
         overlayState.updateState("purchase", "fail");
