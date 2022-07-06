@@ -278,6 +278,8 @@
   }
 
   .dropdown-option {
+    cursor: pointer;
+    user-select: none;
     padding: 0.25em 0;
   }
 
