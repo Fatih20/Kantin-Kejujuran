@@ -11,6 +11,7 @@
   } from "@sveltestack/svelte-query";
   import { getBalance, incrementBalance } from "../utilities/storeAPI";
   import type { AxiosError } from "axios";
+  import Button from "./parts/footer/Button.svelte";
 
   const queryClient = useQueryClient();
 
@@ -33,6 +34,7 @@
   let footerState = "default" as PossibleFooterState;
   let inputtedNumber: number | undefined = undefined;
   let firstStart = true;
+  let warningText = "";
 
   let validInput = true;
   let inputProblem = "none" as PossibleInputProblem;
@@ -44,6 +46,7 @@
     firstStart = true;
     inputtedNumber = undefined;
     footerState = "default";
+    warningText = "";
   }
 
   $: {
@@ -57,6 +60,16 @@
       inputProblem = "undefined";
     } else {
       inputProblem = "none";
+    }
+  }
+
+  $: {
+    if (inputProblem === "overdraw") {
+      warningText = "You can't withdraw more than the canteen balance";
+    } else if (inputProblem === "NaN" || inputProblem === "negative") {
+      warningText = "Please enter a positive number";
+    } else {
+      warningText = "";
     }
   }
 
@@ -97,17 +110,11 @@
 
 <main>
   {#if !validInput}
-    {#if inputProblem === "overdraw"}
-      <p class="warning-text">
-        You can't withdraw more than the canteen balance
-      </p>
-    {:else if inputProblem === "NaN" || inputProblem === "negative"}
-      <p class="warning-text">Please enter a positive number</p>
-    {/if}
+    <p class="warning-text">{warningText}</p>
   {/if}
   <div class="footer-container">
     {#if footerState === "default"}
-      <button class="money-button" on:click={() => (footerState = "take")}>
+      <button on:click={() => (footerState = "take")}>
         <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
       </button>
       <div class="money-container">
@@ -120,19 +127,15 @@
           {/if}
         </div>
       </div>
-      <button class="money-button" on:click={() => (footerState = "give")}>
+      <button on:click={() => (footerState = "give")}>
         <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
       </button>
     {:else}
-      <button
-        class="operate-button cancel-button"
-        on:click={reset}
-        class:invalid-operate-button={operating}
-      >
+      <button class="cancel-button" on:click={reset} class:invalid={operating}>
         <i class="fa-solid fa-share fa-flip-horizontal money-icon" /></button
       >
       <div class="input-container">
-        <p class:invalid-operate-button={operating}>Rp</p>
+        <p class:invalid={operating}>Rp</p>
         <input
           class="input-operator"
           type="number"
@@ -149,16 +152,15 @@
         />
       </div>
       <button
-        class="operate-button"
-        class:invalid-operate-button={!validInput || operating}
+        class:invalid={!validInput || operating}
         disabled={!validInput || operating}
         on:click={handleOperate}
       >
-        {#if footerState === "give"}
-          <i class="fa-solid fa-right-to-bracket fa-rotate-90 money-icon" />
-        {:else if footerState === "take"}
-          <i class="fa-solid fa-right-from-bracket fa-rotate-270 money-icon" />
-        {/if}
+        <i
+          class={`money-icon fa-solid fa-right-${
+            footerState === "give" ? "to" : "from"
+          }-bracket fa-rotate-${footerState === "give" ? "90" : "270"}`}
+        />
       </button>
     {/if}
   </div>
@@ -237,9 +239,7 @@
   .store-balance {
     font-weight: 600;
   }
-
-  .money-button,
-  .operate-button {
+  button {
     background-color: rgba(0, 0, 0, 0);
     border: none;
     color: white;
@@ -249,7 +249,7 @@
     padding: 0;
   }
 
-  .invalid-operate-button {
+  .invalid {
     opacity: 0.5;
   }
 
