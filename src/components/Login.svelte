@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { maxIDLength } from "../config/configTechnical";
-  import { successTextDuration } from "../config/settings";
-
   import {
     useMutation,
     useQuery,
@@ -29,11 +26,6 @@
 
   const queryClient = useQueryClient();
   let isSubmitting = false;
-
-  $: redirectText =
-    $appState === "login"
-      ? "Don't have an account yet?"
-      : "Already have an account?";
 
   let name: number | null | undefined = undefined;
   let password: string = "";
@@ -119,7 +111,6 @@
     } else if (error.response.status >= 400) {
       const manMadeError = error.response.data
         .error as PossibleAuthenticationErrorManMade;
-      console.log(error.response);
       if (manMadeError === "notRegistered") {
         failMessage = "User isn't registered. Please register first.";
       } else if (manMadeError === "registeredAlready") {
@@ -130,7 +121,6 @@
         failMessage = "Please try again.";
       }
     }
-    console.log(error);
   }
 
   const mutateIsLoggedIn = useMutation(
