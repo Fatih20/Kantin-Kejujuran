@@ -1,16 +1,7 @@
 <script lang="ts">
-  import {
-    buyingProcess,
-    showBuyingResultText,
-    justFailedBuying,
-    justFailedLogout,
-    showLogoutResultText,
-    isLoggingOut,
-  } from "../stores";
+  import { overlayEventText } from "../config";
 
-  $: processText = $buyingProcess
-    ? "Processing your purchase"
-    : "Logging you out";
+  import { overlayState } from "../stores";
 </script>
 
 <head>
@@ -27,28 +18,14 @@
 </head>
 
 <main>
-  {#if $buyingProcess || $isLoggingOut}
+  {#if $overlayState["state"] === "ongoing"}
     <div class="icon-container">
       <i class="fa-solid fa-spinner" />
     </div>
-    <h2>{processText}</h2>
-  {:else if $showBuyingResultText}
-    {#if $justFailedBuying}
-      <h4 class="buying-result-text fail-text">
-        Your purchase has just failed. Please try again.
-      </h4>
-    {:else}
-      <h4 class="buying-result-text success-text">
-        Succesfully bought the item!
-      </h4>
-    {/if}
-  {:else if $showLogoutResultText}
-    {#if $justFailedLogout}
-      <h4 class="buying-result-text fail-text">Log out failed</h4>
-    {:else}
-      <h4 class="buying-result-text success-text">Log out successful</h4>
-    {/if}
   {/if}
+  <h2 class={$overlayState["state"]}>
+    {overlayEventText[$overlayState["event"]][$overlayState["state"]]}
+  </h2>
 </main>
 
 <style>
@@ -87,22 +64,22 @@
     animation: spinning 1s linear 0s infinite;
   }
 
-  .success-text {
-    background-color: rgb(var(--success-color-bg));
-    color: rgb(var(--success-color-fg));
-  }
-
-  .fail-text {
-    background-color: rgb(var(--warning-color-bg));
-    color: rgb(var(--warning-color-fg));
-  }
-
-  .buying-result-text {
+  h2 {
     display: inline-block;
     border-radius: var(--button-radius);
     font-size: 1.5em;
     padding: 4px 8px;
     transition: opacity 0.25s ease-in-out;
     text-align: center;
+  }
+
+  .success {
+    background-color: rgb(var(--success-color-bg));
+    color: rgb(var(--success-color-fg));
+  }
+
+  .fail {
+    background-color: rgb(var(--warning-color-bg));
+    color: rgb(var(--warning-color-fg));
   }
 </style>

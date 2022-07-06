@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { initialSortCondition, isInProduction, startPageInDevelopment } from "./config";
-import { PossibleAppState, possibleSortByList, SortingCondition } from "./utilities/types";
+import { OverlayEvent, OverlayEventState, OverlayState, PossibleAppState, possibleSortByList, SortingCondition } from "./utilities/types";
 import { fetchItemFromLocalStorage } from "./utilities/utilities";
 
 function createSortCondition () {
@@ -44,14 +44,30 @@ function cycleSortBy (cycleUp : boolean = true) {
     }
 }
 
+function createOverlayState () {
+    const {subscribe, update, set} = writable({event : "none", state : "inactive"} as OverlayState)
+
+    function updateState(newEvent : OverlayEvent, newState : OverlayEventState) {
+        update (previousOverlayState => {return {
+            event : newEvent,
+            state : newState,
+        }})
+    }
+
+    function resetState () {
+        update (previousOverlayState => {return {
+            event : "none",
+            state : "inactive"
+        }})
+    }
+
+    return {
+        subscribe,
+        updateState,
+        resetState
+    }
+}
+
 export const appState = writable(isInProduction ? "startPage" : startPageInDevelopment as PossibleAppState);
 export const sortCondition = createSortCondition();
-export const buyingProcess = writable(false);
-export const justFailedBuying = writable(false);
-export const showBuyingResultText = writable(false);
-export const isLoggingOut = writable(false);
-export const justFailedLogout = writable(false);
-export const isDeletingAccount = writable(false);
-export const justFailedDeletingAccount = writable(false);
-export const showDeleteAccountResultText = writable(false);
-export const showLogoutResultText = writable(false);
+export const overlayState = createOverlayState();

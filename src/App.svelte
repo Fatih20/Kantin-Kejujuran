@@ -1,14 +1,8 @@
 <script lang="ts">
   import StartPage from "./components/StartPage.svelte";
   import Store from "./components/Store.svelte";
-  import BuyingOverlay from "./components/BuyingOverlay.svelte";
-  import {
-    appState,
-    buyingProcess,
-    showBuyingResultText,
-    showLogoutResultText,
-    isLoggingOut,
-  } from "./stores";
+  import Overlay from "./components/Overlay.svelte";
+  import { appState, overlayState } from "./stores";
   import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
 
   const queryClient = new QueryClient();
@@ -16,8 +10,8 @@
 
 <QueryClientProvider client={queryClient}>
   <main>
-    {#if [$buyingProcess, $showBuyingResultText, $isLoggingOut, $showLogoutResultText].some((element) => element === true)}
-      <BuyingOverlay />
+    {#if $overlayState["event"] !== "none"}
+      <Overlay />
     {/if}
     {#if $appState === "startPage"}
       <StartPage />

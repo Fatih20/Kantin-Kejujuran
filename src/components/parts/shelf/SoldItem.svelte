@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    buyingProcess,
-    justFailedBuying,
-    showBuyingResultText,
-  } from "../../../stores";
+  import { overlayState } from "../../../stores";
   import type { ISoldItemRaw } from "../../../utilities/types";
   import { priceDenominator } from "../../../utilities/utilities";
   import { createEventDispatcher } from "svelte";
@@ -36,23 +32,21 @@
     {
       onSuccess: () => {
         queryClient.invalidateQueries("items");
-        justFailedBuying.set(false);
+        overlayState.updateState("purchase", "success");
       },
       onSettled: () => {
-        buyingProcess.set(false);
-        showBuyingResultText.set(true);
         setTimeout(() => {
-          showBuyingResultText.set(false);
+          overlayState.resetState();
         }, showBuyingResultDuration);
       },
       onError: () => {
-        justFailedBuying.set(true);
+        overlayState.updateState("purchase", "fail");
       },
     }
   );
 
   async function handleBuyingItem() {
-    buyingProcess.set(true);
+    overlayState.updateState("purchase", "ongoing");
     try {
       await $mutateItems.mutateAsync(soldItem);
     } catch (error) {

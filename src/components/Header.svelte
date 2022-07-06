@@ -1,13 +1,5 @@
 <script lang="ts">
-  import {
-    appState,
-    isLoggingOut,
-    showLogoutResultText,
-    justFailedLogout,
-    isDeletingAccount,
-    justFailedDeletingAccount,
-    showDeleteAccountResultText,
-  } from "../stores";
+  import { appState, overlayState } from "../stores";
   import useIsLoggedIn from "../utilities/useMe";
   import { useQueryClient, useMutation } from "@sveltestack/svelte-query";
   import { isLoggedInProcessor } from "../utilities/utilities";
@@ -32,18 +24,19 @@
       return await logout();
     },
     {
-      onSuccess: async () => {
-        await setTimeout(() => {
-          showLogoutResultText.set(false);
+      onSuccess: () => {
+        overlayState.updateState("logout", "success");
+        setTimeout(() => {
+          window.location.reload();
         }, showBuyingResultDuration);
-        window.location.reload();
       },
       onError: () => {
-        justFailedLogout.set(true);
+        overlayState.updateState("logout", "fail");
       },
       onSettled: () => {
-        showLogoutResultText.set(true);
-        isLoggingOut.set(false);
+        setTimeout(() => {
+          overlayState.resetState();
+        }, showBuyingResultDuration);
       },
     }
   );
@@ -54,29 +47,30 @@
       return await deleteAccount();
     },
     {
-      onSuccess: async () => {
-        await setTimeout(() => {
-          showDeleteAccountResultText.set(false);
+      onSuccess: () => {
+        overlayState.updateState("logout", "success");
+        setTimeout(() => {
+          window.location.reload();
         }, showBuyingResultDuration);
-        window.location.reload();
       },
       onError: () => {
-        justFailedDeletingAccount.set(true);
+        overlayState.updateState("logout", "fail");
       },
       onSettled: () => {
-        showDeleteAccountResultText.set(true);
-        isDeletingAccount.set(false);
+        setTimeout(() => {
+          overlayState.resetState();
+        }, showBuyingResultDuration);
       },
     }
   );
 
   async function handleLogout() {
-    isLoggingOut.set(true);
+    overlayState.updateState("logout", "ongoing");
     $logoutMutation.mutateAsync();
   }
 
   async function handleDeleteAccount() {
-    isDeletingAccount.set(true);
+    overlayState.updateState("deleteAccount", "ongoing");
     $deleteAccountMutation.mutateAsync();
   }
 

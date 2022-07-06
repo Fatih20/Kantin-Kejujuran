@@ -91,3 +91,18 @@ const possibleRegisterErrorManMadeList = ["registeredAlready"] as const;
 export type RegisterErrorManMade = (typeof possibleRegisterErrorManMadeList[number]);
 
 export type PossibleAuthenticationErrorManMade = LoginErrorManMade | RegisterErrorManMade;
+
+const overlayEventStateList = ["inactive", "ongoing", "fail", "success"] as const;
+
+export type OverlayEventState = typeof overlayEventStateList[number];
+
+const possibleOverlayEvent = ["none" ,"logout", "deleteAccount", "purchase"] as const;
+
+export type OverlayEvent = typeof possibleOverlayEvent[number];
+
+export type OverlayState = {
+    "event" : OverlayEvent,
+    "state"  : OverlayEventState
+};
+
+export type OverlayEventText = Record<OverlayEvent , Record<OverlayEventState, string>>
