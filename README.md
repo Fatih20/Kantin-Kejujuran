@@ -1,5 +1,5 @@
 # Honest Canteen
-A place where everybody can sell and buy anything for however much. Built with **Svelte** for the front-end, **Express** for the back-end, and **Heroku's PostgreSQL** for the database. The app from back front is built with **Typescript**.
+A place where everybody can sell and buy anything for however much. Built with **Svelte** for the front-end, **Express** for the [back-end](https://github.com/Fatih20/Kantin-Kejujuran-Backend), and **Heroku's PostgreSQL** for the database. The app from back front is built with **Typescript**.
 
 ## Svelte (Front-End)
 ### Tools and Libraries
